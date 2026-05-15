@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1f3354">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="감정 절차">
+<title>문화유산 감정 절차 가이드</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='10' fill='%231f3354'/><text x='32' y='46' font-size='38' fill='%23a8843a' text-anchor='middle' font-family='serif' font-weight='600'>規</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='32' fill='%231f3354'/><text x='90' y='128' font-size='108' fill='%23a8843a' text-anchor='middle' font-family='serif' font-weight='600'>規</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fbf8f1;
+    --bg-alt: #f3ecdd;
+    --paper: #ffffff;
+    --ink: #1a1f2e;
+    --ink-soft: #4a5266;
+    --primary: #1f3354;
+    --primary-light: #324b7a;
+    --primary-bg: #e8edf5;
+    --accent: #8b3a3a;
+    --accent-light: #c97676;
+    --accent-bg: #f5e7e7;
+    --gold: #a8843a;
+    --gold-soft: #d4b87a;
+    --line: #d8cfb9;
+    --line-soft: #e8e1d0;
+    --green: #4a6b3a;
+    --green-bg: #ecf2e3;
+    --shadow: 0 1px 3px rgba(20,30,50,.06), 0 4px 16px rgba(20,30,50,.04);
+    --shadow-lg: 0 4px 12px rgba(20,30,50,.08), 0 16px 32px rgba(20,30,50,.06);
+    --font-display: 'Noto Serif KR', serif;
+    --font-body: 'Noto Sans KR', system-ui, -apple-system, sans-serif;
+    --font-en: 'Cormorant Garamond', 'Noto Serif KR', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { font-size: 16px; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    min-height: 100vh;
+    overscroll-behavior-y: contain;
+    background-image:
+      radial-gradient(circle at 20% 0%, rgba(31,51,84,.03) 0%, transparent 50%),
+      radial-gradient(circle at 80% 100%, rgba(168,132,58,.04) 0%, transparent 50%);
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(180deg, var(--primary) 0%, #182841 100%);
+    color: #f5f0e0;
+    padding: 1rem 1.25rem .85rem;
+    border-bottom: 3px solid var(--gold);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(20,30,50,.15);
+  }
+  .header-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+  }
+  .title-group { display: flex; flex-direction: column; gap: .1rem; min-width: 0; }
+  .title-kor {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -.01em;
+    color: #faf5e6;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .title-sub {
+    font-family: var(--font-en);
+    font-style: italic;
+    font-size: .78rem;
+    color: rgba(245,240,224,.65);
+  }
+  .title-deco { color: var(--gold); margin: 0 .35rem; font-style: normal; }
+  .header-actions { display: flex; gap: .35rem; flex-shrink: 0; }
+  .header-btn {
+    background: rgba(0,0,0,.2);
+    color: rgba(245,240,224,.85);
+    border: 1px solid rgba(168,132,58,.3);
+    padding: .4rem .65rem;
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: .8rem;
+    cursor: pointer;
+    transition: all .15s;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+  }
+  .header-btn:hover { background: rgba(168,132,58,.2); color: #faf5e6; }
+  .header-btn.danger:hover { background: rgba(139,58,58,.4); }
+
+  /* PROGRESS BREADCRUMB */
+  .breadcrumb {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: .5rem 1.25rem .5rem;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--line-soft);
+    font-family: var(--font-body);
+    font-size: .75rem;
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    flex-wrap: wrap;
+    min-height: 32px;
+  }
+  .breadcrumb-track {
+    font-family: var(--font-en);
+    font-weight: 600;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    font-size: .72rem;
+  }
+  .breadcrumb-track.violation { color: var(--accent); }
+  .breadcrumb-sep { color: var(--line); }
+  .breadcrumb-step { color: var(--ink-soft); }
+  .breadcrumb-step.current { color: var(--primary); font-weight: 500; }
+
+  /* MAIN */
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 1rem 1.25rem 5rem;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 1.25rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 1rem;
+  }
+  .card.accent { border-left: 4px solid var(--gold); }
+  .card.violation { border-left: 4px solid var(--accent); background: linear-gradient(180deg, #fdf7f7 0%, var(--paper) 60%); }
+  .card.success { border-left: 4px solid var(--green); background: linear-gradient(180deg, #f7faf3 0%, var(--paper) 60%); }
+  .card.info { border-left: 4px solid var(--primary); }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: .85rem;
+    padding-bottom: .65rem;
+    border-bottom: 1px solid var(--line-soft);
+    gap: .5rem;
+    flex-wrap: wrap;
+  }
+  .card-step {
+    font-family: var(--font-en);
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .card-step.violation { color: var(--accent); }
+  .card-title {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--primary);
+    font-weight: 600;
+    letter-spacing: -.01em;
+    margin-bottom: .35rem;
+    line-height: 1.4;
+  }
+  .card-title.violation { color: var(--accent); }
+  .card-subtitle {
+    font-family: var(--font-en);
+    font-style: italic;
+    font-size: .85rem;
+    color: var(--ink-soft);
+    margin-bottom: .85rem;
+  }
+  .card-desc {
+    color: var(--ink-soft);
+    font-size: .92rem;
+    line-height: 1.65;
+    margin-bottom: 1rem;
+  }
+  .card-desc strong { color: var(--ink); font-weight: 500; }
+
+  /* CHOICE BUTTONS */
+  .choice-grid { display: flex; flex-direction: column; gap: .65rem; }
+  .choice-btn {
+    text-align: left;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    cursor: pointer;
+    font-family: var(--font-body);
+    color: var(--ink);
+    transition: all .15s ease;
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    min-height: 64px;
+    width: 100%;
+  }
+  .choice-btn:hover { background: var(--primary-bg); border-color: var(--primary-light); transform: translateX(2px); }
+  .choice-btn:active { transform: translateX(0); }
+  .choice-btn.violation:hover { background: var(--accent-bg); border-color: var(--accent-light); }
+  .choice-btn.success:hover { background: var(--green-bg); border-color: var(--green); }
+  .choice-icon {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--gold);
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-alt);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .choice-btn.violation .choice-icon { color: var(--accent); background: var(--accent-bg); }
+  .choice-btn.success .choice-icon { color: var(--green); background: var(--green-bg); }
+  .choice-text { flex: 1; min-width: 0; }
+  .choice-label {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: .15rem;
+    line-height: 1.35;
+  }
+  .choice-btn.violation .choice-label { color: var(--accent); }
+  .choice-desc {
+    font-size: .82rem;
+    color: var(--ink-soft);
+    line-height: 1.45;
+  }
+  .choice-arrow {
+    color: var(--line);
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    font-family: var(--font-en);
+  }
+
+  /* CHECKLIST */
+  .checklist { display: flex; flex-direction: column; gap: .5rem; margin: .85rem 0 1rem; }
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: .65rem;
+    padding: .7rem .85rem;
+    background: var(--bg);
+    border: 1px solid var(--line-soft);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all .15s ease;
+    user-select: none;
+  }
+  .check-item:hover { background: var(--bg-alt); border-color: var(--line); }
+  .check-item.checked {
+    background: var(--green-bg);
+    border-color: var(--green);
+  }
+  .check-item.checked .check-label { color: var(--ink-soft); }
+  .check-item.checked .check-label-text { text-decoration: line-through; text-decoration-color: var(--green); }
+  .check-box {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--line);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--paper);
+    transition: all .15s;
+  }
+  .check-item.checked .check-box {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .check-item.checked .check-box::after {
+    content: '✓';
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+  .check-item.shake {
+    animation: shake .55s ease;
+    border-color: var(--accent);
+    background: var(--accent-bg);
+  }
+  .check-label {
+    flex: 1;
+    font-size: .9rem;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .check-label-text { display: block; }
+  .check-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem;
+    margin-top: .35rem;
+  }
+  .meta-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+    padding: .12rem .5rem;
+    border-radius: 3px;
+    font-size: .72rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .meta-tag.form {
+    background: var(--bg-alt);
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+  }
+  .meta-tag.law {
+    background: var(--primary-bg);
+    color: var(--primary);
+    border: 1px solid #c5d1e5;
+  }
+  .meta-tag.warn {
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent-light);
+  }
+  .meta-tag.time {
+    background: #fff4d6;
+    color: #8a6d1a;
+    border: 1px solid #e8d28a;
+  }
+
+  /* INFO BOX */
+  .info-box {
+    background: var(--bg-alt);
+    border: 1px dashed var(--line);
+    border-radius: 5px;
+    padding: .75rem .95rem;
+    margin: .85rem 0;
+    font-size: .85rem;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .info-box.warn {
+    background: var(--accent-bg);
+    border-color: var(--accent-light);
+    border-style: solid;
+    color: #6b2a2a;
+  }
+  .info-box.warn strong { color: var(--accent); }
+  .info-box-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: .82rem;
+    color: var(--primary);
+    margin-bottom: .3rem;
+    display: block;
+  }
+  .info-box.warn .info-box-title { color: var(--accent); }
+  .info-box ul, .info-box ol { padding-left: 1.1rem; margin: .25rem 0; }
+  .info-box li { margin: .15rem 0; }
+
+  /* CRITERIA ACCORDION */
+  details.field {
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    margin-bottom: .55rem;
+    background: var(--paper);
+    overflow: hidden;
+  }
+  details.field summary {
+    padding: .7rem .9rem;
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--bg-alt);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    font-size: .95rem;
+  }
+  details.field summary::-webkit-details-marker { display: none; }
+  details.field summary::after {
+    content: '＋';
+    color: var(--gold);
+    font-weight: 400;
+    font-size: 1.1rem;
+    transition: transform .15s;
+  }
+  details.field[open] summary { background: var(--primary-bg); border-bottom: 1px solid var(--line-soft); }
+  details.field[open] summary::after { content: '−'; }
+  details.field .field-body {
+    padding: .85rem 1rem;
+    font-size: .87rem;
+    color: var(--ink);
+  }
+  details.field .field-body h4 {
+    font-family: var(--font-display);
+    font-size: .85rem;
+    color: var(--primary);
+    margin: .55rem 0 .3rem;
+    font-weight: 600;
+    letter-spacing: -.01em;
+  }
+  details.field .field-body h4:first-child { margin-top: 0; }
+  details.field .field-body ol, details.field .field-body ul {
+    padding-left: 1.3rem;
+    margin: .2rem 0;
+  }
+  details.field .field-body li { margin: .2rem 0; line-height: 1.55; }
+  details.field .field-body li strong { color: var(--primary); }
+  details.field .field-body .field-note {
+    font-size: .77rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-top: .3rem;
+  }
+  details.field .field-body .examples {
+    font-size: .78rem;
+    color: var(--ink-soft);
+    background: var(--bg-alt);
+    padding: .5rem .7rem;
+    border-radius: 4px;
+    margin-top: .55rem;
+    line-height: 1.55;
+  }
+  details.field .field-body .examples strong { color: var(--ink); font-weight: 500; }
+
+  /* INPUT FIELDS */
+  .input-group { margin: .5rem 0; }
+  .input-group label {
+    display: block;
+    font-size: .82rem;
+    color: var(--ink-soft);
+    margin-bottom: .25rem;
+    font-weight: 500;
+  }
+  .input-group input, .input-group textarea, .input-group select {
+    width: 100%;
+    padding: .55rem .75rem;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: .92rem;
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .input-group input:focus, .input-group textarea:focus, .input-group select:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 2px var(--primary-bg);
+  }
+  .input-group textarea { resize: vertical; min-height: 60px; }
+
+  /* NAV BUTTONS */
+  .nav-row {
+    display: flex;
+    gap: .65rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+  .nav-btn {
+    flex: 1;
+    min-width: 130px;
+    padding: .85rem 1rem;
+    border-radius: 5px;
+    font-family: var(--font-body);
+    font-size: .95rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all .15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    min-height: 48px;
+  }
+  .nav-btn.primary { background: var(--primary); color: #faf5e6; }
+  .nav-btn.primary:hover { background: var(--primary-light); transform: translateY(-1px); }
+  .nav-btn.violation { background: var(--accent); color: #faf5e6; }
+  .nav-btn.violation:hover { background: #6b2a2a; }
+  .nav-btn.success { background: var(--green); color: #faf5e6; }
+  .nav-btn.success:hover { background: #3a5a2a; }
+  .nav-btn.secondary {
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--line);
+  }
+  .nav-btn.secondary:hover { background: var(--primary-bg); }
+
+  /* SUMMARY VIEW */
+  .summary-section { margin-bottom: 1.25rem; }
+  .summary-section h3 {
+    font-family: var(--font-display);
+    font-size: .95rem;
+    color: var(--primary);
+    margin-bottom: .5rem;
+    padding-bottom: .25rem;
+    border-bottom: 1px solid var(--line-soft);
+    font-weight: 600;
+  }
+  .summary-list { font-size: .88rem; color: var(--ink); }
+  .summary-list-item {
+    display: flex;
+    justify-content: space-between;
+    padding: .35rem 0;
+    border-bottom: 1px dashed var(--line-soft);
+    gap: .5rem;
+  }
+  .summary-list-item:last-child { border-bottom: none; }
+  .summary-key { color: var(--ink-soft); flex-shrink: 0; }
+  .summary-val {
+    color: var(--ink);
+    font-weight: 500;
+    text-align: right;
+    word-break: break-all;
+  }
+
+  /* MODAL */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(20,30,50,.55);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal-backdrop.active { display: flex; }
+  .modal {
+    background: var(--paper);
+    border-radius: 8px;
+    max-width: 480px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    border-top: 4px solid var(--gold);
+  }
+  .modal-header {
+    padding: 1.25rem 1.25rem .75rem;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .modal-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 1.1rem;
+  }
+  .modal-body { padding: 1rem 1.25rem; font-size: .9rem; line-height: 1.6; }
+  .modal-footer {
+    padding: .75rem 1.25rem 1.25rem;
+    display: flex;
+    gap: .5rem;
+    justify-content: flex-end;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: var(--primary);
+    color: #faf5e6;
+    padding: .75rem 1.25rem;
+    border-radius: 5px;
+    box-shadow: var(--shadow-lg);
+    font-size: .9rem;
+    z-index: 150;
+    transition: transform .3s ease;
+    max-width: 90vw;
+    text-align: center;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.warn { background: var(--accent); }
+  .toast.success { background: var(--green); }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: .72rem;
+    padding: 1.25rem 1rem 2rem;
+    max-width: 720px;
+    margin: 0 auto;
+    font-family: var(--font-en);
+    font-style: italic;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 480px) {
+    .header { padding: .75rem 1rem .65rem; }
+    .title-kor { font-size: .95rem; }
+    .title-sub { font-size: .72rem; }
+    .header-btn { padding: .35rem .5rem; font-size: .75rem; }
+    .container { padding: .85rem 1rem 5rem; }
+    .card { padding: 1rem; }
+    .card-title { font-size: 1.1rem; }
+    .choice-btn { padding: .85rem .95rem; min-height: 58px; }
+    .choice-label { font-size: .95rem; }
+    .choice-desc { font-size: .78rem; }
+    .breadcrumb { font-size: .7rem; padding: .4rem 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="title-group">
+      <div class="title-kor">감정 절차 가이드<span class="title-deco">·</span><span style="font-family:var(--font-en);font-style:italic;font-weight:500;">Procedure</span></div>
+      <div class="title-sub">National Heritage Service · On-Site Manual</div>
+    </div>
+    <div class="header-actions">
+      <button class="header-btn" id="resumeBtn" style="display:none;" title="저장된 진행 복구">⟲ 복구</button>
+      <button class="header-btn danger" id="resetBtn" title="처음으로">⌂ 처음</button>
+    </div>
+  </div>
+</header>
+
+<div class="breadcrumb" id="breadcrumb">
+  <span class="breadcrumb-track">시작</span>
+</div>
+
+<main class="container" id="app"></main>
+
+<div class="footer">
+  Reference · 문화유산법 제39·60·90조 · 형소법 제211·212조 · 감정관실 설치·운영 규정
+</div>
+
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle"></div>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer" id="modalFooter"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+// ===== 케이스 상태 =====
+let caseState = {
+  startedAt: null,
+  track: null,        // 'checkpoint'
+  is_sjp: null,       // true: 특사경 본인 현장 / false: 부재
+  trail: [],          // 경로 기록
+  checks: {},         // { 'state.checkid': true/false }
+  inputs: {},         // 자유 입력값
+};
+
+function saveState() {
+  if (caseState.track) {
+    localStorage.setItem('appraisal_case', JSON.stringify(caseState));
+    document.getElementById('resumeBtn').style.display = '';
+  }
+}
+
+function loadState() {
+  const saved = localStorage.getItem('appraisal_case');
+  if (saved) {
+    try { return JSON.parse(saved); }
+    catch(e) { return null; }
+  }
+  return null;
+}
+
+function clearState() {
+  localStorage.removeItem('appraisal_case');
+  caseState = { startedAt: null, track: null, is_sjp: null, trail: [], checks: {}, inputs: {} };
+  document.getElementById('resumeBtn').style.display = 'none';
+}
+
+// ===== 유틸 =====
+function fmtTime(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  const pad = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' '+type : '');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+function showModal(title, bodyHtml, buttons) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = bodyHtml;
+  const footer = document.getElementById('modalFooter');
+  footer.innerHTML = '';
+  (buttons || [{label:'닫기', className:'nav-btn secondary', action:closeModal}]).forEach(b => {
+    const btn = document.createElement('button');
+    btn.className = b.className || 'nav-btn primary';
+    btn.textContent = b.label;
+    btn.onclick = b.action || closeModal;
+    footer.appendChild(btn);
+  });
+  document.getElementById('modal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+}
+
+// ===== 상태 정의 =====
+const STATES = {
+
+  // ─── 시작 — 일반동산문화유산 판단 기준 ───
+  start: {
+    track: 'checkpoint',
+    crumb: ['시작'],
+    render: () => `
+      <div class="card violation">
+        <div class="card-meta"><span class="card-step violation">검색대 적발 절차</span></div>
+        <h2 class="card-title violation">일반동산문화유산 해당 기준</h2>
+        <p class="card-subtitle">Criteria · General Movable Cultural Heritage</p>
+        <p class="card-desc">시행령 별표 3(2024. 7. 23. 개정) 기준입니다. 분야별로 공통기준을 모두 충족하고 추가기준 중 하나 이상을 충족하면 일반동산문화유산으로 봅니다.</p>
+
+        <details class="field">
+          <summary>1. 미술 분야</summary>
+          <div class="field-body">
+            <h4>공통기준 (1~3 모두 충족)</h4>
+            <ol>
+              <li><strong>가치</strong> — 역사적·예술적·학술적 가치가 있을 것</li>
+              <li><strong>상태</strong> — 원래의 형태와 구성요소를 갖추어 양호할 것 (분리 가능 유물은 분리된 형태 기준)</li>
+              <li><strong>제작연대</strong> — 1945년 이전 제작</li>
+            </ol>
+            <h4>추가기준 (4~7 중 1개 이상)</h4>
+            <ol start="4">
+              <li><strong>희소성</strong> — 형태·기법·재료의 측면에서 유사 가치 유물이 희소</li>
+              <li><strong>명확성</strong> — 제작목적·출토지(제작지)·역사적 인물·사건과의 관련성 분명</li>
+              <li><strong>특이성</strong> — 구성·의장·서체 등 제작방식에 특이성</li>
+              <li><strong>시대성</strong> — 제작 당시의 대표적 시대적 특성 반영</li>
+            </ol>
+            <div class="examples"><strong>예시</strong> 회화류(전통·종교·근대), 조각류(전통·종교·근대), 공예류(금속·목칠·도토·옥석·유리·섬유·짚풀), 서예류, 석조류(석탑·석등·당간지주·석비)</div>
+          </div>
+        </details>
+
+        <details class="field">
+          <summary>2. 전적(典籍) 분야</summary>
+          <div class="field-body">
+            <h4>공통기준 (1~3 모두 충족)</h4>
+            <ol>
+              <li><strong>가치</strong> — 역사적·예술적·학술적 가치가 있을 것</li>
+              <li><strong>상태</strong> — 원래의 형태와 구성요소를 갖추어 양호할 것</li>
+              <li><strong>제작연대</strong> — 1945년 이전 제작</li>
+            </ol>
+            <h4>추가기준 (4~7 중 1개 이상)</h4>
+            <ol start="4">
+              <li><strong>희소성</strong> — 동일·유사 소장본이 희소</li>
+              <li><strong>명확성</strong> — 제작목적·출토지(제작지)·작자·제작시기 분명</li>
+              <li><strong>특이성</strong> — 장황(粧䌙)·서체 등 제작방식에 특이성</li>
+              <li><strong>시대성</strong> — 제작 당시 시대적 상황을 반영하는 내용</li>
+            </ol>
+            <div class="examples"><strong>예시</strong> 서책류(필사본·목판본·활자본), 문서류(왕실·관부·개인·사찰·향교·서원), 서각류(현판·금석각·인장·판목·활자)</div>
+          </div>
+        </details>
+
+        <details class="field">
+          <summary>3. 생활기술 분야</summary>
+          <div class="field-body">
+            <h4>공통기준 (1~3 모두 충족)</h4>
+            <ol>
+              <li><strong>가치</strong> — 역사적·예술적·학술적 가치가 있을 것</li>
+              <li><strong>상태</strong> — 원래의 형태와 구성요소를 갖추어 양호할 것</li>
+              <li><strong>제작연대</strong> — 1945년 이전 제작</li>
+            </ol>
+            <h4>추가기준 (4~7 중 1개 이상)</h4>
+            <ol start="4">
+              <li><strong>희소성</strong> — 형태·기술·재료의 측면에서 유사 가치 유물이 희소</li>
+              <li><strong>명확성</strong> — 제작목적·출토지(제작지)·쓰임새 분명</li>
+              <li><strong>특이성</strong> — 제작 당시의 신기술(신기법) 또는 신소재로 만들어진 특이성</li>
+              <li><strong>시대성</strong> — 제작 당시의 대표적 시대적 특성 반영</li>
+            </ol>
+            <div class="examples"><strong>예시</strong> 고고자료(석기·골각기·청동기·철기), 민속자료(생업·공예기술·놀이·유희), 과학기술자료(산업기술·천문지리·인쇄·방송통신·의료·운송·계측·무기·스포츠)</div>
+          </div>
+        </details>
+
+        <details class="field">
+          <summary>4. 자연사 분야 <span style="font-size:.75rem;color:var(--accent);font-weight:500;margin-left:.4rem;">기준 구성 다름</span></summary>
+          <div class="field-body">
+            <h4>공통기준 (1~2 모두 충족)</h4>
+            <ol>
+              <li><strong>가치</strong> — 역사적·예술적·학술적 또는 <strong>관상적</strong> 가치가 있을 것</li>
+              <li><strong>상태</strong> — 원래의 형태와 구성요소를 갖추어 양호할 것
+                <div class="field-note">특징적 정보를 다수 지닌 부위(예: 머리뼈)가 온전히 보존된 경우, 전체 대비 보존 비율과 무관하게 양호한 것으로 봄</div>
+              </li>
+            </ol>
+            <h4>추가기준 (3~5 중 1개 이상)</h4>
+            <ol start="3">
+              <li><strong>희소성</strong> — 종류·서식지·형태의 측면에서 유사 가치 유물이 희소</li>
+              <li><strong>특이성</strong> — 표본 제작·지질 형성 등 구성방식에 특이성</li>
+              <li><strong>시대성·지역성</strong> — 특정 시대 또는 지역을 대표</li>
+            </ol>
+            <div class="examples"><strong>예시</strong> 동물류(박제·골격·건조표본·액침표본), 식물류(꽃·열매·종자·잎·표본), 지질류(화석·동굴생성물·퇴적구조·광물·암석·운석)</div>
+            <div class="field-note" style="margin-top:.5rem;color:var(--accent);">※ 자연사 분야는 별도기준 조항이 없음 (가목만 적용)</div>
+          </div>
+        </details>
+
+        <div class="info-box" style="background:#fff8e8;border-color:var(--gold-soft);border-style:solid;">
+          <span class="info-box-title" style="color:var(--gold);">별도기준 (미술·전적·생활기술 분야에 한함 · 자연사 분야 제외)</span>
+          <p style="font-size:.82rem;margin-bottom:.35rem;">위 가목 기준을 충족하지 않더라도, 다음 1·2 중 하나에 해당하면 일반동산문화유산으로 봅니다.</p>
+          <ol style="padding-left:1.3rem;margin:.3rem 0;">
+            <li><strong>외국유물</strong> — 국내에서 출토되었거나 상당기간 전해져 온 외국 제작 유물 중 우리나라 역사·예술·문화에 상당한 영향을 끼쳤음이 분명할 것</li>
+            <li><strong>기타</strong> — 유물 형태가 일부분에 불과하더라도 해당 부분의 명문·문양·제작양식 등에 의해 문화유산적 가치가 분명할 것</li>
+          </ol>
+        </div>
+
+        <div class="info-box warn">
+          <span class="info-box-title">제외 대상</span>
+          수출일·반출일 현재 <strong>생존해 있는 제작자의 작품</strong>은 일반동산문화유산 범위에서 제외됩니다 (시행령 제36조 단서).
+        </div>
+
+        <p class="card-desc" style="margin-top:1.25rem;">현장의 특별사법경찰(특사경) 자격 여부를 선택하면 그에 맞는 절차로 진행됩니다.</p>
+        <div class="choice-grid">
+          <button class="choice-btn violation" onclick="setSjpRole(true)">
+            <span class="choice-icon">特</span>
+            <span class="choice-text">
+              <span class="choice-label">특사경 자격 위원 현장</span>
+              <span class="choice-desc">본인이 직접 임의제출·인계 진행 가능</span>
+            </span>
+            <span class="choice-arrow">›</span>
+          </button>
+          <button class="choice-btn" onclick="setSjpRole(false)">
+            <span class="choice-icon">非</span>
+            <span class="choice-text">
+              <span class="choice-label">특사경 자격 위원 부재</span>
+              <span class="choice-desc">사범단속팀 호출 또는 경찰 신고 필요</span>
+            </span>
+            <span class="choice-arrow">›</span>
+          </button>
+        </div>
+      </div>
+      <div class="info-box">
+        체크항목·진행 위치는 이 기기에만 저장됩니다(localStorage). "⌂ 처음" 버튼으로 언제든 삭제됩니다.
+      </div>
+    `
+  },
+
+  // ─── 출동 · 현장 도착 · 위반 고지 · 분기 ───
+  arrival: {
+    track: 'checkpoint',
+    crumb: ['검색대', '출동·고지'],
+    render: () => {
+      const sjpLabel = caseState.is_sjp
+        ? '<span class="meta-tag warn" style="margin-left:.4rem;">특사경 본인</span>'
+        : '<span class="meta-tag form" style="margin-left:.4rem;">특사경 부재</span>';
+      return `
+      <div class="card violation">
+        <div class="card-meta">
+          <span class="card-step violation">① 현장 도착 · 위반 고지</span>
+          <span style="font-size:.78rem;color:var(--ink-soft);" id="startedAtDisplay"></span>
+        </div>
+        <h2 class="card-title violation">현장 도착 및 위반 사실 고지${sjpLabel}</h2>
+        <p class="card-subtitle">On-site arrival &amp; violation notice</p>
+
+        ${renderChecklist('arrival', [
+          { id:'self_intro', label:'감정위원 신분 고지' },
+          { id:'procedure', label:'감정 절차 및 처리 결과 안내' },
+          { id:'violation', label:'위반 사실 고지 (법 제60조·제90조)', meta:[{type:'law', text:'법 제60조·제90조'}, {type:'warn', text:'필수'}] },
+        ])}
+
+        <div class="info-box warn">
+          <span class="info-box-title">법적 성격 — 협조 여부 무관</span>
+          신청받지 않은 동산이 검색 과정에서 일반동산문화유산으로 판별되면 법 제60조·제90조 위반이며, 해당 문화유산은 <strong>법정 몰수 대상물</strong>입니다 (법 제90조②, 운영규정 제10조②). 협조 여부와 무관하게 사법기관 고발 조치 및 몰수 조치가 이루어져야 합니다.
+        </div>
+
+        <div class="info-box warn">
+          <span class="info-box-title">현장 처리 원칙</span>
+          소유자는 현행범으로 보지 않으며, <strong>범죄구성요건에 대한 판단은 하지 않습니다</strong>. 감정위원은 위반 고지와 임의제출 절차만 진행합니다.
+        </div>
+
+        <p class="card-desc" style="margin-top:1rem;">소유자의 협조 여부에 따라 절차가 갈립니다.</p>
+        <div class="choice-grid">
+          <button class="choice-btn" onclick="tryNavigate('cooperate', 'arrival', ['violation'])">
+            <span class="choice-icon">協</span>
+            <span class="choice-text">
+              <span class="choice-label">협조 — 임의제출 절차</span>
+              <span class="choice-desc">임의제출서·여권 사본 등 필수 서류 확보</span>
+            </span>
+            <span class="choice-arrow">›</span>
+          </button>
+          <button class="choice-btn violation" onclick="tryNavigate('refuse', 'arrival', ['violation'])">
+            <span class="choice-icon">拒</span>
+            <span class="choice-text">
+              <span class="choice-label">비협조 — 경찰 신고</span>
+              <span class="choice-desc">제출 또는 신분 확인 거부 시</span>
+            </span>
+            <span class="choice-arrow">›</span>
+          </button>
+        </div>
+      </div>
+      `;
+    },
+    onMount: () => {
+      const el = document.getElementById('startedAtDisplay');
+      if (el && caseState.startedAt) {
+        el.textContent = '시작 ' + fmtTime(caseState.startedAt);
+      }
+    }
+  },
+
+  // ─── 협조 — 검색대 필수 서류 (화주 출국 전) ───
+  cooperate: {
+    track: 'checkpoint',
+    crumb: ['검색대', '협조', '필수 서류'],
+    render: () => {
+      const sjpNotice = caseState.is_sjp
+        ? `<div class="info-box">
+            <span class="info-box-title">특사경 본인 처리</span>
+            본인이 특사경 자격으로 임의제출을 받고 압수물을 인계받습니다. 사후 처리는 감정관실에서 이어집니다.
+          </div>`
+        : `<div class="info-box warn">
+            <span class="info-box-title">특사경 부재 — 관할 사법기관 협조</span>
+            현장에 특사경 자격 위원이 없습니다. 먼저 <strong>국가유산청 사범단속팀 특사경의 즉시 출동 가능 여부</strong>를 확인합니다.
+            <ul style="padding-left:1.1rem;margin:.4rem 0;">
+              <li><strong>즉시 출동 가능</strong> → 도착 대기, 이후 정식 인계</li>
+              <li><strong>즉시 출동 불가</strong> → <strong>공항경찰대 등 관할 사법기관</strong>의 협조를 받아 진행 (기존 관례)</li>
+            </ul>
+            임의제출서·여권 사본 등 필수 서류 확보는 비특사경 위원도 진행 가능하며, 압수물 정식 인계는 출동한 특사경 또는 협조 사법기관 측에서 처리합니다.
+          </div>`;
+      const cooperateItems = [
+        ...(caseState.is_sjp ? [{ id:'sjp_intro', label:'특사경 지명서 제시 및 신분 고지 (수사 개시)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'특사경 직무규정 제12조②'}] }] : []),
+        { id:'rights', label:'권리 고지 — 제출 거부권 / 범위 특정 제출권', meta:[{type:'warn', text:'필수'}] },
+        { id:'submission', label:'임의제출서 작성·서명 확보', meta:[{type:'warn', text:'필수'}, {type:'form', text:'붙임 1 (임의제출서)'}] },
+        { id:'receive', label:'문화유산 압수·인수 (임의제출 형식 · 법 제90조 몰수 대상물 확보)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제90조②'}] },
+        { id:'passport', label:'여권 사본 촬영', meta:[{type:'warn', text:'필수'}] },
+      ];
+      const cooperateRequired = caseState.is_sjp
+        ? ['sjp_intro', 'rights', 'submission', 'receive', 'passport']
+        : ['rights', 'submission', 'receive', 'passport'];
+      return `
+      <div class="card violation">
+        <div class="card-meta"><span class="card-step violation">② 검색대 필수 서류</span></div>
+        <h2 class="card-title">화주 출국 전 필수 절차</h2>
+        <p class="card-subtitle">Mandatory at checkpoint · before departure</p>
+
+        <div class="info-box warn">
+          <span class="info-box-title">검색대에서 반드시 마쳐야 할 것</span>
+          아래 필수 항목은 <strong>화주가 출국하기 전 검색대에서 반드시 마무리</strong>해야 합니다. 다른 사후 절차는 압수물을 감정관실로 가져온 뒤 처리합니다.
+        </div>
+
+        ${sjpNotice}
+
+        ${renderChecklist('cooperate', cooperateItems)}
+
+        <p class="card-desc" style="margin-top:.85rem;font-size:.88rem;">아래는 가능하면 함께 확보(상황에 따라 선택).</p>
+
+        ${renderChecklist('cooperate_optional', [
+          { id:'addl', label:'추가 자료 — 연락처, 전자우편, 주소, 영수증' },
+          { id:'waiver', label:'소유권 포기서 작성 (소유자 의사에 따라)', meta:[{type:'form', text:'붙임 6 (소유권 포기서)'}] },
+        ])}
+
+        <p class="card-desc" style="margin-top:1rem;">소유자 국적에 따라 출국 안내 분기:</p>
+        <div class="choice-grid">
+          <button class="choice-btn" onclick="tryNavigate('departure_korean', 'cooperate', ${JSON.stringify(cooperateRequired).replace(/"/g, '&quot;')})">
+            <span class="choice-icon">韓</span>
+            <span class="choice-text">
+              <span class="choice-label">내국인</span>
+              <span class="choice-desc">귀국 후 사법기관 출석 안내</span>
+            </span>
+            <span class="choice-arrow">›</span>
+          </button>
+          <button class="choice-btn" onclick="tryNavigate('departure_foreign', 'cooperate', ${JSON.stringify(cooperateRequired).replace(/"/g, '&quot;')})">
+            <span class="choice-icon">外</span>
+            <span class="choice-text">
+              <span class="choice-label">외국인</span>
+              <span class="choice-desc">사법기관 출석 안내</span>
+            </span>
+            <span class="choice-arrow">›</span>
+          </button>
+        </div>
+      </div>
+      `;
+    }
+  },
+
+  // ─── 협조 · 내국인 출국 ───
+  departure_korean: {
+    track: 'checkpoint',
+    crumb: ['검색대', '협조', '내국인 출국'],
+    render: () => `
+      <div class="card success">
+        <div class="card-meta"><span class="card-step">③ 출국 안내 · 내국인</span></div>
+        <h2 class="card-title">내국인 출국 처리</h2>
+        <p class="card-subtitle">Korean national · departure</p>
+
+        ${renderChecklist('departure_korean', [
+          { id:'judicial', label:'귀국 후 사법기관 출석 조사 가능 안내', meta:[{type:'law', text:'법 제60조·제90조'}] },
+          { id:'allow', label:'출국 허용' },
+        ])}
+
+        <div class="info-box">
+          검색대 현장 절차는 여기서 종료됩니다. 압수한 물품을 감정관실로 가져와 사후 처리를 진행합니다.
+        </div>
+
+        <div class="nav-row">
+          <button class="nav-btn secondary" onclick="goBack()">‹ 뒤로</button>
+          <button class="nav-btn violation" onclick="navigate('office_followup')">감정관실 사후 처리 ›</button>
+        </div>
+      </div>
+    `
+  },
+
+  // ─── 협조 · 외국인 출국 ───
+  departure_foreign: {
+    track: 'checkpoint',
+    crumb: ['검색대', '협조', '외국인 출국'],
+    render: () => `
+      <div class="card success">
+        <div class="card-meta"><span class="card-step">③ 출국 안내 · 외국인</span></div>
+        <h2 class="card-title">외국인 출국 처리</h2>
+        <p class="card-subtitle">Foreign national · departure</p>
+
+        ${renderChecklist('departure_foreign', [
+          { id:'judicial', label:'사법기관 출석 조사 가능 안내', meta:[{type:'law', text:'법 제60조·제90조'}] },
+          { id:'allow', label:'출국 허용' },
+        ])}
+
+        <div class="info-box">
+          검색대 현장 절차는 여기서 종료됩니다. 압수한 물품을 감정관실로 가져와 사후 처리를 진행합니다.
+        </div>
+
+        <div class="nav-row">
+          <button class="nav-btn secondary" onclick="goBack()">‹ 뒤로</button>
+          <button class="nav-btn violation" onclick="navigate('office_followup')">감정관실 사후 처리 ›</button>
+        </div>
+      </div>
+    `
+  },
+
+  // ─── 비협조 ───
+  refuse: {
+    track: 'checkpoint',
+    crumb: ['검색대', '비협조'],
+    render: () => {
+      const sjpBlock = caseState.is_sjp
+        ? `
+          <div class="info-box warn">
+            <span class="info-box-title">특사경 본인 — 현행범 체포 가능</span>
+            위법성이 명백하고 체포 필요성이 인정될 때, 형소법 제212조에 따라 영장 없이 현행범 체포가 가능합니다 (준현행범: 형소법 제211조② 2호 — 장물·범죄에 사용된 물건 소지). 본인이 신원 확보를 시도하고, 필요 시 공항경찰대 등 관할 사법기관과 협조해 신병을 처리합니다.
+          </div>
+          ${renderChecklist('refuse_sjp', [
+            { id:'sjp_intro', label:'특사경 지명서 제시 및 신분 고지 (수사 개시)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'특사경 직무규정 제12조②'}] },
+            { id:'warn', label:'위반 사항 반복 고지 및 현행범 체포 가능 경고', meta:[{type:'warn', text:'필수'}] },
+            { id:'identify', label:'신원 확보 시도 (여권·신분증 제시 요구)' },
+            { id:'confiscate', label:'문화유산 압수 (보안검색요원 지원 · 법 제90조 몰수 대상)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제90조②'}] },
+            { id:'support', label:'필요 시 공항경찰대 등 관할 사법기관 협조 요청' },
+            { id:'handover', label:'신병·압수물 처리 — 사범단속팀 또는 경찰 인계', meta:[{type:'warn', text:'필수'}] },
+          ])}
+        `
+        : `
+          <div class="info-box warn">
+            <span class="info-box-title">특사경 부재 — 공항경찰대 신고</span>
+            특사경 자격 위원이 현장에 없으므로 즉시 <strong>공항경찰대 등 관할 사법기관</strong>에 신고합니다 (기존 관례). 직접 신고가 어려우면 보안검색요원이나 인근 인원에게 협조를 요청합니다. 동시에 국가유산청 사범단속팀에도 통보합니다.
+          </div>
+          ${renderChecklist('refuse_nonsjp', [
+            { id:'warn', label:'위반 사항 반복 고지', meta:[{type:'warn', text:'필수'}] },
+            { id:'call_police', label:'공항경찰대 등 관할 사법기관 신고 (보안검색요원·인근 인원 협조)', meta:[{type:'warn', text:'필수'}] },
+            { id:'call_sjp', label:'국가유산청 사범단속팀 통보', meta:[{type:'warn', text:'필수'}] },
+            { id:'confiscate', label:'문화유산 압수 (보안검색요원 지원 · 법 제90조 몰수 대상)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제90조②'}] },
+            { id:'await', label:'사법기관 도착 시까지 위반자 동태 관찰' },
+            { id:'handover', label:'사법기관 도착 시 위반자 특정 후 신병 인계', meta:[{type:'warn', text:'필수'}] },
+            { id:'cooperate_req', label:'사법기관 요구사항(동행 등) 협조' },
+          ])}
+        `;
+      const requiredIds = caseState.is_sjp
+        ? ['sjp_intro', 'warn', 'confiscate', 'handover']
+        : ['warn', 'call_police', 'call_sjp', 'confiscate', 'handover'];
+      const stateKey = caseState.is_sjp ? 'refuse_sjp' : 'refuse_nonsjp';
+      return `
+      <div class="card violation">
+        <div class="card-meta"><span class="card-step violation">비협조 트랙</span></div>
+        <h2 class="card-title violation">경찰 신고 및 신병 인계</h2>
+        <p class="card-subtitle">Police report &amp; handover</p>
+
+        ${sjpBlock}
+
+        <div class="info-box">
+          비협조 사건에서는 <strong>여권 사본 등 추가 자료 제출 의무가 없습니다</strong>. 신병 인계 후 경찰의 요청에 따라 협조합니다. 적발 경위서는 감정관실로 돌아와 작성합니다.
+        </div>
+
+        <div class="nav-row">
+          <button class="nav-btn secondary" onclick="goBack()">‹ 뒤로</button>
+          <button class="nav-btn violation" onclick="tryNavigate('office_followup', '${stateKey}', ${JSON.stringify(requiredIds).replace(/"/g, '&quot;')})">감정관실 사후 처리 ›</button>
+        </div>
+      </div>
+      `;
+    }
+  },
+
+  // ─── 감정관실 사후 처리 ───
+  office_followup: {
+    track: 'checkpoint',
+    crumb: ['감정관실', '사후 처리'],
+    render: () => {
+      const items = [
+        { id:'photo', label:'압수물 정밀 사진 촬영 (정면·측면·바닥·세부·크기 표시)', meta:[{type:'warn', text:'필수'}] },
+        { id:'report', label:'적발 경위서 작성', meta:[{type:'warn', text:'필수'}, {type:'form', text:'붙임 2 (경위서)'}] },
+        { id:'confirm', label:'일반동산문화유산 확인서 작성', meta:[{type:'warn', text:'필수'}, {type:'form', text:'붙임 3 / 별지 제1호'}] },
+        { id:'record', label:'감정조서 작성 (특사경 요청 시 한글파일 + 서명 PDF 제출)', meta:[{type:'form', text:'붙임 5 (감정조서)'}] },
+        { id:'notify_policy', label:'문화유산정책과 보고', meta:[{type:'warn', text:'필수'}] },
+        { id:'notify_offices', label:'다른 감정관실 통보', meta:[{type:'law', text:'운영규정 제11조①'}] },
+        { id:'handover_form', label:'사범단속팀 특사경에게 인계 (사법기관 고발 절차 개시 · 인계인수서 + 원본 서류·물품)', meta:[{type:'warn', text:'필수'}, {type:'form', text:'붙임 4 (인계인수서)'}, {type:'law', text:'운영규정 제10조② / 법 제90조'}] },
+        { id:'safekeep', label:'인계 전까지 감정관실 금고 보관' },
+      ];
+      const requiredIds = items.filter(it => (it.meta || []).some(m => m.type === 'warn' && m.text === '필수')).map(it => it.id);
+
+      return `
+      <div class="card accent">
+        <div class="card-meta"><span class="card-step">③ 감정관실 사후 처리</span></div>
+        <h2 class="card-title">압수물 처리 및 후속 절차</h2>
+        <p class="card-subtitle">Post-detection processing at the office</p>
+
+        ${renderChecklist('office_followup', items)}
+
+        <div class="info-box">
+          <span class="info-box-title">정밀 사진 촬영 권장 포인트</span>
+          <ul style="padding-left:1.1rem;margin:.25rem 0;">
+            <li>정면·측면·바닥(굽 포함)·세부 문양·명문·관지</li>
+            <li>스케일바 또는 자 동시 촬영 (크기 검증용)</li>
+            <li>균열·결손·수리 흔적 등 보존 상태 기록</li>
+            <li>고해상도 원본 보관 (감정조서·인계 자료 활용)</li>
+          </ul>
+        </div>
+
+        ${caseState.is_sjp ? `
+        <div class="info-box warn">
+          <span class="info-box-title">특사경 본인 — 추가 수사 절차</span>
+          본인이 특사경 자격으로 수사를 직접 개시하는 경우 다음을 함께 진행합니다.
+          <ul style="padding-left:1.1rem;margin:.4rem 0;">
+            <li><strong>범죄인지보고서</strong> 작성 — 특사경 직무규정 별지 제2호 서식 · 범죄사건부 등재</li>
+            <li>피의자 본인 확인 — 신분증 사본 복사 후 수사기록 편철</li>
+            <li>피의자 신문조서 작성 시 <strong>진술거부권 및 변호인 조력권</strong> 사전 고지 (자필 확인)</li>
+          </ul>
+          이러한 절차는 압수·인수 후 사범단속팀과 협의하여 진행하며, 인계 시 함께 송부합니다.
+        </div>
+        ` : ''}
+
+        <div class="nav-row">
+          <button class="nav-btn secondary" onclick="goBack()">‹ 뒤로</button>
+          <button class="nav-btn primary" onclick="tryNavigate('summary', 'office_followup', ${JSON.stringify(requiredIds).replace(/"/g, '&quot;')})">완료 ›</button>
+        </div>
+      </div>
+      `;
+    }
+  },
+
+  // ─── 요약 ───
+  summary: {
+    track: null,
+    crumb: ['요약'],
+    render: () => renderSummary()
+  }
+};
+
+// ═══════════════════════════════════════════
+//   렌더링 헬퍼
+// ═══════════════════════════════════════════
+
+function renderChecklist(stateId, items) {
+  return `<div class="checklist">${items.map(it => {
+    const checkId = `${stateId}.${it.id}`;
+    const checked = caseState.checks[checkId] ? 'checked' : '';
+    const metaHtml = (it.meta || []).map(m => {
+      return `<span class="meta-tag ${m.type}">${m.text}</span>`;
+    }).join('');
+    return `
+      <div class="check-item ${checked}" data-check-id="${checkId}" onclick="toggleCheck('${checkId}', this)">
+        <div class="check-box"></div>
+        <div class="check-label">
+          <span class="check-label-text">${it.label}</span>
+          ${metaHtml ? `<div class="check-meta">${metaHtml}</div>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('')}</div>`;
+}
+
+function renderSummary() {
+  const t = caseState.track;
+  const trackLabel = t === 'checkpoint' ? '검색대 — 일반동산 적발' : '—';
+  const startedFmt = caseState.startedAt ? fmtTime(caseState.startedAt) : '—';
+  const sjpLabel = caseState.is_sjp === true ? '특사경 본인'
+                   : caseState.is_sjp === false ? '특사경 부재'
+                   : '—';
+  const wasRefused = caseState.trail.includes('refuse');
+  const branchLabel = wasRefused ? '비협조' : caseState.trail.includes('cooperate') ? '협조' : '—';
+
+  const checkEntries = Object.entries(caseState.checks).filter(([k,v]) => v);
+  const inputEntries = Object.entries(caseState.inputs).filter(([k,v]) => v);
+
+  return `
+    <div class="card accent">
+      <div class="card-meta"><span class="card-step">진행 완료</span></div>
+      <h2 class="card-title">사건 진행 요약</h2>
+      <p class="card-subtitle">Case summary</p>
+      <div class="summary-section">
+        <h3>기본 정보</h3>
+        <div class="summary-list">
+          <div class="summary-list-item"><span class="summary-key">진입 트랙</span><span class="summary-val">${trackLabel}</span></div>
+          <div class="summary-list-item"><span class="summary-key">시작 시각</span><span class="summary-val">${startedFmt}</span></div>
+          <div class="summary-list-item"><span class="summary-key">특사경 자격</span><span class="summary-val">${sjpLabel}</span></div>
+          <div class="summary-list-item"><span class="summary-key">분기</span><span class="summary-val">${branchLabel}</span></div>
+        </div>
+      </div>
+      ${inputEntries.length ? `
+      <div class="summary-section">
+        <h3>입력 항목</h3>
+        <div class="summary-list">
+          ${inputEntries.map(([k,v]) => `
+            <div class="summary-list-item">
+              <span class="summary-key">${k}</span>
+              <span class="summary-val">${v}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>` : ''}
+      <div class="summary-section">
+        <h3>완료 항목 (${checkEntries.length}건)</h3>
+        <div class="summary-list" style="font-size:.82rem;color:var(--ink-soft);">
+          ${checkEntries.length ? checkEntries.map(([k]) => {
+            return `<div style="padding:.2rem 0;">✓ ${k}</div>`;
+          }).join('') : '<div style="color:var(--line);font-style:italic;">완료 항목 없음</div>'}
+        </div>
+      </div>
+      <div class="nav-row">
+        <button class="nav-btn secondary" onclick="copyReport()">📋 요약 복사</button>
+        <button class="nav-btn primary" onclick="if(confirm('새 사건으로 진행하시겠습니까? 현재 기록은 삭제됩니다.')){clearState();navigate('start');}">새 사건 ›</button>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════
+//   상태 머신 액션
+// ═══════════════════════════════════════════
+
+function navigate(stateId) {
+  const state = STATES[stateId];
+  if (!state) { console.warn('Unknown state:', stateId); return; }
+
+  if (!caseState.startedAt) caseState.startedAt = new Date().toISOString();
+  if (state.track && !caseState.track) caseState.track = state.track;
+
+  caseState.trail.push(stateId);
+  saveState();
+
+  document.getElementById('app').innerHTML = state.render();
+  renderBreadcrumb(state);
+  window.scrollTo(0, 0);
+
+  if (state.onMount) state.onMount();
+}
+
+// 필수 항목 체크 검증 후 진행. 미체크 시 토스트 + 시각 강조
+function tryNavigate(targetState, stateId, requiredIds) {
+  const missing = requiredIds.filter(id => !caseState.checks[`${stateId}.${id}`]);
+  if (missing.length > 0) {
+    showToast(`필수 항목 ${missing.length}개를 먼저 체크해 주십시오`, 'warn');
+    missing.forEach(id => {
+      const el = document.querySelector(`[data-check-id="${stateId}.${id}"]`);
+      if (el) {
+        el.classList.add('shake');
+        setTimeout(() => el.classList.remove('shake'), 700);
+      }
+    });
+    return;
+  }
+  navigate(targetState);
+}
+
+// 특사경 역할 설정 후 진행
+function setSjpRole(isSjp) {
+  caseState.is_sjp = isSjp;
+  navigate('arrival');
+}
+
+function goBack() {
+  if (caseState.trail.length <= 1) {
+    navigate('start');
+    return;
+  }
+  caseState.trail.pop(); // remove current
+  const prev = caseState.trail.pop();
+  navigate(prev);
+}
+
+function renderBreadcrumb(state) {
+  const crumb = document.getElementById('breadcrumb');
+  const items = state.crumb || ['시작'];
+  const trackClass = state.track === 'checkpoint' ? 'violation' : '';
+  crumb.innerHTML = items.map((c, i) => {
+    if (i === 0) return `<span class="breadcrumb-track ${trackClass}">${c}</span>`;
+    const isLast = i === items.length - 1;
+    return `<span class="breadcrumb-sep">›</span><span class="breadcrumb-step ${isLast?'current':''}">${c}</span>`;
+  }).join('');
+}
+
+function toggleCheck(id, el) {
+  caseState.checks[id] = !caseState.checks[id];
+  el.classList.toggle('checked', caseState.checks[id]);
+  saveState();
+}
+
+function copyReport() {
+  const t = caseState.track === 'checkpoint' ? '검색대 — 일반동산 적발' : '—';
+  const sjpLabel = caseState.is_sjp === true ? '특사경 본인'
+                   : caseState.is_sjp === false ? '특사경 부재'
+                   : '—';
+  const wasRefused = caseState.trail.includes('refuse');
+  const branchLabel = wasRefused ? '비협조' : caseState.trail.includes('cooperate') ? '협조' : '—';
+
+  let txt = `[감정 절차 기록]\n`;
+  txt += `진입 트랙: ${t}\n`;
+  txt += `시작 시각: ${fmtTime(caseState.startedAt)}\n`;
+  txt += `특사경 자격: ${sjpLabel}\n`;
+  txt += `분기: ${branchLabel}\n\n`;
+
+  const checks = Object.entries(caseState.checks).filter(([k,v]) => v);
+  if (checks.length) {
+    txt += `[완료 항목 ${checks.length}건]\n`;
+    checks.forEach(([k]) => { txt += `✓ ${k}\n`; });
+  }
+
+  navigator.clipboard.writeText(txt).then(() => {
+    showToast('요약이 클립보드에 복사되었습니다', 'success');
+  }).catch(() => {
+    showModal('요약', `<pre style="white-space:pre-wrap;font-family:var(--font-body);font-size:.85rem;">${txt}</pre>`);
+  });
+}
+
+// ═══════════════════════════════════════════
+//   초기화
+// ═══════════════════════════════════════════
+
+document.getElementById('resetBtn').onclick = () => {
+  if (caseState.track && !confirm('진행 중인 사건이 있습니다. 처음으로 돌아가면 삭제됩니다. 계속하시겠습니까?')) return;
+  clearState();
+  navigate('start');
+};
+
+document.getElementById('resumeBtn').onclick = () => {
+  const saved = loadState();
+  if (saved && saved.trail.length) {
+    caseState = saved;
+    navigate(saved.trail[saved.trail.length - 1]);
+    showToast('이전 진행 상태를 복구했습니다', 'success');
+  }
+};
+
+// 모달 배경 클릭 시 닫기
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target.id === 'modal') closeModal();
+});
+
+// 시작
+(function init() {
+  const saved = loadState();
+  if (saved && saved.trail && saved.trail.length) {
+    document.getElementById('resumeBtn').style.display = '';
+  }
+  navigate('start');
+})();
+</script>
+
+</body>
+</html>
