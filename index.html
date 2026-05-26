@@ -883,10 +883,10 @@ const STATES = {
     `
   },
 
-  // ─── 출동 · 현장 도착 · 위반 고지 · 분기 ───
+  // ─── 출동 · 현장 도착 · 신청서 작성 · 감정 ───
   arrival: {
     track: 'checkpoint',
-    crumb: ['검색대', '출동·고지'],
+    crumb: ['검색대', '신청서 작성·감정'],
     render: () => {
       const sjpLabel = caseState.is_sjp
         ? '<span class="meta-tag warn" style="margin-left:.4rem;">특사경 본인</span>'
@@ -894,43 +894,39 @@ const STATES = {
       return `
       <div class="card violation">
         <div class="card-meta">
-          <span class="card-step violation">① 현장 도착 · 위반 고지</span>
+          <span class="card-step violation">① 현장 도착 · 신청서 작성 · 감정</span>
           <span style="font-size:.78rem;color:var(--ink-soft);" id="startedAtDisplay"></span>
         </div>
-        <h2 class="card-title violation">현장 도착 및 위반 사실 고지${sjpLabel}</h2>
-        <p class="card-subtitle">On-site arrival &amp; violation notice</p>
+        <h2 class="card-title violation">비문화유산 확인 신청서 작성 및 감정${sjpLabel}</h2>
+        <p class="card-subtitle">Confirmation request &amp; appraisal</p>
+
+        <div class="info-box">
+          <span class="info-box-title">법 제60조 의무의 사후 보완</span>
+          법 제60조 ①항은 문화유산으로 오인될 수 있는 동산을 국외 반출하려는 자에게 사전 비문화유산 확인 신청 의무를 부과합니다. 검색대에서 미신청 동산이 발견되면 화주가 <strong>현장에서 수기로 확인 신청서를 작성</strong>하여 이 의무를 사후에 이행합니다. 이 단계는 위법 확정 전 행정의무 보완 절차이며, 감정 결과에 따라 후속 처리가 갈립니다.
+        </div>
 
         ${renderChecklist('arrival', [
           { id:'self_intro', label:'감정위원 신분 고지' },
-          { id:'procedure', label:'감정 절차 및 처리 결과 안내' },
-          { id:'violation', label:'위반 사실 고지 (법 제60조·제90조)', meta:[{type:'law', text:'법 제60조·제90조'}, {type:'warn', text:'필수'}] },
+          { id:'duty_notice', label:'법 제60조 비문화유산 확인 신청 의무 안내', meta:[{type:'law', text:'법 제60조'}] },
+          { id:'confirm_request', label:'비문화유산 확인 신청서 수기 작성 (별지 제78호 서식)', meta:[{type:'warn', text:'필수'}, {type:'form', text:'별지 제78호'}] },
+          { id:'appraisal', label:'감정 실시 (공동감정 또는 화상감정)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'운영규정 제7조·제8조'}] },
         ])}
 
-        <div class="info-box warn">
-          <span class="info-box-title">법적 성격 — 협조 여부 무관</span>
-          신청받지 않은 동산이 검색 과정에서 일반동산문화유산으로 판별되면 법 제60조·제90조 위반이며, 해당 문화유산은 <strong>법정 몰수 대상물</strong>입니다 (법 제90조②, 운영규정 제10조②). 협조 여부와 무관하게 사법기관 고발 조치 및 몰수 조치가 이루어져야 합니다.
-        </div>
-
-        <div class="info-box warn">
-          <span class="info-box-title">현장 처리 원칙</span>
-          소유자는 현행범으로 보지 않으며, <strong>범죄구성요건에 대한 판단은 하지 않습니다</strong>. 감정위원은 위반 고지와 임의제출 절차만 진행합니다.
-        </div>
-
-        <p class="card-desc" style="margin-top:1rem;">소유자의 협조 여부에 따라 절차가 갈립니다.</p>
+        <p class="card-desc" style="margin-top:1rem;">감정 결과에 따라 절차가 갈립니다.</p>
         <div class="choice-grid">
-          <button class="choice-btn" onclick="tryNavigate('cooperate', 'arrival', ['violation'])">
-            <span class="choice-icon">協</span>
+          <button class="choice-btn success" onclick="tryNavigate('release', 'arrival', ['confirm_request','appraisal'])">
+            <span class="choice-icon">非</span>
             <span class="choice-text">
-              <span class="choice-label">협조 — 임의제출 절차</span>
-              <span class="choice-desc">임의제출서·여권 사본 등 필수 서류 확보</span>
+              <span class="choice-label">비문화유산 판별</span>
+              <span class="choice-desc">국외 반출 가능 · 출국 허용</span>
             </span>
             <span class="choice-arrow">›</span>
           </button>
-          <button class="choice-btn violation" onclick="tryNavigate('refuse', 'arrival', ['violation'])">
-            <span class="choice-icon">拒</span>
+          <button class="choice-btn violation" onclick="tryNavigate('heritage_confirmed', 'arrival', ['confirm_request','appraisal'])">
+            <span class="choice-icon">遺</span>
             <span class="choice-text">
-              <span class="choice-label">비협조 — 경찰 신고</span>
-              <span class="choice-desc">제출 또는 신분 확인 거부 시</span>
+              <span class="choice-label">일반동산문화유산 판별</span>
+              <span class="choice-desc">법 제60조·제90조 위반 확정 · 후속 절차 진행</span>
             </span>
             <span class="choice-arrow">›</span>
           </button>
@@ -944,6 +940,89 @@ const STATES = {
         el.textContent = '시작 ' + fmtTime(caseState.startedAt);
       }
     }
+  },
+
+  // ─── 비문화유산 판별 — 출국 허용 ───
+  release: {
+    track: 'checkpoint',
+    crumb: ['검색대', '비문화유산', '출국'],
+    render: () => `
+      <div class="card success">
+        <div class="card-meta"><span class="card-step">② 비문화유산 판별 · 출국</span></div>
+        <h2 class="card-title">국외 반출 가능</h2>
+        <p class="card-subtitle">Non-heritage · departure allowed</p>
+
+        <div class="info-box">
+          감정 결과 비문화유산으로 판별되었습니다. 법 제60조 ①항의 비문화유산 확인 신청 의무가 현장 수기 신청서 작성으로 사후 보완되었고, 반출 제한 사유가 없으므로 <strong>화주의 출국을 허용</strong>합니다.
+        </div>
+
+        <div class="info-box warn">
+          <span class="info-box-title">현장 운용 — 생략 사항</span>
+          본 감정관실 운용상 비문화유산 케이스의 별지 제78호의2 서식 교부 및 시행규칙 별표 3 확인표지 부착은 <strong>생략</strong>합니다. 다른 감정관실 통보 등 형식 절차도 필요 시 사후 처리합니다.
+        </div>
+
+        <div class="nav-row">
+          <button class="nav-btn secondary" onclick="goBack()">‹ 뒤로</button>
+          <button class="nav-btn success" onclick="navigate('summary')">종료 ›</button>
+        </div>
+      </div>
+    `
+  },
+
+  // ─── 일반동산 판별 — 위반 고지 + 권리 고지 + 3분기 ───
+  heritage_confirmed: {
+    track: 'checkpoint',
+    crumb: ['검색대', '일반동산 확정', '위반 고지'],
+    render: () => `
+      <div class="card violation">
+        <div class="card-meta"><span class="card-step violation">② 일반동산 확정 · 위반 고지</span></div>
+        <h2 class="card-title violation">위반 사실 고지 및 권리 고지</h2>
+        <p class="card-subtitle">Violation notice &amp; rights</p>
+
+        <div class="info-box warn">
+          <span class="info-box-title">위법 확정</span>
+          감정 결과 일반동산문화유산으로 판별되었습니다. 신청받지 않은 동산이므로 <strong>법 제60조·제90조 위반</strong>이 확정되며, 해당 문화유산은 <strong>법정 몰수 대상물</strong>입니다 (법 제90조②, 운영규정 제10조②). 협조 여부와 무관하게 사법기관 고발 조치 및 몰수 조치가 이루어져야 합니다.
+        </div>
+
+        ${renderChecklist('heritage_confirmed', [
+          { id:'violation', label:'위반 사실 고지 (법 제60조·제90조)', meta:[{type:'law', text:'법 제60조·제90조'}, {type:'warn', text:'필수'}] },
+          { id:'right_refuse', label:'임의제출 거부권 고지', meta:[{type:'warn', text:'필수'}] },
+        ])}
+
+        <div class="info-box warn">
+          <span class="info-box-title">현장 처리 원칙</span>
+          소유자는 현행범으로 보지 않으며, <strong>범죄구성요건에 대한 판단은 하지 않습니다</strong>. 감정위원은 위반 고지와 임의제출 절차만 진행합니다.
+        </div>
+
+        <p class="card-desc" style="margin-top:1rem;">화주의 응답에 따라 절차가 세 갈래로 나뉩니다.</p>
+        <div class="choice-grid">
+          <button class="choice-btn" onclick="tryNavigate('cooperate', 'heritage_confirmed', ['violation','right_refuse'])">
+            <span class="choice-icon">協</span>
+            <span class="choice-text">
+              <span class="choice-label">임의제출 동의</span>
+              <span class="choice-desc">임의제출서·여권 사본 등 필수 서류 확보</span>
+            </span>
+            <span class="choice-arrow">›</span>
+          </button>
+          <button class="choice-btn violation" onclick="tryNavigate('seize_216', 'heritage_confirmed', ['violation','right_refuse'])">
+            <span class="choice-icon">押</span>
+            <span class="choice-text">
+              <span class="choice-label">임의제출 거부 · 신원 협조</span>
+              <span class="choice-desc">형소법 제216조 ② 압수 · 신병 출국 허용</span>
+            </span>
+            <span class="choice-arrow">›</span>
+          </button>
+          <button class="choice-btn violation" onclick="tryNavigate('refuse', 'heritage_confirmed', ['violation','right_refuse'])">
+            <span class="choice-icon">拒</span>
+            <span class="choice-text">
+              <span class="choice-label">전면 거부 · 도주 우려</span>
+              <span class="choice-desc">신원 확인 거부 등 — 현행범 체포 검토</span>
+            </span>
+            <span class="choice-arrow">›</span>
+          </button>
+        </div>
+      </div>
+    `
   },
 
   // ─── 협조 — 검색대 필수 서류 (화주 출국 전) ───
@@ -967,14 +1046,15 @@ const STATES = {
           </div>`;
       const cooperateItems = [
         ...(caseState.is_sjp ? [{ id:'sjp_intro', label:'특사경 지명서 제시 및 신분 고지 (수사 개시)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'특사경 직무규정 제12조②'}] }] : []),
-        { id:'rights', label:'권리 고지 — 제출 거부권 / 범위 특정 제출권', meta:[{type:'warn', text:'필수'}] },
-        { id:'submission', label:'임의제출서 작성·서명 확보', meta:[{type:'warn', text:'필수'}, {type:'form', text:'붙임 1 (임의제출서)'}] },
+        { id:'rights', label:'범위 특정 제출권 안내 (전부/일부 선택 제출 가능)', meta:[{type:'warn', text:'필수'}] },
+        { id:'submission', label:'임의제출서 작성·서명 확보 (2부 작성)', meta:[{type:'warn', text:'필수'}, {type:'form', text:'붙임 1 (임의제출서)'}] },
+        { id:'receipt_copy', label:'임의제출 목록 사본 화주 교부 (제출자 보관용 1부)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제219조·제129조'}] },
         { id:'receive', label:'문화유산 압수·인수 (임의제출 형식 · 법 제90조 몰수 대상물 확보)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제90조②'}] },
         { id:'passport', label:'여권 사본 촬영', meta:[{type:'warn', text:'필수'}] },
       ];
       const cooperateRequired = caseState.is_sjp
-        ? ['sjp_intro', 'rights', 'submission', 'receive', 'passport']
-        : ['rights', 'submission', 'receive', 'passport'];
+        ? ['sjp_intro', 'rights', 'submission', 'receipt_copy', 'receive', 'passport']
+        : ['rights', 'submission', 'receipt_copy', 'receive', 'passport'];
       return `
       <div class="card violation">
         <div class="card-meta"><span class="card-step violation">② 검색대 필수 서류</span></div>
@@ -1075,6 +1155,85 @@ const STATES = {
     `
   },
 
+  // ─── 임의제출 거부 + 신원 협조 — 형소법 제216조② 압수 ───
+  seize_216: {
+    track: 'checkpoint',
+    crumb: ['검색대', '임의제출 거부', '제216조② 압수'],
+    render: () => {
+      const sjpBlock = caseState.is_sjp
+        ? `<div class="info-box warn">
+            <span class="info-box-title">특사경 본인 — 직접 압수 가능</span>
+            본인이 특사경 자격으로 형소법 제216조 ②항에 따라 영장 없이 압수합니다. <strong>사후 영장 청구 의무</strong>가 발생하며, 신원·연락처 확보 후 신병은 출국 허용합니다.
+          </div>`
+        : `<div class="info-box warn">
+            <span class="info-box-title">특사경 부재 — 압수 권한자 호출 필수</span>
+            <strong>비특사경 위원에게는 영장 없는 압수 권한이 없습니다.</strong> 즉시 <strong>국가유산청 사범단속팀 특사경의 출동 가능 여부</strong>를 확인하고, 불가하면 <strong>공항경찰대 등 관할 사법기관</strong>의 사법경찰관 출동을 요청합니다. 압수 권한자 도착 전까지 <strong>보안검색요원 협조로 문화유산 점유 보전 조치</strong>(반출 차단)만 수행합니다.
+          </div>`;
+
+      const items = caseState.is_sjp
+        ? [
+            { id:'sjp_intro', label:'특사경 지명서 제시 및 신분 고지 (수사 개시)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'특사경 직무규정 제12조②'}] },
+            { id:'seize_declare', label:'압수 처분 선언 (제216조 ②항 근거 + 사후 영장 청구 의무 고지)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제216조②'}] },
+            { id:'identify', label:'화주 신원·연락처 확인 (여권·신분증 제시)', meta:[{type:'warn', text:'필수'}] },
+            { id:'seize_record', label:'압수조서 작성 (제출자 진술란에 "임의제출 거부, 압수 처분에 따름" 명시)', meta:[{type:'warn', text:'필수'}, {type:'form', text:'압수조서'}] },
+            { id:'receipt_copy', label:'압수목록 화주 교부', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제129조'}] },
+            { id:'receive', label:'문화유산 압수·인수 (법 제90조 몰수 대상물 확보)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제90조②'}] },
+            { id:'passport', label:'여권 사본 촬영', meta:[{type:'warn', text:'필수'}] },
+          ]
+        : [
+            { id:'call_authority', label:'사범단속팀 또는 공항경찰대 호출 (압수 권한자 출동 요청)', meta:[{type:'warn', text:'필수'}] },
+            { id:'hold_position', label:'보안검색요원 협조로 문화유산 점유 보전 (반출 차단)', meta:[{type:'warn', text:'필수'}] },
+            { id:'identify', label:'화주 신원·연락처 확인 협조 요청', meta:[{type:'warn', text:'필수'}] },
+            { id:'await_seizure', label:'압수 권한자 도착 후 압수 처분 진행 입회', meta:[{type:'warn', text:'필수'}] },
+            { id:'receipt_copy', label:'압수목록 화주 교부 확인 (압수 권한자 작성·교부 입회)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제129조'}] },
+            { id:'passport', label:'여권 사본 촬영 (도착 권한자와 공유)', meta:[{type:'warn', text:'필수'}] },
+          ];
+      const requiredIds = items.map(it => it.id);
+      const stateKey = 'seize_216';
+
+      return `
+      <div class="card violation">
+        <div class="card-meta"><span class="card-step violation">② 임의제출 거부 · 제216조 ② 압수</span></div>
+        <h2 class="card-title violation">압수 처분</h2>
+        <p class="card-subtitle">Seizure under Criminal Procedure Act §216(2)</p>
+
+        <div class="info-box warn">
+          <span class="info-box-title">법적 근거</span>
+          형소법 제216조 ②항은 "사법경찰관은 범행 중 또는 범행 직후의 범죄장소에서 긴급을 요하여 법원판사의 영장을 받을 수 없는 때에는 영장 없이 압수·수색 또는 검증을 할 수 있다. <strong>이 경우에는 사후에 지체 없이 영장을 받아야 한다</strong>"고 정합니다. 검색대 적발은 이 요건을 충족합니다.
+        </div>
+
+        ${sjpBlock}
+
+        ${renderChecklist('seize_216', items)}
+
+        <div class="info-box">
+          화주가 신원·연락처를 제공하고 후속 조사에 응할 의사가 있으면 신병은 출국 허용합니다. 출국 도중 추가 비협조가 발생하면 비협조 트랙으로 전환합니다.
+        </div>
+
+        <p class="card-desc" style="margin-top:1rem;">소유자 국적에 따라 출국 안내 분기:</p>
+        <div class="choice-grid">
+          <button class="choice-btn" onclick="tryNavigate('departure_korean', '${stateKey}', ${JSON.stringify(requiredIds).replace(/"/g, '&quot;')})">
+            <span class="choice-icon">韓</span>
+            <span class="choice-text">
+              <span class="choice-label">내국인</span>
+              <span class="choice-desc">귀국 후 사법기관 출석 안내</span>
+            </span>
+            <span class="choice-arrow">›</span>
+          </button>
+          <button class="choice-btn" onclick="tryNavigate('departure_foreign', '${stateKey}', ${JSON.stringify(requiredIds).replace(/"/g, '&quot;')})">
+            <span class="choice-icon">外</span>
+            <span class="choice-text">
+              <span class="choice-label">외국인</span>
+              <span class="choice-desc">사법기관 출석 안내</span>
+            </span>
+            <span class="choice-arrow">›</span>
+          </button>
+        </div>
+      </div>
+      `;
+    }
+  },
+
   // ─── 비협조 ───
   refuse: {
     track: 'checkpoint',
@@ -1160,6 +1319,13 @@ const STATES = {
 
         ${renderChecklist('office_followup', items)}
 
+        ${caseState.trail.includes('seize_216') ? `
+        <div class="info-box warn">
+          <span class="info-box-title">제216조 ② 압수 — 사후 영장 청구 의무</span>
+          영장 없이 압수한 사건이므로 <strong>지체 없이 사후 영장을 청구</strong>해야 합니다 (형소법 제216조 ② 단서). 사범단속팀 특사경 인계 시 <strong>"제216조 ② 압수 사건"임을 명시</strong>하고 사후 영장 청구 절차가 누락되지 않도록 협조합니다. 사후 영장 청구가 빠지면 압수의 적법성 자체가 다투어질 수 있습니다.
+        </div>
+        ` : ''}
+
         <div class="info-box">
           <span class="info-box-title">정밀 사진 촬영 권장 포인트</span>
           <ul style="padding-left:1.1rem;margin:.25rem 0;">
@@ -1231,7 +1397,13 @@ function renderSummary() {
                    : caseState.is_sjp === false ? '특사경 부재'
                    : '—';
   const wasRefused = caseState.trail.includes('refuse');
-  const branchLabel = wasRefused ? '비협조' : caseState.trail.includes('cooperate') ? '협조' : '—';
+  const wasSeized = caseState.trail.includes('seize_216');
+  const wasReleased = caseState.trail.includes('release');
+  const branchLabel = wasReleased ? '비문화유산 판별 · 출국'
+                      : wasRefused ? '전면 거부 · 현행범 검토'
+                      : wasSeized ? '임의제출 거부 · 제216조② 압수'
+                      : caseState.trail.includes('cooperate') ? '임의제출 동의'
+                      : '—';
 
   const checkEntries = Object.entries(caseState.checks).filter(([k,v]) => v);
   const inputEntries = Object.entries(caseState.inputs).filter(([k,v]) => v);
@@ -1282,6 +1454,15 @@ function renderSummary() {
 //   상태 머신 액션
 // ═══════════════════════════════════════════
 
+function renderState(stateId) {
+  const state = STATES[stateId];
+  if (!state) return;
+  document.getElementById('app').innerHTML = state.render();
+  renderBreadcrumb(state);
+  window.scrollTo(0, 0);
+  if (state.onMount) state.onMount();
+}
+
 function navigate(stateId) {
   const state = STATES[stateId];
   if (!state) { console.warn('Unknown state:', stateId); return; }
@@ -1290,13 +1471,10 @@ function navigate(stateId) {
   if (state.track && !caseState.track) caseState.track = state.track;
 
   caseState.trail.push(stateId);
-  saveState();
+  // 'start' 화면은 진행 시작 전이므로 저장하지 않음 (이전 saved 보존)
+  if (stateId !== 'start') saveState();
 
-  document.getElementById('app').innerHTML = state.render();
-  renderBreadcrumb(state);
-  window.scrollTo(0, 0);
-
-  if (state.onMount) state.onMount();
+  renderState(stateId);
 }
 
 // 필수 항목 체크 검증 후 진행. 미체크 시 토스트 + 시각 강조
@@ -1355,7 +1533,13 @@ function copyReport() {
                    : caseState.is_sjp === false ? '특사경 부재'
                    : '—';
   const wasRefused = caseState.trail.includes('refuse');
-  const branchLabel = wasRefused ? '비협조' : caseState.trail.includes('cooperate') ? '협조' : '—';
+  const wasSeized = caseState.trail.includes('seize_216');
+  const wasReleased = caseState.trail.includes('release');
+  const branchLabel = wasReleased ? '비문화유산 판별 · 출국'
+                      : wasRefused ? '전면 거부 · 현행범 검토'
+                      : wasSeized ? '임의제출 거부 · 제216조② 압수'
+                      : caseState.trail.includes('cooperate') ? '임의제출 동의'
+                      : '—';
 
   let txt = `[감정 절차 기록]\n`;
   txt += `진입 트랙: ${t}\n`;
@@ -1388,10 +1572,13 @@ document.getElementById('resetBtn').onclick = () => {
 
 document.getElementById('resumeBtn').onclick = () => {
   const saved = loadState();
-  if (saved && saved.trail.length) {
+  if (saved && saved.trail && saved.trail.length > 1) {
     caseState = saved;
-    navigate(saved.trail[saved.trail.length - 1]);
+    const lastState = saved.trail[saved.trail.length - 1];
+    renderState(lastState);
     showToast('이전 진행 상태를 복구했습니다', 'success');
+  } else {
+    showToast('복구할 진행 상태가 없습니다', 'warn');
   }
 };
 
@@ -1403,7 +1590,8 @@ document.getElementById('modal').addEventListener('click', e => {
 // 시작
 (function init() {
   const saved = loadState();
-  if (saved && saved.trail && saved.trail.length) {
+  // 진행 중인 사건이 있을 때만(start 외에 다른 화면을 거친 경우) 복구 버튼 표시
+  if (saved && saved.trail && saved.trail.length > 1) {
     document.getElementById('resumeBtn').style.display = '';
   }
   navigate('start');
