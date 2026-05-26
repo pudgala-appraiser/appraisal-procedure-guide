@@ -901,18 +901,41 @@ const STATES = {
         <p class="card-subtitle">Confirmation request &amp; appraisal</p>
 
         <div class="info-box">
-          <span class="info-box-title">법 제60조 의무의 사후 보완</span>
-          법 제60조 ①항은 문화유산으로 오인될 수 있는 동산을 국외 반출하려는 자에게 사전 비문화유산 확인 신청 의무를 부과합니다. 검색대에서 미신청 동산이 발견되면 화주가 <strong>현장에서 수기로 확인 신청서를 작성</strong>하여 이 의무를 사후에 이행합니다. 이 단계는 위법 확정 전 행정의무 보완 절차이며, 감정 결과에 따라 후속 처리가 갈립니다.
+          <span class="info-box-title">법 제60조⑤ 의무의 사후 보완</span>
+          법 제60조 ⑤항은 문화유산으로 오인될 우려가 있는 동산을 국외로 수출·반출하려는 자에게 <strong>사전 확인 의무</strong>를 부과합니다 (시행령 제37조 ①항: 감정위원의 감정으로 확인). 검색대에서 미신청 동산이 발견되면 화주가 <strong>현장에서 수기로 확인 신청서를 작성</strong>하여 이 의무를 사후에 이행합니다. 이 단계는 위법 확정 전 행정의무 보완 절차이며, 감정 결과에 따라 후속 처리가 갈립니다.
         </div>
 
         ${renderChecklist('arrival', [
           { id:'self_intro', label:'감정위원 신분 고지' },
-          { id:'duty_notice', label:'법 제60조 비문화유산 확인 신청 의무 안내', meta:[{type:'law', text:'법 제60조'}] },
+          { id:'duty_notice', label:'사전 확인 의무 안내 (법 제60조⑤)', meta:[{type:'law', text:'법 제60조⑤'}] },
           { id:'confirm_request', label:'비문화유산 확인 신청서 수기 작성 (별지 제78호 서식)', meta:[{type:'warn', text:'필수'}, {type:'form', text:'별지 제78호'}] },
-          { id:'appraisal', label:'감정 실시 (공동감정 또는 화상감정)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'운영규정 제7조·제8조'}] },
+          { id:'appraisal', label:'감정 실시 (공동감정 또는 화상감정)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'시행령 제37조① / 운영규정 제7조·제8조'}] },
         ])}
 
-        <p class="card-desc" style="margin-top:1rem;">감정 결과에 따라 절차가 갈립니다.</p>
+        <details class="field" style="margin-top:1rem;">
+          <summary>신청서 작성 거부 시 처리 <span style="font-size:.75rem;color:var(--ink-soft);font-weight:400;margin-left:.4rem;">드문 케이스</span></summary>
+          <div class="field-body">
+            <h4>① 다국어 안내 도구로 재시도</h4>
+            <ul>
+              <li>거부의 원인이 언어 장벽이나 절차 이해 부족일 수 있음. 다국어 안내 도구로 취지(처벌이 아닌 비문화유산 확인 절차)와 결과를 다시 설명한다.</li>
+            </ul>
+            <h4>② 재시도 후에도 거부 시 다음을 명확히 고지</h4>
+            <ul>
+              <li>일반동산 가능성 있는 동산을 신청 없이 반출하면 <strong>법 제60조①·제90조②</strong>에 따라 처벌(3년 이상 유기징역) 및 몰수 대상이 될 수 있음.</li>
+              <li>신청서 미작성은 사후 <strong>처벌 가중 사유</strong>로 작용할 수 있음 (작성 시 의무 사후 보완으로 평가).</li>
+            </ul>
+            <h4>③ 위원 직무 종결 · 화주 선택 존중</h4>
+            <ul>
+              <li>작성에 응하면 정상 절차로 복귀.</li>
+              <li>끝까지 거부하면 위원 보고서에 거부 사실 및 고지 내용 기록 후 <strong>반출 허용</strong>.</li>
+            </ul>
+            <div class="field-note">
+              위원에게는 사람의 출국이나 동산 점유를 강제할 권한이 법 제60조⑤ 의무 조항만으로는 부여되지 않음. 강제 처분은 일반동산문화유산으로 확정된 후에야 발동됩니다.
+            </div>
+          </div>
+        </details>
+
+        <p class="card-desc" style="margin-top:1rem;">감정 결과 또는 화주의 응답에 따라 절차가 갈립니다.</p>
         <div class="choice-grid">
           <button class="choice-btn success" onclick="tryNavigate('release', 'arrival', ['confirm_request','appraisal'])">
             <span class="choice-icon">非</span>
@@ -926,7 +949,15 @@ const STATES = {
             <span class="choice-icon">遺</span>
             <span class="choice-text">
               <span class="choice-label">일반동산문화유산 판별</span>
-              <span class="choice-desc">법 제60조·제90조 위반 확정 · 후속 절차 진행</span>
+              <span class="choice-desc">법 제60조①·제90조② 위반 확정 · 후속 절차 진행</span>
+            </span>
+            <span class="choice-arrow">›</span>
+          </button>
+          <button class="choice-btn" onclick="tryNavigate('release_refused', 'arrival', [])">
+            <span class="choice-icon">拒</span>
+            <span class="choice-text">
+              <span class="choice-label">신청서 작성 거부</span>
+              <span class="choice-desc">드문 케이스 · 재시도 후 화주 책임 반출</span>
             </span>
             <span class="choice-arrow">›</span>
           </button>
@@ -953,7 +984,7 @@ const STATES = {
         <p class="card-subtitle">Non-heritage · departure allowed</p>
 
         <div class="info-box">
-          감정 결과 비문화유산으로 판별되었습니다. 법 제60조 ①항의 비문화유산 확인 신청 의무가 현장 수기 신청서 작성으로 사후 보완되었고, 반출 제한 사유가 없으므로 <strong>화주의 출국을 허용</strong>합니다.
+          감정 결과 비문화유산으로 판별되었습니다. 법 제60조 ⑤항의 사전 확인 의무가 현장 수기 신청서 작성으로 사후 보완되었고, 반출 제한 사유가 없으므로 <strong>화주의 출국을 허용</strong>합니다.
         </div>
 
         <div class="info-box warn">
@@ -964,6 +995,51 @@ const STATES = {
         <div class="nav-row">
           <button class="nav-btn secondary" onclick="goBack()">‹ 뒤로</button>
           <button class="nav-btn success" onclick="navigate('summary')">종료 ›</button>
+        </div>
+      </div>
+    `
+  },
+
+  // ─── 신청서 작성 거부 — 위원 직권 감정 ───
+  release_refused: {
+    track: 'checkpoint',
+    crumb: ['검색대', '신청서 거부', '위원 직권 감정'],
+    render: () => `
+      <div class="card violation">
+        <div class="card-meta"><span class="card-step violation">② 신청서 작성 거부 · 위원 직권 감정</span></div>
+        <h2 class="card-title violation">신청서 거부 후 직권 감정</h2>
+        <p class="card-subtitle">Refused submission · ex officio appraisal</p>
+
+        <div class="info-box warn">
+          <span class="info-box-title">상황 정의</span>
+          화주가 비문화유산 확인 신청서 작성을 거부한 상황. 신청서 작성은 화주의 행정의무이지 위원의 감정 권한 발동 요건이 아니므로, 위원은 <strong>직권으로 외관 감정을 실시</strong>하여 일반동산 해당 여부를 <strong>현장에서 판단·종결</strong>합니다. 사후 확인 경로는 두지 않습니다.
+        </div>
+
+        ${renderChecklist('release_refused', [
+          { id:'retry', label:'다국어 안내 도구로 재시도 (취지·결과 재설명)', meta:[{type:'warn', text:'필수'}] },
+          { id:'risk_notice', label:'처벌·몰수 위험 고지 (일반동산 확정 시 법 제60조①·제90조② 위반 · 3년 이상 유기징역 · 몰수 대상)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제60조①·제90조②'}] },
+          { id:'ex_officio_appraisal', label:'위원 직권 감정 실시 (외관 관찰 · 공동감정 가능 시 활용)', meta:[{type:'warn', text:'필수'}] },
+          { id:'memo', label:'거부 사실 및 감정 결과 메모', meta:[{type:'form', text:'권장'}] },
+        ])}
+
+        <p class="card-desc" style="margin-top:1rem;">위원의 직권 감정 결과에 따라 절차가 갈립니다.</p>
+        <div class="choice-grid">
+          <button class="choice-btn success" onclick="tryNavigate('release', 'release_refused', ['retry','risk_notice','ex_officio_appraisal'])">
+            <span class="choice-icon">非</span>
+            <span class="choice-text">
+              <span class="choice-label">비문화유산으로 판단</span>
+              <span class="choice-desc">반출 허용 · 종결</span>
+            </span>
+            <span class="choice-arrow">›</span>
+          </button>
+          <button class="choice-btn violation" onclick="tryNavigate('heritage_confirmed', 'release_refused', ['retry','risk_notice','ex_officio_appraisal'])">
+            <span class="choice-icon">遺</span>
+            <span class="choice-text">
+              <span class="choice-label">일반동산으로 판단</span>
+              <span class="choice-desc">현장에서 후속 처분 (임의제출/압수/비협조 분기)</span>
+            </span>
+            <span class="choice-arrow">›</span>
+          </button>
         </div>
       </div>
     `
@@ -981,11 +1057,11 @@ const STATES = {
 
         <div class="info-box warn">
           <span class="info-box-title">위법 확정</span>
-          감정 결과 일반동산문화유산으로 판별되었습니다. 신청받지 않은 동산이므로 <strong>법 제60조·제90조 위반</strong>이 확정되며, 해당 문화유산은 <strong>법정 몰수 대상물</strong>입니다 (법 제90조②, 운영규정 제10조②). 협조 여부와 무관하게 사법기관 고발 조치 및 몰수 조치가 이루어져야 합니다.
+          감정 결과 일반동산문화유산으로 판별되었습니다. 신청받지 않은 동산이므로 <strong>법 제60조 ①항(제39조 ①항 준용) 무허가 반출 금지 위반</strong>이며, 해당 문화유산은 <strong>법 제90조 ②항에 따른 법정 몰수 대상</strong>입니다 (운영규정 제10조②). 협조 여부와 무관하게 사법기관 고발 조치 및 몰수 조치가 이루어져야 합니다.
         </div>
 
         ${renderChecklist('heritage_confirmed', [
-          { id:'violation', label:'위반 사실 고지 (법 제60조·제90조)', meta:[{type:'law', text:'법 제60조·제90조'}, {type:'warn', text:'필수'}] },
+          { id:'violation', label:'위반 사실 고지 (법 제60조①·제90조②)', meta:[{type:'law', text:'법 제60조①·제90조②'}, {type:'warn', text:'필수'}] },
           { id:'right_refuse', label:'임의제출 거부권 고지', meta:[{type:'warn', text:'필수'}] },
         ])}
 
@@ -1112,7 +1188,7 @@ const STATES = {
         <p class="card-subtitle">Korean national · departure</p>
 
         ${renderChecklist('departure_korean', [
-          { id:'judicial', label:'귀국 후 사법기관 출석 조사 가능 안내', meta:[{type:'law', text:'법 제60조·제90조'}] },
+          { id:'judicial', label:'귀국 후 사법기관 출석 조사 가능 안내', meta:[{type:'law', text:'법 제60조①·제90조②'}] },
           { id:'allow', label:'출국 허용' },
         ])}
 
@@ -1139,7 +1215,7 @@ const STATES = {
         <p class="card-subtitle">Foreign national · departure</p>
 
         ${renderChecklist('departure_foreign', [
-          { id:'judicial', label:'사법기관 출석 조사 가능 안내', meta:[{type:'law', text:'법 제60조·제90조'}] },
+          { id:'judicial', label:'사법기관 출석 조사 가능 안내', meta:[{type:'law', text:'법 제60조①·제90조②'}] },
           { id:'allow', label:'출국 허용' },
         ])}
 
@@ -1306,7 +1382,7 @@ const STATES = {
         { id:'record', label:'감정조서 작성 (특사경 요청 시 한글파일 + 서명 PDF 제출)', meta:[{type:'form', text:'붙임 5 (감정조서)'}] },
         { id:'notify_policy', label:'문화유산정책과 보고', meta:[{type:'warn', text:'필수'}] },
         { id:'notify_offices', label:'다른 감정관실 통보', meta:[{type:'law', text:'운영규정 제11조①'}] },
-        { id:'handover_form', label:'사범단속팀 특사경에게 인계 (사법기관 고발 절차 개시 · 인계인수서 + 원본 서류·물품)', meta:[{type:'warn', text:'필수'}, {type:'form', text:'붙임 4 (인계인수서)'}, {type:'law', text:'운영규정 제10조② / 법 제90조'}] },
+        { id:'handover_form', label:'사범단속팀 특사경에게 인계 (사법기관 고발 절차 개시 · 인계인수서 + 원본 서류·물품)', meta:[{type:'warn', text:'필수'}, {type:'form', text:'붙임 4 (인계인수서)'}, {type:'law', text:'운영규정 제10조② / 법 제90조②'}] },
         { id:'safekeep', label:'인계 전까지 감정관실 금고 보관' },
       ];
       const requiredIds = items.filter(it => (it.meta || []).some(m => m.type === 'warn' && m.text === '필수')).map(it => it.id);
@@ -1399,10 +1475,12 @@ function renderSummary() {
   const wasRefused = caseState.trail.includes('refuse');
   const wasSeized = caseState.trail.includes('seize_216');
   const wasReleased = caseState.trail.includes('release');
-  const branchLabel = wasReleased ? '비문화유산 판별 · 출국'
-                      : wasRefused ? '전면 거부 · 현행범 검토'
-                      : wasSeized ? '임의제출 거부 · 제216조② 압수'
-                      : caseState.trail.includes('cooperate') ? '임의제출 동의'
+  const wasReleasedRefused = caseState.trail.includes('release_refused');
+  const prefix = wasReleasedRefused ? '신청서 거부 → ' : '';
+  const branchLabel = wasReleased ? prefix + '비문화유산 판별 · 출국'
+                      : wasRefused ? prefix + '전면 거부 · 현행범 검토'
+                      : wasSeized ? prefix + '임의제출 거부 · 제216조② 압수'
+                      : caseState.trail.includes('cooperate') ? prefix + '임의제출 동의'
                       : '—';
 
   const checkEntries = Object.entries(caseState.checks).filter(([k,v]) => v);
@@ -1535,10 +1613,12 @@ function copyReport() {
   const wasRefused = caseState.trail.includes('refuse');
   const wasSeized = caseState.trail.includes('seize_216');
   const wasReleased = caseState.trail.includes('release');
-  const branchLabel = wasReleased ? '비문화유산 판별 · 출국'
-                      : wasRefused ? '전면 거부 · 현행범 검토'
-                      : wasSeized ? '임의제출 거부 · 제216조② 압수'
-                      : caseState.trail.includes('cooperate') ? '임의제출 동의'
+  const wasReleasedRefused = caseState.trail.includes('release_refused');
+  const prefix = wasReleasedRefused ? '신청서 거부 → ' : '';
+  const branchLabel = wasReleased ? prefix + '비문화유산 판별 · 출국'
+                      : wasRefused ? prefix + '전면 거부 · 현행범 검토'
+                      : wasSeized ? prefix + '임의제출 거부 · 제216조② 압수'
+                      : caseState.trail.includes('cooperate') ? prefix + '임의제출 동의'
                       : '—';
 
   let txt = `[감정 절차 기록]\n`;
