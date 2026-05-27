@@ -1084,7 +1084,7 @@ const STATES = {
             <span class="choice-icon">押</span>
             <span class="choice-text">
               <span class="choice-label">임의제출 거부 · 신원 협조</span>
-              <span class="choice-desc">형소법 제216조 ② 압수 · 신병 출국 허용</span>
+              <span class="choice-desc">형소법 제216조 ③ 압수 · 신병 출국 허용</span>
             </span>
             <span class="choice-arrow">›</span>
           </button>
@@ -1231,15 +1231,15 @@ const STATES = {
     `
   },
 
-  // ─── 임의제출 거부 + 신원 협조 — 형소법 제216조② 압수 ───
+  // ─── 임의제출 거부 + 신원 협조 — 형소법 제216조③ 압수 ───
   seize_216: {
     track: 'checkpoint',
-    crumb: ['검색대', '임의제출 거부', '제216조② 압수'],
+    crumb: ['검색대', '임의제출 거부', '제216조③ 압수'],
     render: () => {
       const sjpBlock = caseState.is_sjp
         ? `<div class="info-box warn">
             <span class="info-box-title">특사경 본인 — 직접 압수 가능</span>
-            본인이 특사경 자격으로 형소법 제216조 ②항에 따라 영장 없이 압수합니다. <strong>사후 영장 청구 의무</strong>가 발생하며, 신원·연락처 확보 후 신병은 출국 허용합니다.
+            본인이 특사경 자격으로 형소법 제216조 ③항에 따라 영장 없이 압수합니다. <strong>사후 영장 청구 의무</strong>가 발생하며, 신원·연락처 확보 후 신병은 출국 허용합니다.
           </div>`
         : `<div class="info-box warn">
             <span class="info-box-title">특사경 부재 — 압수 권한자 호출 필수</span>
@@ -1249,7 +1249,7 @@ const STATES = {
       const items = caseState.is_sjp
         ? [
             { id:'sjp_intro', label:'특사경 지명서 제시 및 신분 고지 (수사 개시)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'특사경 직무규정 제12조②'}] },
-            { id:'seize_declare', label:'압수 처분 선언 (제216조 ②항 근거 + 사후 영장 청구 의무 고지)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제216조②'}] },
+            { id:'seize_declare', label:'압수 처분 선언 (제216조 ③항 근거 + 사후 영장 청구 의무 고지)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제216조③'}] },
             { id:'identify', label:'화주 신원·연락처 확인 (여권·신분증 제시)', meta:[{type:'warn', text:'필수'}] },
             { id:'seize_record', label:'압수조서 작성 (제출자 진술란에 "임의제출 거부, 압수 처분에 따름" 명시)', meta:[{type:'warn', text:'필수'}, {type:'form', text:'압수조서'}] },
             { id:'receipt_copy', label:'압수목록 화주 교부', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제129조'}] },
@@ -1269,13 +1269,13 @@ const STATES = {
 
       return `
       <div class="card violation">
-        <div class="card-meta"><span class="card-step violation">② 임의제출 거부 · 제216조 ② 압수</span></div>
+        <div class="card-meta"><span class="card-step violation">② 임의제출 거부 · 제216조 ③ 압수</span></div>
         <h2 class="card-title violation">압수 처분</h2>
-        <p class="card-subtitle">Seizure under Criminal Procedure Act §216(2)</p>
+        <p class="card-subtitle">Seizure under Criminal Procedure Act §216(3)</p>
 
         <div class="info-box warn">
           <span class="info-box-title">법적 근거</span>
-          형소법 제216조 ②항은 "사법경찰관은 범행 중 또는 범행 직후의 범죄장소에서 긴급을 요하여 법원판사의 영장을 받을 수 없는 때에는 영장 없이 압수·수색 또는 검증을 할 수 있다. <strong>이 경우에는 사후에 지체 없이 영장을 받아야 한다</strong>"고 정합니다. 검색대 적발은 이 요건을 충족합니다.
+          형소법 제216조 ③항은 "사법경찰관은 범행 중 또는 범행 직후의 범죄장소에서 긴급을 요하여 법원판사의 영장을 받을 수 없는 때에는 영장 없이 압수·수색 또는 검증을 할 수 있다. <strong>이 경우에는 사후에 지체 없이 영장을 받아야 한다</strong>"고 정합니다. 검색대 적발은 이 요건을 충족합니다.
         </div>
 
         ${sjpBlock}
@@ -1397,8 +1397,8 @@ const STATES = {
 
         ${caseState.trail.includes('seize_216') ? `
         <div class="info-box warn">
-          <span class="info-box-title">제216조 ② 압수 — 사후 영장 청구 의무</span>
-          영장 없이 압수한 사건이므로 <strong>지체 없이 사후 영장을 청구</strong>해야 합니다 (형소법 제216조 ② 단서). 사범단속팀 특사경 인계 시 <strong>"제216조 ② 압수 사건"임을 명시</strong>하고 사후 영장 청구 절차가 누락되지 않도록 협조합니다. 사후 영장 청구가 빠지면 압수의 적법성 자체가 다투어질 수 있습니다.
+          <span class="info-box-title">제216조 ③ 압수 — 사후 영장 청구 의무</span>
+          영장 없이 압수한 사건이므로 <strong>지체 없이 사후 영장을 청구</strong>해야 합니다 (형소법 제216조 ③ 단서). 사범단속팀 특사경 인계 시 <strong>"제216조 ③ 압수 사건"임을 명시</strong>하고 사후 영장 청구 절차가 누락되지 않도록 협조합니다. 사후 영장 청구가 빠지면 압수의 적법성 자체가 다투어질 수 있습니다.
         </div>
         ` : ''}
 
@@ -1479,7 +1479,7 @@ function renderSummary() {
   const prefix = wasReleasedRefused ? '신청서 거부 → ' : '';
   const branchLabel = wasReleased ? prefix + '비문화유산 판별 · 출국'
                       : wasRefused ? prefix + '전면 거부 · 현행범 검토'
-                      : wasSeized ? prefix + '임의제출 거부 · 제216조② 압수'
+                      : wasSeized ? prefix + '임의제출 거부 · 제216조③ 압수'
                       : caseState.trail.includes('cooperate') ? prefix + '임의제출 동의'
                       : '—';
 
@@ -1617,7 +1617,7 @@ function copyReport() {
   const prefix = wasReleasedRefused ? '신청서 거부 → ' : '';
   const branchLabel = wasReleased ? prefix + '비문화유산 판별 · 출국'
                       : wasRefused ? prefix + '전면 거부 · 현행범 검토'
-                      : wasSeized ? prefix + '임의제출 거부 · 제216조② 압수'
+                      : wasSeized ? prefix + '임의제출 거부 · 제216조③ 압수'
                       : caseState.trail.includes('cooperate') ? prefix + '임의제출 동의'
                       : '—';
 
