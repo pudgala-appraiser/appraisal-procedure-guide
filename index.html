@@ -984,7 +984,7 @@ const STATES = {
         <p class="card-subtitle">Non-heritage · departure allowed</p>
 
         <div class="info-box">
-          감정 결과 비문화유산으로 판별되었습니다. 법 제60조 ⑤항의 사전 확인 의무가 현장 수기 신청서 작성으로 사후 보완되었고, 반출 제한 사유가 없으므로 <strong>화주의 출국을 허용</strong>합니다.
+          감정 결과 비문화유산으로 판별되었습니다. 반출 제한 사유가 없으므로 <strong>화주의 출국을 허용</strong>합니다.
         </div>
 
         <div class="info-box warn">
@@ -1383,7 +1383,7 @@ const STATES = {
         { id:'notify_policy', label:'문화유산정책과 보고', meta:[{type:'warn', text:'필수'}] },
         { id:'notify_offices', label:'다른 감정관실 통보', meta:[{type:'law', text:'운영규정 제11조①'}] },
         { id:'handover_form', label:'사범단속팀 특사경에게 인계 (사법기관 고발 절차 개시 · 인계인수서 + 원본 서류·물품)', meta:[{type:'warn', text:'필수'}, {type:'form', text:'붙임 4 (인계인수서)'}, {type:'law', text:'운영규정 제10조② / 법 제90조②'}] },
-        { id:'safekeep', label:'인계 전까지 감정관실 금고 보관' },
+        { id:'safekeep', label:'인계 전까지 감정관실 유물보관장 보관' },
       ];
       const requiredIds = items.filter(it => (it.meta || []).some(m => m.type === 'warn' && m.text === '필수')).map(it => it.id);
 
