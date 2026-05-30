@@ -223,6 +223,12 @@
   }
   .choice-btn:hover { background: var(--primary-bg); border-color: var(--primary-light); transform: translateX(2px); }
   .choice-btn:active { transform: translateX(0); }
+  .choice-btn:focus-visible,
+  .check-item:focus-visible,
+  details.field summary:focus-visible {
+    outline: 2px solid var(--primary-light);
+    outline-offset: 2px;
+  }
   .choice-btn.violation:hover { background: var(--accent-bg); border-color: var(--accent-light); }
   .choice-btn.success:hover { background: var(--green-bg); border-color: var(--green); }
   .choice-icon {
@@ -625,6 +631,14 @@
     font-family: var(--font-en);
     font-style: italic;
   }
+  .app-version {
+    margin-top: .5rem;
+    font-family: var(--font-body);
+    font-style: normal;
+    font-size: .68rem;
+    letter-spacing: .04em;
+    color: var(--line);
+  }
 
   /* RESPONSIVE */
   @media (max-width: 480px) {
@@ -665,6 +679,7 @@
 
 <div class="footer">
   Reference · 문화유산법 제39·60·90조 · 형소법 제211·212조 · 감정관실 설치·운영 규정
+  <div class="app-version" id="appVersion"></div>
 </div>
 
 <div class="modal-backdrop" id="modal">
@@ -677,10 +692,19 @@
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 'use strict';
+
+// ────────────────────────────────────────────────
+//  ▼ 배포할 때마다 이 한 줄만 바꾸세요. 화면 맨 아래에 그대로 표시됩니다.
+const APP_VERSION = 'v1.1 · 2026-05-29';
+// ────────────────────────────────────────────────
+(function () {
+  const v = document.getElementById('appVersion');
+  if (v) v.textContent = APP_VERSION;
+})();
 
 // ===== 케이스 상태 =====
 let caseState = {
@@ -689,6 +713,7 @@ let caseState = {
   is_sjp: null,       // true: 특사경 본인 현장 / false: 부재
   trail: [],          // 경로 기록
   checks: {},         // { 'state.checkid': true/false }
+  checkLabels: {},    // { 'state.checkid': '사람이 읽는 라벨' }
   inputs: {},         // 자유 입력값
 };
 
@@ -702,7 +727,11 @@ function saveState() {
 function loadState() {
   const saved = localStorage.getItem('appraisal_case');
   if (saved) {
-    try { return JSON.parse(saved); }
+    try {
+      const obj = JSON.parse(saved);
+      if (obj && !obj.checkLabels) obj.checkLabels = {};  // 구버전 저장 호환
+      return obj;
+    }
     catch(e) { return null; }
   }
   return null;
@@ -710,7 +739,7 @@ function loadState() {
 
 function clearState() {
   localStorage.removeItem('appraisal_case');
-  caseState = { startedAt: null, track: null, is_sjp: null, trail: [], checks: {}, inputs: {} };
+  caseState = { startedAt: null, track: null, is_sjp: null, trail: [], checks: {}, checkLabels: {}, inputs: {} };
   document.getElementById('resumeBtn').style.display = 'none';
 }
 
@@ -1454,7 +1483,7 @@ function renderChecklist(stateId, items) {
       return `<span class="meta-tag ${m.type}">${m.text}</span>`;
     }).join('');
     return `
-      <div class="check-item ${checked}" data-check-id="${checkId}" onclick="toggleCheck('${checkId}', this)">
+      <div class="check-item ${checked}" data-check-id="${checkId}" role="checkbox" aria-checked="${checked ? 'true' : 'false'}" tabindex="0" onclick="toggleCheck('${checkId}', this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleCheck('${checkId}', this);}">
         <div class="check-box"></div>
         <div class="check-label">
           <span class="check-label-text">${it.label}</span>
@@ -1465,10 +1494,10 @@ function renderChecklist(stateId, items) {
   }).join('')}</div>`;
 }
 
-function renderSummary() {
+// 트랙·특사경·분기 라벨을 한 곳에서 계산 (요약·복사에서 공용)
+function computeCaseLabels() {
   const t = caseState.track;
   const trackLabel = t === 'checkpoint' ? '검색대 — 일반동산 적발' : '—';
-  const startedFmt = caseState.startedAt ? fmtTime(caseState.startedAt) : '—';
   const sjpLabel = caseState.is_sjp === true ? '특사경 본인'
                    : caseState.is_sjp === false ? '특사경 부재'
                    : '—';
@@ -1482,6 +1511,12 @@ function renderSummary() {
                       : wasSeized ? prefix + '임의제출 거부 · 제216조③ 압수'
                       : caseState.trail.includes('cooperate') ? prefix + '임의제출 동의'
                       : '—';
+  return { trackLabel, sjpLabel, branchLabel };
+}
+
+function renderSummary() {
+  const { trackLabel, sjpLabel, branchLabel } = computeCaseLabels();
+  const startedFmt = caseState.startedAt ? fmtTime(caseState.startedAt) : '—';
 
   const checkEntries = Object.entries(caseState.checks).filter(([k,v]) => v);
   const inputEntries = Object.entries(caseState.inputs).filter(([k,v]) => v);
@@ -1516,7 +1551,7 @@ function renderSummary() {
         <h3>완료 항목 (${checkEntries.length}건)</h3>
         <div class="summary-list" style="font-size:.82rem;color:var(--ink-soft);">
           ${checkEntries.length ? checkEntries.map(([k]) => {
-            return `<div style="padding:.2rem 0;">✓ ${k}</div>`;
+            return `<div style="padding:.2rem 0;">✓ ${caseState.checkLabels[k] || k}</div>`;
           }).join('') : '<div style="color:var(--line);font-style:italic;">완료 항목 없음</div>'}
         </div>
       </div>
@@ -1600,29 +1635,22 @@ function renderBreadcrumb(state) {
 }
 
 function toggleCheck(id, el) {
-  caseState.checks[id] = !caseState.checks[id];
-  el.classList.toggle('checked', caseState.checks[id]);
+  if (!caseState.checkLabels) caseState.checkLabels = {};
+  const now = !caseState.checks[id];
+  caseState.checks[id] = now;
+  el.classList.toggle('checked', now);
+  el.setAttribute('aria-checked', now ? 'true' : 'false');
+  // 요약·기록에서 내부 ID 대신 사람이 읽는 라벨이 나오도록 보존
+  const labelEl = el.querySelector('.check-label-text');
+  if (labelEl) caseState.checkLabels[id] = labelEl.textContent.trim();
   saveState();
 }
 
 function copyReport() {
-  const t = caseState.track === 'checkpoint' ? '검색대 — 일반동산 적발' : '—';
-  const sjpLabel = caseState.is_sjp === true ? '특사경 본인'
-                   : caseState.is_sjp === false ? '특사경 부재'
-                   : '—';
-  const wasRefused = caseState.trail.includes('refuse');
-  const wasSeized = caseState.trail.includes('seize_216');
-  const wasReleased = caseState.trail.includes('release');
-  const wasReleasedRefused = caseState.trail.includes('release_refused');
-  const prefix = wasReleasedRefused ? '신청서 거부 → ' : '';
-  const branchLabel = wasReleased ? prefix + '비문화유산 판별 · 출국'
-                      : wasRefused ? prefix + '전면 거부 · 현행범 검토'
-                      : wasSeized ? prefix + '임의제출 거부 · 제216조③ 압수'
-                      : caseState.trail.includes('cooperate') ? prefix + '임의제출 동의'
-                      : '—';
+  const { trackLabel, sjpLabel, branchLabel } = computeCaseLabels();
 
   let txt = `[감정 절차 기록]\n`;
-  txt += `진입 트랙: ${t}\n`;
+  txt += `진입 트랙: ${trackLabel}\n`;
   txt += `시작 시각: ${fmtTime(caseState.startedAt)}\n`;
   txt += `특사경 자격: ${sjpLabel}\n`;
   txt += `분기: ${branchLabel}\n\n`;
@@ -1630,8 +1658,9 @@ function copyReport() {
   const checks = Object.entries(caseState.checks).filter(([k,v]) => v);
   if (checks.length) {
     txt += `[완료 항목 ${checks.length}건]\n`;
-    checks.forEach(([k]) => { txt += `✓ ${k}\n`; });
+    checks.forEach(([k]) => { txt += `✓ ${caseState.checkLabels[k] || k}\n`; });
   }
+  txt += `\n기록 출력: ${fmtTime(new Date().toISOString())}\n`;
 
   navigator.clipboard.writeText(txt).then(() => {
     showToast('요약이 클립보드에 복사되었습니다', 'success');
@@ -1665,6 +1694,11 @@ document.getElementById('resumeBtn').onclick = () => {
 // 모달 배경 클릭 시 닫기
 document.getElementById('modal').addEventListener('click', e => {
   if (e.target.id === 'modal') closeModal();
+});
+
+// Esc 키로 모달 닫기
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
 });
 
 // 시작
