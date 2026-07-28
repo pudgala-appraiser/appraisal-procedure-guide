@@ -2,679 +2,434 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#1f3354">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1F4E79">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="검색대 적발">
 <title>검색대 적발 시 절차</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='10' fill='%231f3354'/><text x='32' y='46' font-size='38' fill='%23a8843a' text-anchor='middle' font-family='serif' font-weight='600'>規</text></svg>">
-<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='32' fill='%231f3354'/><text x='90' y='128' font-size='108' fill='%23a8843a' text-anchor='middle' font-family='serif' font-weight='600'>規</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%231F4E79'/><text x='32' y='46' font-size='38' fill='%23D9A43B' text-anchor='middle' font-family='serif' font-weight='600'>規</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' fill='%231F4E79'/><text x='90' y='128' font-size='108' fill='%23D9A43B' text-anchor='middle' font-family='serif' font-weight='600'>規</text></svg>">
 <style>
-  :root {
-    --bg: #fbf8f1;
-    --bg-alt: #f3ecdd;
-    --paper: #ffffff;
-    --ink: #1a1f2e;
-    --ink-soft: #4a5266;
-    --primary: #1f3354;
-    --primary-light: #324b7a;
-    --primary-bg: #e8edf5;
-    --accent: #8b3a3a;
-    --accent-light: #c97676;
-    --accent-bg: #f5e7e7;
-    --gold: #a8843a;
-    --gold-soft: #d4b87a;
-    --line: #d8cfb9;
-    --line-soft: #e8e1d0;
-    --green: #4a6b3a;
-    --green-bg: #ecf2e3;
-    --shadow: 0 1px 3px rgba(20,30,50,.06), 0 4px 16px rgba(20,30,50,.04);
-    --shadow-lg: 0 4px 12px rgba(20,30,50,.08), 0 16px 32px rgba(20,30,50,.06);
-    --font-display: 'Noto Serif KR', serif;
-    --font-body: 'Noto Sans KR', system-ui, -apple-system, sans-serif;
-    --font-en: 'Cormorant Garamond', 'Noto Serif KR', serif;
-  }
+/* =====================================================================
+   heritage-design.css — 한재원 문화유산 교육·학술 디자인 시스템 (오방색)
+   단일 HTML 배포 원칙에 따라 원본 CSS 전문을 이 블록에 내장함.
+   시스템이 갱신되면 '── 앱 화면 스타일 ──' 이전 부분을 통째로 교체할 것.
+   (서체 예외: 미설치 기기·오프라인 대응을 위해 웹폰트 대신
+    기기 기본 글꼴 스택을 사용함 — heritage-guide와 동일한 결정)
+   ===================================================================== */
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html { font-size: 16px; }
-  body {
-    font-family: var(--font-body);
-    background: var(--bg);
-    color: var(--ink);
-    line-height: 1.6;
-    min-height: 100vh;
-    overscroll-behavior-y: contain;
-    background-image:
-      radial-gradient(circle at 20% 0%, rgba(31,51,84,.03) 0%, transparent 50%),
-      radial-gradient(circle at 80% 100%, rgba(168,132,58,.04) 0%, transparent 50%);
-  }
+/* ── 토큰 ── */
+:root {
+  /* 오방 기본색 */
+  --obang-cheong: #1F4E79; /* 청(쪽빛) — 구조·질서 */
+  --obang-jeok: #A63C32;   /* 적(석간주) — 경계·금지 */
+  --obang-hwang: #D9A43B;  /* 황(치자) — 중심·핵심 */
+  --obang-baek: #FAF7F0;   /* 백(소색 한지) — 바탕 */
+  --obang-heuk: #221E1A;   /* 흑(먹) — 텍스트 */
+  --obang-nok: #3F6B51;    /* 뇌록 — 긍정·확인 */
 
-  /* HEADER */
-  .header {
-    background: linear-gradient(180deg, var(--primary) 0%, #182841 100%);
-    color: #f5f0e0;
-    padding: 1rem 1.25rem .85rem;
-    border-bottom: 3px solid var(--gold);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 12px rgba(20,30,50,.15);
-  }
-  .header-inner {
-    max-width: 720px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: .75rem;
-  }
-  .title-group { display: flex; flex-direction: column; gap: .1rem; min-width: 0; }
-  .title-kor {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 1.05rem;
-    letter-spacing: -.01em;
-    color: #faf5e6;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .title-sub {
-    font-family: var(--font-en);
-    font-style: italic;
-    font-size: .78rem;
-    color: rgba(245,240,224,.65);
-  }
-  .title-deco { color: var(--gold); margin: 0 .35rem; font-style: normal; }
-  .header-actions { display: flex; gap: .35rem; flex-shrink: 0; }
-  .header-btn {
-    background: rgba(0,0,0,.2);
-    color: rgba(245,240,224,.85);
-    border: 1px solid rgba(168,132,58,.3);
-    padding: .4rem .65rem;
-    border-radius: 4px;
-    font-family: var(--font-body);
-    font-size: .8rem;
-    cursor: pointer;
-    transition: all .15s;
-    min-height: 36px;
-    display: inline-flex;
-    align-items: center;
-    gap: .3rem;
-  }
-  .header-btn:hover { background: rgba(168,132,58,.2); color: #faf5e6; }
-  .header-btn.danger:hover { background: rgba(139,58,58,.4); }
+  /* 표면 */
+  --surface-canvas: #FAF7F0; /* 페이지 바탕 — 순백 #FFF 금지 */
+  --surface-soft: #F3EEE3;   /* 카드·박스 채움 */
+  --surface-card: #ECE5D6;   /* 가라앉은 카드 */
+  --hairline: #E3DBC9;       /* 1px 경계선 */
 
-  /* PROGRESS BREADCRUMB */
-  .breadcrumb {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: .5rem 1.25rem .5rem;
-    background: var(--bg-alt);
-    border-bottom: 1px solid var(--line-soft);
-    font-family: var(--font-body);
-    font-size: .75rem;
-    color: var(--ink-soft);
-    display: flex;
-    align-items: center;
-    gap: .35rem;
-    flex-wrap: wrap;
-    min-height: 32px;
-  }
-  .breadcrumb-track {
-    font-family: var(--font-en);
-    font-weight: 600;
-    color: var(--gold);
-    text-transform: uppercase;
-    letter-spacing: .1em;
-    font-size: .72rem;
-  }
-  .breadcrumb-track.violation { color: var(--accent); }
-  .breadcrumb-sep { color: var(--line); }
-  .breadcrumb-step { color: var(--ink-soft); }
-  .breadcrumb-step.current { color: var(--primary); font-weight: 500; }
+  /* 텍스트 */
+  --text-ink: #221E1A;
+  --text-body: #3D3831;
+  --text-muted: #6F675B;
+  --text-muted-soft: #948B7D;
+  --on-dark: #FAF7F0;       /* 어두운 면 위 주 텍스트 */
+  --on-dark-soft: #B9C9D8;  /* 어두운 면 위 보조(회청) */
+  --on-hwang: #221E1A;      /* 황 면 위 텍스트 */
 
-  /* MAIN */
-  .container {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 1rem 1.25rem 5rem;
-  }
+  /* 의미 별칭 */
+  --accent-structure: var(--obang-cheong); /* 구조: 헤더·주 버튼·기본 띠 */
+  --accent-center: var(--obang-hwang);     /* 핵심: 화면당 채움 1회 */
+  --accent-warning: var(--obang-jeok);     /* 주의·오류 전용 */
+  --accent-positive: var(--obang-nok);     /* 확인·긍정 전용 */
 
-  /* CARDS */
-  .card {
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: 1.25rem;
-    box-shadow: var(--shadow);
-    margin-bottom: 1rem;
-  }
-  .card.accent { border-left: 4px solid var(--gold); }
-  .card.violation { border-left: 4px solid var(--accent); background: linear-gradient(180deg, #fdf7f7 0%, var(--paper) 60%); }
-  .card.success { border-left: 4px solid var(--green); background: linear-gradient(180deg, #f7faf3 0%, var(--paper) 60%); }
-  .card.info { border-left: 4px solid var(--primary); }
+  /* 서체 — 기기 기본 글꼴 스택 (웹폰트 미사용: 미설치 기기·오프라인 대응) */
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, 'Apple SD Gothic Neo', 'Malgun Gothic', '맑은 고딕', 'Noto Sans KR', sans-serif;
+  --font-display: var(--font-body); /* 제목·인용 — 굵기로만 위계 구분 */
 
-  .card-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: .85rem;
-    padding-bottom: .65rem;
-    border-bottom: 1px solid var(--line-soft);
-    gap: .5rem;
-    flex-wrap: wrap;
-  }
-  .card-step {
-    font-family: var(--font-en);
-    font-size: .75rem;
-    text-transform: uppercase;
-    letter-spacing: .15em;
-    color: var(--gold);
-    font-weight: 600;
-  }
-  .card-step.violation { color: var(--accent); }
-  .card-title {
-    font-family: var(--font-display);
-    font-size: 1.2rem;
-    color: var(--primary);
-    font-weight: 600;
-    letter-spacing: -.01em;
-    margin-bottom: .35rem;
-    line-height: 1.4;
-  }
-  .card-title.violation { color: var(--accent); }
-  .card-subtitle {
-    font-family: var(--font-en);
-    font-style: italic;
-    font-size: .85rem;
-    color: var(--ink-soft);
-    margin-bottom: .85rem;
-  }
-  .card-desc {
-    color: var(--ink-soft);
-    font-size: .92rem;
-    line-height: 1.65;
-    margin-bottom: 1rem;
-  }
-  .card-desc strong { color: var(--ink); font-weight: 500; }
+  /* 여백·형태 */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px;
+  --radius: 0; /* 모든 모서리 직각 — 원형은 번호 배지만 예외 */
 
-  /* CHOICE BUTTONS */
-  .choice-grid { display: flex; flex-direction: column; gap: .65rem; }
-  .choice-btn {
-    text-align: left;
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: 1rem 1.1rem;
-    cursor: pointer;
-    font-family: var(--font-body);
-    color: var(--ink);
-    transition: all .15s ease;
-    display: flex;
-    align-items: center;
-    gap: .85rem;
-    min-height: 64px;
-    width: 100%;
-  }
-  .choice-btn:hover { background: var(--primary-bg); border-color: var(--primary-light); transform: translateX(2px); }
-  .choice-btn:active { transform: translateX(0); }
-  .choice-btn:focus-visible,
-  .check-item:focus-visible,
-  details.field summary:focus-visible {
-    outline: 2px solid var(--primary-light);
-    outline-offset: 2px;
-  }
-  .choice-btn.violation:hover { background: var(--accent-bg); border-color: var(--accent-light); }
-  .choice-btn.success:hover { background: var(--green-bg); border-color: var(--green); }
-  .choice-icon {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    color: var(--gold);
-    width: 38px;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-alt);
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .choice-btn.violation .choice-icon { color: var(--accent); background: var(--accent-bg); }
-  .choice-btn.success .choice-icon { color: var(--green); background: var(--green-bg); }
-  .choice-text { flex: 1; min-width: 0; }
-  .choice-label {
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--primary);
-    margin-bottom: .15rem;
-    line-height: 1.35;
-  }
-  .choice-btn.violation .choice-label { color: var(--accent); }
-  .choice-desc {
-    font-size: .82rem;
-    color: var(--ink-soft);
-    line-height: 1.45;
-  }
-  .choice-arrow {
-    color: var(--line);
-    font-size: 1.3rem;
-    flex-shrink: 0;
-    font-family: var(--font-en);
-  }
+  /* 구 토큰 호환 별칭 — 본문 인라인 스타일이 참조 (전부 시스템 토큰으로 연결) */
+  --ink-soft: var(--text-muted);
+  --accent: var(--accent-warning);
+  --line: var(--hairline);
+  --line-soft: var(--hairline);
+  --gold: var(--obang-hwang);
+  --gold-soft: var(--obang-hwang);
+  --primary: var(--accent-structure);
+  --bg-alt: var(--surface-card);
+  --font-en: var(--font-body);
+}
 
-  /* CHECKLIST */
-  .checklist { display: flex; flex-direction: column; gap: .5rem; margin: .85rem 0 1rem; }
-  .check-item {
-    display: flex;
-    align-items: flex-start;
-    gap: .65rem;
-    padding: .7rem .85rem;
-    background: var(--bg);
-    border: 1px solid var(--line-soft);
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all .15s ease;
-    user-select: none;
-  }
-  .check-item:hover { background: var(--bg-alt); border-color: var(--line); }
-  .check-item.checked {
-    background: var(--green-bg);
-    border-color: var(--green);
-  }
-  .check-item.checked .check-label { color: var(--ink-soft); }
-  .check-item.checked .check-label-text { text-decoration: line-through; text-decoration-color: var(--green); }
-  .check-box {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--line);
-    border-radius: 4px;
-    flex-shrink: 0;
-    margin-top: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--paper);
-    transition: all .15s;
-  }
-  .check-item.checked .check-box {
-    background: var(--green);
-    border-color: var(--green);
-  }
-  .check-item.checked .check-box::after {
-    content: '✓';
-    color: white;
-    font-size: 14px;
-    font-weight: 700;
-  }
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    20% { transform: translateX(-6px); }
-    40% { transform: translateX(6px); }
-    60% { transform: translateX(-4px); }
-    80% { transform: translateX(4px); }
-  }
-  .check-item.shake {
-    animation: shake .55s ease;
-    border-color: var(--accent);
-    background: var(--accent-bg);
-  }
-  .check-label {
-    flex: 1;
-    font-size: .9rem;
-    color: var(--ink);
-    line-height: 1.5;
-  }
-  .check-label-text { display: block; }
-  .check-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .35rem;
-    margin-top: .35rem;
-  }
-  .meta-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: .25rem;
-    padding: .12rem .5rem;
-    border-radius: 3px;
-    font-size: .72rem;
-    font-family: var(--font-body);
-    font-weight: 500;
-    line-height: 1.4;
-  }
-  .meta-tag.form {
-    background: var(--bg-alt);
-    color: var(--ink-soft);
-    border: 1px solid var(--line);
-  }
-  .meta-tag.law {
-    background: var(--primary-bg);
-    color: var(--primary);
-    border: 1px solid #c5d1e5;
-  }
-  .meta-tag.warn {
-    background: var(--accent-bg);
-    color: var(--accent);
-    border: 1px solid var(--accent-light);
-  }
-  .meta-tag.time {
-    background: #fff4d6;
-    color: #8a6d1a;
-    border: 1px solid #e8d28a;
-  }
+/* ── 베이스 ── */
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { font-size: 16px; }
+body.heritage {
+  margin: 0; background: var(--surface-canvas); color: var(--text-body);
+  font-family: var(--font-body); font-size: 14px; line-height: 1.65;
+  min-height: 100vh; overscroll-behavior-y: contain;
+}
+.heritage h1, .heritage h2, .heritage h3 {
+  font-family: var(--font-display); font-weight: 800; color: var(--text-ink);
+  letter-spacing: -0.02em; line-height: 1.3; margin: 0;
+}
+.heritage a { color: var(--accent-structure); }
+.heritage a:hover { color: var(--obang-cheong); text-decoration: underline; text-underline-offset: 3px; }
+.heritage :focus-visible { outline: 2px solid var(--accent-structure); outline-offset: 2px; }
 
-  /* INFO BOX */
-  .info-box {
-    background: var(--bg-alt);
-    border: 1px dashed var(--line);
-    border-radius: 5px;
-    padding: .75rem .95rem;
-    margin: .85rem 0;
-    font-size: .85rem;
-    color: var(--ink-soft);
-    line-height: 1.55;
-  }
-  .info-box.warn {
-    background: var(--accent-bg);
-    border-color: var(--accent-light);
-    border-style: solid;
-    color: #6b2a2a;
-  }
-  .info-box.warn strong { color: var(--accent); }
-  .info-box-title {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: .82rem;
-    color: var(--primary);
-    margin-bottom: .3rem;
-    display: block;
-  }
-  .info-box.warn .info-box-title { color: var(--accent); }
-  .info-box ul, .info-box ol { padding-left: 1.1rem; margin: .25rem 0; }
-  .info-box li { margin: .15rem 0; }
+/* ── 헤더 바 (쪽빛 단일 평면 — 그라데이션 금지) ── */
+.h-header {
+  background: var(--accent-structure); color: var(--on-dark);
+  display: flex; align-items: baseline; gap: 12px; padding: 13px 20px;
+}
+.h-header .h-brand { font-family: var(--font-display); font-weight: 800; font-size: 21px; letter-spacing: 4px; }
+.h-header .h-sub { font-size: 11px; font-weight: 800; letter-spacing: 2px; color: var(--on-dark-soft); }
 
-  /* CRITERIA ACCORDION */
-  details.field {
-    border: 1px solid var(--line);
-    border-radius: 5px;
-    margin-bottom: .55rem;
-    background: var(--paper);
-    overflow: hidden;
-  }
-  details.field summary {
-    padding: .7rem .9rem;
-    cursor: pointer;
-    font-family: var(--font-display);
-    font-weight: 600;
-    color: var(--primary);
-    background: var(--bg-alt);
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    user-select: none;
-    font-size: .95rem;
-  }
-  details.field summary::-webkit-details-marker { display: none; }
-  details.field summary::after {
-    content: '＋';
-    color: var(--gold);
-    font-weight: 400;
-    font-size: 1.1rem;
-    transition: transform .15s;
-  }
-  details.field[open] summary { background: var(--primary-bg); border-bottom: 1px solid var(--line-soft); }
-  details.field[open] summary::after { content: '−'; }
-  details.field .field-body {
-    padding: .85rem 1rem;
-    font-size: .87rem;
-    color: var(--ink);
-  }
-  details.field .field-body h4 {
-    font-family: var(--font-display);
-    font-size: .85rem;
-    color: var(--primary);
-    margin: .55rem 0 .3rem;
-    font-weight: 600;
-    letter-spacing: -.01em;
-  }
-  details.field .field-body h4:first-child { margin-top: 0; }
-  details.field .field-body ol, details.field .field-body ul {
-    padding-left: 1.3rem;
-    margin: .2rem 0;
-  }
-  details.field .field-body li { margin: .2rem 0; line-height: 1.55; }
-  details.field .field-body li strong { color: var(--primary); }
-  details.field .field-body .field-note {
-    font-size: .77rem;
-    color: var(--ink-soft);
-    font-style: italic;
-    margin-top: .3rem;
-  }
-  details.field .field-body .examples {
-    font-size: .78rem;
-    color: var(--ink-soft);
-    background: var(--bg-alt);
-    padding: .5rem .7rem;
-    border-radius: 4px;
-    margin-top: .55rem;
-    line-height: 1.55;
-  }
-  details.field .field-body .examples strong { color: var(--ink); font-weight: 500; }
+/* ── 카드/박스: 한지 채움 + 1px 경계 + 좌측 4px 의미색 띠. 그림자 없음 ── */
+.h-box { background: var(--surface-soft); border: 1px solid var(--hairline); border-left: 4px solid var(--accent-structure); padding: 16px 18px; }
+.h-box--warning { border-left-color: var(--accent-warning); }
+.h-box--positive { border-left-color: var(--accent-positive); }
+.h-box--center { border-left-color: var(--accent-center); }
 
-  /* INPUT FIELDS */
-  .input-group { margin: .5rem 0; }
-  .input-group label {
-    display: block;
-    font-size: .82rem;
-    color: var(--ink-soft);
-    margin-bottom: .25rem;
-    font-weight: 500;
-  }
-  .input-group input, .input-group textarea, .input-group select {
-    width: 100%;
-    padding: .55rem .75rem;
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    font-family: var(--font-body);
-    font-size: .92rem;
-    background: var(--paper);
-    color: var(--ink);
-  }
-  .input-group input:focus, .input-group textarea:focus, .input-group select:focus {
-    outline: none;
-    border-color: var(--primary-light);
-    box-shadow: 0 0 0 2px var(--primary-bg);
-  }
-  .input-group textarea { resize: vertical; min-height: 60px; }
+/* ── 버튼 ── */
+.h-btn {
+  font-family: inherit; cursor: pointer; border: none; border-radius: 0;
+  background: var(--accent-structure); color: var(--on-dark);
+  padding: 10px 30px; font-size: 14px; font-weight: 700; letter-spacing: 3px;
+}
+.h-btn:hover { background: #1A4066; }
+.h-btn:disabled { opacity: 0.45; cursor: default; }
+.h-btn--ghost { background: var(--surface-canvas); border: 1px solid var(--accent-structure); color: var(--accent-structure); }
+.h-btn--ghost:hover { background: var(--surface-soft); }
+.h-btn--text { background: none; padding: 2px 0; color: var(--accent-structure); font-size: 12.5px; letter-spacing: 0.5px; }
 
-  /* NAV BUTTONS */
-  .nav-row {
-    display: flex;
-    gap: .65rem;
-    margin-top: 1rem;
-    flex-wrap: wrap;
-  }
-  .nav-btn {
-    flex: 1;
-    min-width: 130px;
-    padding: .85rem 1rem;
-    border-radius: 5px;
-    font-family: var(--font-body);
-    font-size: .95rem;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    transition: all .15s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: .4rem;
-    min-height: 48px;
-  }
-  .nav-btn.primary { background: var(--primary); color: #faf5e6; }
-  .nav-btn.primary:hover { background: var(--primary-light); transform: translateY(-1px); }
-  .nav-btn.violation { background: var(--accent); color: #faf5e6; }
-  .nav-btn.violation:hover { background: #6b2a2a; }
-  .nav-btn.success { background: var(--green); color: #faf5e6; }
-  .nav-btn.success:hover { background: #3a5a2a; }
-  .nav-btn.secondary {
-    background: transparent;
-    color: var(--primary);
-    border: 1px solid var(--line);
-  }
-  .nav-btn.secondary:hover { background: var(--primary-bg); }
+/* ── 태그·칩 (1px 테두리, 직각) ── */
+.h-tag { font-size: 10px; border: 1px solid var(--hairline); color: var(--text-muted); padding: 1.5px 6px; background: var(--surface-canvas); letter-spacing: 1px; }
+.h-tag--primary { border-color: var(--accent-structure); color: var(--accent-structure); }
 
-  /* SUMMARY VIEW */
-  .summary-section { margin-bottom: 1.25rem; }
-  .summary-section h3 {
-    font-family: var(--font-display);
-    font-size: .95rem;
-    color: var(--primary);
-    margin-bottom: .5rem;
-    padding-bottom: .25rem;
-    border-bottom: 1px solid var(--line-soft);
-    font-weight: 600;
-  }
-  .summary-list { font-size: .88rem; color: var(--ink); }
-  .summary-list-item {
-    display: flex;
-    justify-content: space-between;
-    padding: .35rem 0;
-    border-bottom: 1px dashed var(--line-soft);
-    gap: .5rem;
-  }
-  .summary-list-item:last-child { border-bottom: none; }
-  .summary-key { color: var(--ink-soft); flex-shrink: 0; }
-  .summary-val {
-    color: var(--ink);
-    font-weight: 500;
-    text-align: right;
-    word-break: break-all;
-  }
+/* ── 번호 배지 (원형 예외) ── */
+.h-badge {
+  width: 44px; height: 44px; border-radius: 999px; background: var(--accent-structure);
+  color: var(--on-dark); display: inline-flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 800;
+}
 
-  /* MODAL */
-  .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(20,30,50,.55);
-    z-index: 200;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-  }
-  .modal-backdrop.active { display: flex; }
-  .modal {
-    background: var(--paper);
-    border-radius: 8px;
-    max-width: 480px;
-    width: 100%;
-    max-height: 85vh;
-    overflow-y: auto;
-    box-shadow: var(--shadow-lg);
-    border-top: 4px solid var(--gold);
-  }
-  .modal-header {
-    padding: 1.25rem 1.25rem .75rem;
-    border-bottom: 1px solid var(--line-soft);
-  }
-  .modal-title {
-    font-family: var(--font-display);
-    font-weight: 600;
-    color: var(--primary);
-    font-size: 1.1rem;
-  }
-  .modal-body { padding: 1rem 1.25rem; font-size: .9rem; line-height: 1.6; }
-  .modal-footer {
-    padding: .75rem 1.25rem 1.25rem;
-    display: flex;
-    gap: .5rem;
-    justify-content: flex-end;
-  }
+/* ── 색동 구분선 — 표지·마무리 화면에만 ── */
+.h-saekdong { display: flex; gap: 8px; }
+.h-saekdong span { width: 34px; height: 5px; }
+.h-saekdong span:nth-child(1) { background: var(--obang-cheong); }
+.h-saekdong span:nth-child(2) { background: var(--obang-jeok); }
+.h-saekdong span:nth-child(3) { background: var(--obang-hwang); }
+.h-saekdong span:nth-child(4) { background: var(--obang-heuk); }
 
-  /* TOAST */
-  .toast {
-    position: fixed;
-    bottom: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%) translateY(120%);
-    background: var(--primary);
-    color: #faf5e6;
-    padding: .75rem 1.25rem;
-    border-radius: 5px;
-    box-shadow: var(--shadow-lg);
-    font-size: .9rem;
-    z-index: 150;
-    transition: transform .3s ease;
-    max-width: 90vw;
-    text-align: center;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-  .toast.warn { background: var(--accent); }
-  .toast.success { background: var(--green); }
+/* ── 로딩: 황 점 3개 깜빡임 (허용된 유일한 모션) ── */
+.h-dots { display: inline-flex; gap: 7px; }
+.h-dots span { width: 7px; height: 7px; background: var(--accent-center); animation: h-blink 1.05s infinite; }
+.h-dots span:nth-child(2) { animation-delay: 0.18s; }
+.h-dots span:nth-child(3) { animation-delay: 0.36s; }
+@keyframes h-blink { 0%, 70%, 100% { opacity: 0.25; } 35% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .h-dots span { animation: none; opacity: 0.8; } }
 
-  /* FOOTER */
-  .footer {
-    text-align: center;
-    color: var(--ink-soft);
-    font-size: .72rem;
-    padding: 1.25rem 1rem 2rem;
-    max-width: 720px;
-    margin: 0 auto;
-    font-family: var(--font-en);
-    font-style: italic;
-  }
-  .footer-author {
-    font-family: var(--font-display);
-    font-style: normal;
-    font-size: .82rem;
-    color: var(--ink-soft);
-    margin-top: .4rem;
-  }
-  .app-version {
-    margin-top: .5rem;
-    font-family: var(--font-body);
-    font-style: normal;
-    font-size: .68rem;
-    letter-spacing: .04em;
-    color: var(--line);
-  }
+/* =====================================================================
+   ── 앱 화면 스타일 — 위 시스템의 토큰·클래스만 사용 ──
+   규칙 준수 메모:
+   · 평면·직각·무그림자. 전환·변형 모션 없음 (필수 미체크 강조도 정적 색 강조)
+   · 적은 경계·금지 전용(위반 트랙·경고 박스·필수 태그), 뇌록은 완료 체크 전용
+   · 황 채움 없음(띠·색동만 사용) — 화면당 1회 한도 내
+   · 색동 구분선은 표지(시작 화면)와 푸터에만
+   ===================================================================== */
 
-  /* RESPONSIVE */
-  @media (max-width: 480px) {
-    .header { padding: .75rem 1rem .65rem; }
-    .title-kor { font-size: .95rem; }
-    .title-sub { font-size: .72rem; }
-    .header-btn { padding: .35rem .5rem; font-size: .75rem; }
-    .container { padding: .85rem 1rem 5rem; }
-    .card { padding: 1rem; }
-    .card-title { font-size: 1.1rem; }
-    .choice-btn { padding: .85rem .95rem; min-height: 58px; }
-    .choice-label { font-size: .95rem; }
-    .choice-desc { font-size: .78rem; }
-    .breadcrumb { font-size: .7rem; padding: .4rem 1rem; }
-  }
+/* HEADER */
+.h-header {
+  position: sticky; top: 0; z-index: 100;
+  flex-wrap: wrap; align-items: center; gap: 10px;
+  padding: 12px max(16px, calc((100% - 720px) / 2));
+}
+.h-header .h-brand { font-size: 17px; letter-spacing: 2px; }
+.h-header .h-sub { letter-spacing: 1.5px; }
+.header-actions { margin-left: auto; display: flex; gap: 6px; flex-shrink: 0; }
+.header-btn {
+  background: transparent; border: 1px solid var(--on-dark-soft); color: var(--on-dark);
+  padding: 6px 10px; border-radius: 0; font-family: var(--font-body);
+  font-size: 12.5px; font-weight: 700; cursor: pointer; min-height: 36px;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.header-btn:hover { background: #1A4066; }
+.header-btn.danger:hover { background: var(--accent-warning); border-color: var(--accent-warning); }
+
+/* BREADCRUMB */
+.breadcrumb {
+  background: var(--surface-canvas); border-bottom: 1px solid var(--hairline);
+  padding: 7px max(16px, calc((100% - 720px) / 2));
+  font-size: 12px; color: var(--text-muted);
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-height: 32px;
+}
+.breadcrumb-track { font-weight: 800; letter-spacing: 2px; font-size: 11px; text-transform: uppercase; color: var(--accent-structure); }
+.breadcrumb-track.violation { color: var(--accent-warning); }
+.breadcrumb-sep { color: var(--text-muted-soft); }
+.breadcrumb-step { color: var(--text-muted); }
+.breadcrumb-step.current { color: var(--text-ink); font-weight: 700; }
+
+/* MAIN */
+.container { max-width: 720px; margin: 0 auto; padding: 18px 16px 72px; }
+
+/* CARDS — h-box 문법 */
+.card {
+  background: var(--surface-soft); border: 1px solid var(--hairline);
+  border-left: 4px solid var(--accent-structure);
+  padding: 18px; margin-bottom: 16px;
+}
+.card.accent { border-left-color: var(--accent-center); }
+.card.violation { border-left-color: var(--accent-warning); }
+.card.success { border-left-color: var(--accent-positive); }
+.card.info { border-left-color: var(--accent-structure); }
+
+.card-meta {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; flex-wrap: wrap; margin-bottom: 12px; padding-bottom: 9px;
+  border-bottom: 1px solid var(--hairline);
+}
+.card-step { font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-structure); }
+.card-step.violation { color: var(--accent-warning); }
+.card-title { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; color: var(--text-ink); line-height: 1.4; margin-bottom: 4px; word-break: keep-all; }
+.card-title.violation { color: var(--accent-warning); }
+.card-subtitle { font-size: 10.5px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted-soft); margin-bottom: 12px; }
+.card-desc { color: var(--text-body); font-size: .92rem; line-height: 1.65; margin-bottom: 14px; word-break: keep-all; }
+.card-desc strong { color: var(--text-ink); font-weight: 700; }
+
+/* CHOICE BUTTONS */
+.choice-grid { display: flex; flex-direction: column; gap: 8px; }
+.choice-btn {
+  text-align: left; background: var(--surface-canvas);
+  border: 1px solid var(--hairline); border-radius: 0;
+  padding: 13px 14px; cursor: pointer; font-family: var(--font-body); color: var(--text-ink);
+  display: flex; align-items: center; gap: 12px; min-height: 60px; width: 100%;
+}
+.choice-btn:hover { border-color: var(--accent-structure); }
+.choice-btn.violation:hover { border-color: var(--accent-warning); }
+.choice-btn.success:hover { border-color: var(--accent-positive); }
+.choice-icon {
+  font-family: var(--font-display); font-weight: 800; font-size: 1.05rem;
+  color: var(--on-dark); width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent-structure); border-radius: 999px; /* 원형 배지 예외 */
+  flex-shrink: 0;
+}
+.choice-btn.violation .choice-icon { background: var(--accent-warning); }
+.choice-btn.success .choice-icon { background: var(--accent-positive); }
+.choice-text { flex: 1; min-width: 0; }
+.choice-label { font-family: var(--font-display); font-size: .98rem; font-weight: 800; color: var(--text-ink); margin-bottom: 2px; line-height: 1.35; word-break: keep-all; }
+.choice-btn.violation .choice-label { color: var(--accent-warning); }
+.choice-desc { font-size: .8rem; color: var(--text-muted); line-height: 1.45; word-break: keep-all; }
+.choice-arrow { color: var(--text-muted-soft); font-size: 1.2rem; flex-shrink: 0; }
+
+/* CHECKLIST */
+.checklist { display: flex; flex-direction: column; gap: 6px; margin: 12px 0 14px; }
+.check-item {
+  display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px;
+  background: var(--surface-canvas); border: 1px solid var(--hairline); border-radius: 0;
+  cursor: pointer; user-select: none;
+}
+.check-item:hover { border-color: var(--accent-structure); }
+.check-item.checked { background: var(--surface-card); border-color: var(--accent-positive); }
+.check-item.checked .check-label { color: var(--text-muted); }
+.check-item.checked .check-label-text { text-decoration: line-through; text-decoration-color: var(--accent-positive); }
+.check-box {
+  width: 19px; height: 19px; border: 2px solid var(--hairline); border-radius: 0;
+  flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center;
+  background: var(--surface-canvas);
+}
+.check-item.checked .check-box { background: var(--accent-positive); border-color: var(--accent-positive); }
+.check-item.checked .check-box::after { content: '✓'; color: var(--on-dark); font-size: 13px; font-weight: 700; }
+/* 필수 미체크 강조 — 규칙 6에 따라 모션 없이 정적 색 강조 */
+.check-item.miss { border-color: var(--accent-warning); background: var(--surface-card); }
+.check-item.miss .check-box { border-color: var(--accent-warning); }
+.check-label { flex: 1; font-size: .88rem; color: var(--text-ink); line-height: 1.5; word-break: keep-all; }
+.check-label-text { display: block; }
+.check-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+
+/* 메타 태그 — h-tag 문법 */
+.meta-tag {
+  display: inline-flex; align-items: center; gap: 4px; padding: 1.5px 6px;
+  border-radius: 0; font-size: 10px; font-weight: 700; letter-spacing: .5px; line-height: 1.5;
+  background: var(--surface-canvas); border: 1px solid var(--hairline); color: var(--text-muted);
+}
+.meta-tag.law { border-color: var(--accent-structure); color: var(--accent-structure); }
+.meta-tag.warn { border-color: var(--accent-warning); color: var(--accent-warning); }
+.meta-tag.time { border-color: var(--accent-center); color: var(--text-muted); }
+
+/* INFO BOX */
+.info-box {
+  background: var(--surface-card); border: 1px solid var(--hairline);
+  border-left: 4px solid var(--accent-structure); border-radius: 0;
+  padding: 12px 14px; margin: 14px 0; font-size: .85rem; color: var(--text-body);
+  line-height: 1.6; word-break: keep-all;
+}
+.info-box.warn { border-left-color: var(--accent-warning); }
+.info-box.warn strong { color: var(--accent-warning); }
+.info-box-title { font-family: var(--font-display); font-weight: 800; font-size: .8rem; color: var(--accent-structure); margin-bottom: 5px; display: block; }
+.info-box.warn .info-box-title { color: var(--accent-warning); }
+.info-box ul, .info-box ol { padding-left: 1.1rem; margin: .25rem 0; }
+.info-box li { margin: .15rem 0; }
+
+/* CRITERIA ACCORDION */
+details.field { border: 1px solid var(--hairline); border-radius: 0; margin-bottom: 8px; background: var(--surface-canvas); }
+details.field summary {
+  padding: 10px 13px; cursor: pointer; font-family: var(--font-display); font-weight: 800;
+  color: var(--text-ink); background: var(--surface-card); list-style: none;
+  display: flex; justify-content: space-between; align-items: center; user-select: none;
+  font-size: .92rem; word-break: keep-all;
+}
+details.field summary::-webkit-details-marker { display: none; }
+details.field summary::after { content: '＋'; color: var(--accent-structure); font-weight: 400; font-size: 1.05rem; }
+details.field[open] summary { border-bottom: 1px solid var(--hairline); }
+details.field[open] summary::after { content: '−'; }
+details.field .field-body { padding: 12px 14px; font-size: .86rem; color: var(--text-body); }
+details.field .field-body h4 { font-family: var(--font-display); font-size: .84rem; color: var(--accent-structure); margin: .6rem 0 .3rem; font-weight: 800; }
+details.field .field-body h4:first-child { margin-top: 0; }
+details.field .field-body ol, details.field .field-body ul { padding-left: 1.3rem; margin: .2rem 0; }
+details.field .field-body li { margin: .2rem 0; line-height: 1.55; }
+details.field .field-body li strong { color: var(--text-ink); }
+details.field .field-body .field-note { font-size: .77rem; color: var(--text-muted); margin-top: .35rem; }
+details.field .field-body .examples {
+  font-size: .78rem; color: var(--text-muted); background: var(--surface-card);
+  border: 1px solid var(--hairline); padding: 8px 11px; margin-top: .55rem; line-height: 1.55;
+}
+details.field .field-body .examples strong { color: var(--text-ink); font-weight: 700; }
+
+/* INPUT FIELDS */
+.input-group { margin: .5rem 0; }
+.input-group label { display: block; font-size: .8rem; color: var(--text-muted); margin-bottom: .25rem; font-weight: 700; }
+.input-group input, .input-group textarea, .input-group select {
+  width: 100%; padding: 9px 12px; border: 1px solid var(--hairline); border-radius: 0;
+  font-family: var(--font-body); font-size: .95rem; background: var(--surface-canvas); color: var(--text-ink);
+}
+.input-group textarea { resize: vertical; min-height: 60px; }
+
+/* NAV BUTTONS */
+.nav-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.nav-btn {
+  flex: 1; min-width: 130px; padding: 12px 16px; border-radius: 0;
+  font-family: var(--font-body); font-size: .92rem; font-weight: 700; letter-spacing: 1px;
+  cursor: pointer; border: none; display: inline-flex; align-items: center; justify-content: center;
+  gap: 6px; min-height: 48px;
+}
+.nav-btn.primary { background: var(--accent-structure); color: var(--on-dark); }
+.nav-btn.primary:hover { background: #1A4066; }
+.nav-btn.violation { background: var(--accent-warning); color: var(--on-dark); }
+.nav-btn.success { background: var(--accent-positive); color: var(--on-dark); }
+.nav-btn.secondary { background: var(--surface-canvas); color: var(--accent-structure); border: 1px solid var(--accent-structure); }
+.nav-btn.secondary:hover { background: var(--surface-soft); }
+
+/* SUMMARY VIEW */
+.summary-section { margin-bottom: 18px; }
+.summary-section h3 {
+  font-family: var(--font-display); font-size: .92rem; font-weight: 800; color: var(--text-ink);
+  margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--hairline);
+}
+.summary-list { font-size: .88rem; color: var(--text-ink); }
+.summary-list-item { display: flex; justify-content: space-between; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--hairline); }
+.summary-list-item:last-child { border-bottom: none; }
+.summary-key { color: var(--text-muted); flex-shrink: 0; }
+.summary-val { color: var(--text-ink); font-weight: 700; text-align: right; word-break: break-all; }
+
+/* MODAL — 직각·무그림자 */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(34, 30, 26, .55); z-index: 200;
+  display: none; align-items: center; justify-content: center; padding: 16px;
+}
+.modal-backdrop.active { display: flex; }
+.modal {
+  background: var(--surface-canvas); border: 1px solid var(--hairline);
+  border-top: 4px solid var(--accent-structure); border-radius: 0;
+  max-width: 480px; width: 100%; max-height: 85vh; overflow-y: auto;
+}
+.modal-header { padding: 16px 18px 10px; border-bottom: 1px solid var(--hairline); }
+.modal-title { font-family: var(--font-display); font-weight: 800; color: var(--text-ink); font-size: 1.05rem; }
+.modal-body { padding: 14px 18px; font-size: .9rem; line-height: 1.6; }
+.modal-footer { padding: 10px 18px 18px; display: flex; gap: 8px; justify-content: flex-end; }
+
+/* TOAST — 모션 없이 즉시 표시 */
+.toast {
+  position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+  display: none; background: var(--surface-soft); border: 1px solid var(--hairline);
+  border-left: 4px solid var(--accent-structure); border-radius: 0;
+  color: var(--text-body); padding: 10px 16px; font-size: .88rem;
+  z-index: 150; max-width: 90vw; text-align: center;
+}
+.toast.show { display: block; }
+.toast.warn { border-left-color: var(--accent-warning); }
+.toast.success { border-left-color: var(--accent-positive); }
+
+/* FOOTER — 색동 구분선 (마무리 허용 지점) */
+.footer { text-align: center; color: var(--text-muted); font-size: .75rem; padding: 8px 16px 36px; max-width: 720px; margin: 0 auto; line-height: 1.7; }
+.footer .h-saekdong { justify-content: center; margin: 0 auto 14px; width: max-content; }
+.footer-author { font-weight: 700; margin-top: 6px; color: var(--text-muted); }
+.app-version { margin-top: 8px; font-size: .68rem; letter-spacing: 1px; color: var(--text-muted-soft); }
+
+/* 표지(시작 화면) 색동 */
+.h-saekdong.cover { justify-content: center; margin: 4px auto 16px; width: max-content; }
+
+/* RESPONSIVE */
+@media (max-width: 480px) {
+  .h-header .h-brand { font-size: 15px; letter-spacing: 1px; }
+  .h-header .h-sub { display: none; }
+  .container { padding: 14px 12px 72px; }
+  .card { padding: 14px; }
+  .card-title { font-size: 1.05rem; }
+  .choice-btn { padding: 11px 12px; min-height: 56px; }
+  .choice-label { font-size: .93rem; }
+  .choice-desc { font-size: .76rem; }
+}
+
+/* 터치 기기 — hover 잔상 제거 */
+@media (hover: none) {
+  .choice-btn:hover, .choice-btn.violation:hover, .choice-btn.success:hover,
+  .check-item:hover { border-color: var(--hairline); }
+  .nav-btn.primary:hover { background: var(--accent-structure); }
+  .nav-btn.secondary:hover { background: var(--surface-canvas); }
+  .h-btn:hover { background: var(--accent-structure); }
+  .header-btn:hover, .header-btn.danger:hover { background: transparent; border-color: var(--on-dark-soft); }
+}
+
+/* 스크롤바 — 직각, 시스템 색 */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--surface-soft); }
+::-webkit-scrollbar-thumb { background: var(--hairline); }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted-soft); }
+
+/* =====================================================================
+   규칙 요약 (코드 리뷰용 — heritage-design.css 원문)
+   1. 페이지 배경은 항상 --surface-canvas. 순백 #FFF 금지.
+   2. 모든 모서리 직각. 그라데이션·그림자·블러 금지 — 평면과 1px 선만.
+   3. 황(치자) 채움은 화면당 1회.
+   4. 적(석간주)은 경계·금지·오류에만, 뇌록은 긍정·확인에만.
+   5. 색동 구분선은 표지(빈 상태)·마무리(푸터)에만.
+   6. hover=색 심화·밑줄 / focus=청 2px outline / 로딩=황 점 3개. 그 외 모션 없음.
+   7. 제목=나눔명조 800, 본문·UI=나눔고딕. 본문 행간 1.6~1.75.
+      (7조 서체는 미설치 기기·오프라인 대응을 위해 기기 기본 글꼴로 대체 적용)
+   ===================================================================== */
 </style>
 </head>
-<body>
+<body class="heritage">
 
-<header class="header">
-  <div class="header-inner">
-    <div class="title-group">
-      <div class="title-kor">검색대 적발 시 절차<span class="title-deco">·</span><span style="font-family:var(--font-en);font-style:italic;font-weight:500;">Detection Protocol</span></div>
-      <div class="title-sub">Korea Heritage Service · On-Site Manual</div>
-    </div>
-    <div class="header-actions">
-      <button class="header-btn" id="resumeBtn" style="display:none;" title="저장된 진행 복구">⟲ 복구</button>
-      <button class="header-btn danger" id="resetBtn" title="처음으로">⌂ 처음</button>
-    </div>
+<header class="h-header">
+  <div class="h-brand">검색대 적발 시 절차</div>
+  <div class="h-sub">KOREA HERITAGE SERVICE · ON-SITE MANUAL</div>
+  <div class="header-actions">
+    <button class="header-btn" id="resumeBtn" style="display:none;" title="저장된 진행 복구">⟲ 복구</button>
+    <button class="header-btn danger" id="resetBtn" title="처음으로">⌂ 처음</button>
   </div>
 </header>
 
@@ -685,6 +440,7 @@
 <main class="container" id="app"></main>
 
 <div class="footer">
+  <div class="h-saekdong" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
   Reference · 문화유산법 제39·60·90조 · 형소법 제211·212조 · 감정관실 설치·운영 규정
   <div class="app-version" id="appVersion"></div>
 </div>
@@ -706,7 +462,7 @@
 
 // ────────────────────────────────────────────────
 //  ▼ 배포할 때마다 이 한 줄만 바꾸세요. 화면 맨 아래에 그대로 표시됩니다.
-const APP_VERSION = 'v3.1 · 2026-05-30';
+const APP_VERSION = 'v3.3 · 2026-07-28';
 // ────────────────────────────────────────────────
 (function () {
   const v = document.getElementById('appVersion');
@@ -792,6 +548,7 @@ const STATES = {
     track: 'checkpoint',
     crumb: ['시작'],
     render: () => `
+      <div class="h-saekdong cover" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
       <div class="card violation">
         <div class="card-meta"><span class="card-step violation">검색대 적발 절차</span></div>
         <h2 class="card-title violation">일반동산문화유산 해당 기준</h2>
@@ -879,8 +636,8 @@ const STATES = {
           </div>
         </details>
 
-        <div class="info-box" style="background:#fff8e8;border-color:var(--gold-soft);border-style:solid;">
-          <span class="info-box-title" style="color:var(--gold);">별도기준 (미술·전적·생활기술 분야에 한함 · 자연사 분야 제외)</span>
+        <div class="info-box" style="border-left-color:var(--obang-hwang);">
+          <span class="info-box-title">별도기준 (미술·전적·생활기술 분야에 한함 · 자연사 분야 제외)</span>
           <p style="font-size:.82rem;margin-bottom:.35rem;">위 가목 기준을 충족하지 않더라도, 다음 1·2 중 하나에 해당하면 일반동산문화유산으로 봅니다.</p>
           <ol style="padding-left:1.3rem;margin:.3rem 0;">
             <li><strong>외국유물</strong> — 국내에서 출토되었거나 상당기간 전해져 온 외국 제작 유물 중 우리나라 역사·예술·문화에 상당한 영향을 끼쳤음이 분명할 것</li>
@@ -960,13 +717,14 @@ const STATES = {
               <li>일반동산 가능성 있는 동산을 신청 없이 반출하면 <strong>법 제60조①·제90조②</strong>에 따라 처벌(3년 이상 유기징역) 및 몰수 대상이 될 수 있음.</li>
               <li>신청서 미작성은 사후 <strong>처벌 가중 사유</strong>로 작용할 수 있음 (작성 시 의무 사후 보완으로 평가).</li>
             </ul>
-            <h4>③ 위원 직무 종결 · 화주 선택 존중</h4>
+            <h4>③ 위원 직권 감정으로 현장 종결</h4>
             <ul>
               <li>작성에 응하면 정상 절차로 복귀.</li>
-              <li>끝까지 거부하면 위원 보고서에 거부 사실 및 고지 내용 기록 후 <strong>반출 허용</strong>.</li>
+              <li>끝까지 거부하더라도 위원은 <strong>직권으로 외관 감정을 실시</strong>하여 현장에서 판단을 종결한다 (아래 '신청서 작성 거부' 분기로 진행). 비문화유산이면 반출 허용, 일반동산이면 위반 고지 후 후속 처분.</li>
+              <li>거부 사실과 고지 내용은 위원 보고서에 기록.</li>
             </ul>
             <div class="field-note">
-              위원에게는 사람의 출국이나 동산 점유를 강제할 권한이 법 제60조⑤ 의무 조항만으로는 부여되지 않음. 강제 처분은 일반동산문화유산으로 확정된 후에야 발동됩니다.
+              신청서 작성은 화주의 행정의무이지 위원의 감정 권한 발동 요건이 아님. 다만 동산 점유·출국을 강제하는 처분은 일반동산문화유산으로 확정된 후에야 발동됩니다.
             </div>
           </div>
         </details>
@@ -1023,9 +781,9 @@ const STATES = {
           감정 결과 비문화유산으로 판별되었습니다. 반출 제한 사유가 없으므로 <strong>화주의 출국을 허용</strong>합니다.
         </div>
 
-        <div class="info-box warn">
-          <span class="info-box-title">현장 운용 — 생략 사항</span>
-          본 감정관실 운용상 비문화유산 케이스의 별지 제78호의2 서식 교부 및 시행규칙 별표 3 확인표지 부착은 <strong>생략</strong>합니다. 다른 감정관실 통보 등 형식 절차도 필요 시 사후 처리합니다.
+        <div class="info-box">
+          <span class="info-box-title">서식 교부·확인표지 — 검색대 건은 해당 없음 (감정관실 공통)</span>
+          시행규칙 별표 3 확인표지는 <strong>방문 감정</strong>에서 확인받은 물품에 확인 사실을 표시하기 위해 부착하는 것입니다. 검색대 건은 그 자리에서 확인 후 바로 반출되므로 확인표지 부착과 별지 제78호의2 서식 교부를 하지 않습니다 — 특정 감정관실의 운용 방식이 아니라 절차 성격에 따른 공통 처리입니다. 다른 감정관실 통보 등 형식 절차는 필요 시 사후 처리합니다.
         </div>
 
         <div class="nav-row">
@@ -1093,7 +851,7 @@ const STATES = {
 
         <div class="info-box warn">
           <span class="info-box-title">위법 확정</span>
-          감정 결과 일반동산문화유산으로 판별되었습니다. 신청받지 않은 동산이므로 <strong>법 제60조 ①항(제39조 ①항 준용) 무허가 반출 금지 위반</strong>이며, 해당 문화유산은 <strong>법 제90조 ②항에 따른 법정 몰수 대상</strong>입니다 (운영규정 제10조②). 협조 여부와 무관하게 사법기관 고발 조치 및 몰수 조치가 이루어져야 합니다.
+          감정 결과 일반동산문화유산으로 판별되었습니다. 신청받지 않은 동산이므로 <strong>법 제60조 ①항(제39조 ①항 준용) 무허가 반출 금지 위반</strong>이며, 해당 문화유산은 <strong>법 제90조에 따른 법정 몰수 대상</strong>입니다 (운영규정 제10조②). 협조 여부와 무관하게 사법기관 고발 조치 및 몰수 조치가 이루어져야 합니다.
         </div>
 
         ${renderChecklist('heritage_confirmed', [
@@ -1103,7 +861,7 @@ const STATES = {
 
         <div class="info-box warn">
           <span class="info-box-title">현장 처리 원칙</span>
-          소유자는 현행범으로 보지 않으며, <strong>범죄구성요건에 대한 판단은 하지 않습니다</strong>. 감정위원은 위반 고지와 임의제출 절차만 진행합니다.
+          소유자는 <strong>원칙적으로 현행범으로 보지 않으며</strong>, 범죄구성요건에 대한 판단은 하지 않습니다. 감정위원은 위반 고지와 임의제출 절차만 진행하고, 현행범 체포 여부의 검토는 전면 거부·도주 우려가 있는 비협조 트랙에서만 이루어집니다.
         </div>
 
         <p class="card-desc" style="margin-top:1rem;">화주의 응답에 따라 절차가 세 갈래로 나뉩니다.</p>
@@ -1161,7 +919,7 @@ const STATES = {
         { id:'rights', label:'범위 특정 제출권 안내 (전부/일부 선택 제출 가능)', meta:[{type:'warn', text:'필수'}] },
         { id:'submission', label:'임의제출서 작성·서명 확보 (2부 작성)', meta:[{type:'warn', text:'필수'}, {type:'form', text:'붙임 1 (임의제출서)'}] },
         { id:'receipt_copy', label:'임의제출 목록 사본 화주 교부 (제출자 보관용 1부)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제219조·제129조'}] },
-        { id:'receive', label:'문화유산 압수·인수 (임의제출 형식 · 법 제90조 몰수 대상물 확보)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제90조②'}] },
+        { id:'receive', label:'문화유산 압수·인수 (임의제출물 압수 · 법 제90조 몰수 대상물 확보)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제218조 / 법 제90조'}] },
         { id:'passport', label:'여권 사본 촬영', meta:[{type:'warn', text:'필수'}] },
       ];
       const cooperateRequired = caseState.is_sjp
@@ -1289,7 +1047,7 @@ const STATES = {
             { id:'identify', label:'화주 신원·연락처 확인 (여권·신분증 제시)', meta:[{type:'warn', text:'필수'}] },
             { id:'seize_record', label:'압수조서 작성 (제출자 진술란에 "임의제출 거부, 압수 처분에 따름" 명시)', meta:[{type:'warn', text:'필수'}, {type:'form', text:'압수조서'}] },
             { id:'receipt_copy', label:'압수목록 화주 교부', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제129조'}] },
-            { id:'receive', label:'문화유산 압수·인수 (법 제90조 몰수 대상물 확보)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제90조②'}] },
+            { id:'receive', label:'문화유산 압수·인수 (법 제90조 몰수 대상물 확보)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제90조'}] },
             { id:'passport', label:'여권 사본 촬영', meta:[{type:'warn', text:'필수'}] },
           ]
         : [
@@ -1311,7 +1069,7 @@ const STATES = {
 
         <div class="info-box warn">
           <span class="info-box-title">법적 근거</span>
-          형소법 제216조 ③항은 "사법경찰관은 범행 중 또는 범행 직후의 범죄장소에서 긴급을 요하여 법원판사의 영장을 받을 수 없는 때에는 영장 없이 압수·수색 또는 검증을 할 수 있다. <strong>이 경우에는 사후에 지체 없이 영장을 받아야 한다</strong>"고 정합니다. 검색대 적발은 이 요건을 충족합니다.
+          형소법 제216조 ③항은 검사·사법경찰관이 "범행 중 또는 범행 직후의 범죄장소에서 긴급을 요하여 법원판사의 영장을 받을 수 없는 때에는 영장 없이 압수·수색 또는 검증을 할 수 있다. <strong>이 경우에는 사후에 지체 없이 영장을 받아야 한다</strong>"고 정합니다. 검색대 적발은 통상 범행 직후의 범죄장소·긴급성 요건을 충족하는 것으로 봅니다.
         </div>
 
         ${sjpBlock}
@@ -1361,7 +1119,7 @@ const STATES = {
             { id:'sjp_intro', label:'특사경 지명서 제시 및 신분 고지 (수사 개시)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'특사경 직무규정 제12조②'}] },
             { id:'warn', label:'위반 사항 반복 고지 및 현행범 체포 가능 경고', meta:[{type:'warn', text:'필수'}] },
             { id:'identify', label:'신원 확보 시도 (여권·신분증 제시 요구)' },
-            { id:'confiscate', label:'문화유산 압수 (보안검색요원 지원 · 법 제90조 몰수 대상)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제90조②'}] },
+            { id:'confiscate', label:'문화유산 압수 (보안검색요원 지원 · 법 제90조 몰수 대상)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제90조'}] },
             { id:'support', label:'필요 시 공항경찰대 등 관할 사법기관 협조 요청' },
             { id:'handover', label:'신병·압수물 처리 — 사범단속팀 또는 경찰 인계', meta:[{type:'warn', text:'필수'}] },
           ])}
@@ -1375,7 +1133,7 @@ const STATES = {
             { id:'warn', label:'위반 사항 반복 고지', meta:[{type:'warn', text:'필수'}] },
             { id:'call_police', label:'공항경찰대 등 관할 사법기관 신고 (보안검색요원·인근 인원 협조)', meta:[{type:'warn', text:'필수'}] },
             { id:'call_sjp', label:'국가유산청 사범단속팀 통보', meta:[{type:'warn', text:'필수'}] },
-            { id:'confiscate', label:'문화유산 압수 (보안검색요원 지원 · 법 제90조 몰수 대상)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제90조②'}] },
+            { id:'hold_position', label:'문화유산 점유 보전 — 반출 차단 (보안검색요원 협조 · 압수는 도착한 압수 권한자가 집행)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제90조'}] },
             { id:'await', label:'사법기관 도착 시까지 위반자 동태 관찰' },
             { id:'handover', label:'사법기관 도착 시 위반자 특정 후 신병 인계', meta:[{type:'warn', text:'필수'}] },
             { id:'cooperate_req', label:'사법기관 요구사항(동행 등) 협조' },
@@ -1383,7 +1141,7 @@ const STATES = {
         `;
       const requiredIds = caseState.is_sjp
         ? ['sjp_intro', 'warn', 'confiscate', 'handover']
-        : ['warn', 'call_police', 'call_sjp', 'confiscate', 'handover'];
+        : ['warn', 'call_police', 'call_sjp', 'hold_position', 'handover'];
       const stateKey = caseState.is_sjp ? 'refuse_sjp' : 'refuse_nonsjp';
       return `
       <div class="card violation">
@@ -1526,7 +1284,6 @@ function renderSummary() {
   const startedFmt = caseState.startedAt ? fmtTime(caseState.startedAt) : '—';
 
   const checkEntries = Object.entries(caseState.checks).filter(([k,v]) => v);
-  const inputEntries = Object.entries(caseState.inputs).filter(([k,v]) => v);
 
   return `
     <div class="card accent">
@@ -1542,18 +1299,6 @@ function renderSummary() {
           <div class="summary-list-item"><span class="summary-key">분기</span><span class="summary-val">${branchLabel}</span></div>
         </div>
       </div>
-      ${inputEntries.length ? `
-      <div class="summary-section">
-        <h3>입력 항목</h3>
-        <div class="summary-list">
-          ${inputEntries.map(([k,v]) => `
-            <div class="summary-list-item">
-              <span class="summary-key">${k}</span>
-              <span class="summary-val">${v}</span>
-            </div>
-          `).join('')}
-        </div>
-      </div>` : ''}
       <div class="summary-section">
         <h3>완료 항목 (${checkEntries.length}건)</h3>
         <div class="summary-list" style="font-size:.82rem;color:var(--ink-soft);">
@@ -1587,7 +1332,6 @@ function navigate(stateId) {
   const state = STATES[stateId];
   if (!state) { console.warn('Unknown state:', stateId); return; }
 
-  if (!caseState.startedAt) caseState.startedAt = new Date().toISOString();
   if (state.track && !caseState.track) caseState.track = state.track;
 
   caseState.trail.push(stateId);
@@ -1605,8 +1349,9 @@ function tryNavigate(targetState, stateId, requiredIds) {
     missing.forEach(id => {
       const el = document.querySelector(`[data-check-id="${stateId}.${id}"]`);
       if (el) {
-        el.classList.add('shake');
-        setTimeout(() => el.classList.remove('shake'), 700);
+        // 디자인 시스템 규칙 6(허용 모션 외 금지) — 흔들림 대신 정적 색 강조
+        el.classList.add('miss');
+        setTimeout(() => el.classList.remove('miss'), 1400);
       }
     });
     return;
@@ -1617,11 +1362,14 @@ function tryNavigate(targetState, stateId, requiredIds) {
 // 특사경 역할 설정 후 진행
 function setSjpRole(isSjp) {
   caseState.is_sjp = isSjp;
+  // 사건 시작 시각 — 앱을 열어둔 시각이 아니라 실제 절차 진입 시점에 기록
+  if (!caseState.startedAt) caseState.startedAt = new Date().toISOString();
   navigate('arrival');
 }
 
 function goBack() {
   if (caseState.trail.length <= 1) {
+    caseState.trail = [];   // 'start' 중복 축적 방지
     navigate('start');
     return;
   }
