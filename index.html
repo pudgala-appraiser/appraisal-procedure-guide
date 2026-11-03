@@ -441,7 +441,7 @@ details.field .field-body .examples strong { color: var(--text-ink); font-weight
 
 <div class="footer">
   <div class="h-saekdong" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-  Reference · 문화유산법 제39·60·90조 · 형소법 제211·212조 · 감정관실 설치·운영 규정
+  Reference · 문화유산법 제39·60·90조 · 형소법 제211·212·216·218조 · 특사경 협력규정 · 감정관실 설치·운영 규정
   <div class="app-version" id="appVersion"></div>
 </div>
 
@@ -462,7 +462,7 @@ details.field .field-body .examples strong { color: var(--text-ink); font-weight
 
 // ────────────────────────────────────────────────
 //  ▼ 배포할 때마다 이 한 줄만 바꾸세요. 화면 맨 아래에 그대로 표시됩니다.
-const APP_VERSION = 'v3.3 · 2026-07-28';
+const APP_VERSION = 'v3.4 · 2026-11-03';
 // ────────────────────────────────────────────────
 (function () {
   const v = document.getElementById('appVersion');
@@ -651,11 +651,14 @@ const STATES = {
         </div>
 
         <p class="card-desc" style="margin-top:1.25rem;">현장의 특별사법경찰(특사경) 자격 여부를 선택하면 그에 맞는 절차로 진행됩니다.</p>
+        <div class="info-box" style="font-size:.82rem;">
+          여기서 '특사경 자격'은 <strong>특별사법경찰관</strong> 지명을 말합니다. 영장 없는 압수(형소법 제216조③·제218조)와 피의자 신문의 주체는 특별사법경찰관이며, 특별사법경찰리는 수사를 보조합니다. 특별사법경찰리만 현장에 있으면 '부재'로 진행하십시오. 지명 여부·직위·담당 범죄는 미리 확인해 두고, 서류에는 직위를 명확히 적습니다.
+        </div>
         <div class="choice-grid">
           <button class="choice-btn violation" onclick="setSjpRole(true)">
             <span class="choice-icon">特</span>
             <span class="choice-text">
-              <span class="choice-label">특사경 자격 위원 현장</span>
+              <span class="choice-label">특사경(특별사법경찰관) 위원 현장</span>
               <span class="choice-desc">본인이 직접 임의제출·인계 진행 가능</span>
             </span>
             <span class="choice-arrow">›</span>
@@ -857,11 +860,15 @@ const STATES = {
         ${renderChecklist('heritage_confirmed', [
           { id:'violation', label:'위반 사실 고지 (법 제60조①·제90조②)', meta:[{type:'law', text:'법 제60조①·제90조②'}, {type:'warn', text:'필수'}] },
           { id:'right_refuse', label:'임의제출 거부권 고지', meta:[{type:'warn', text:'필수'}] },
+          ...(caseState.is_sjp ? [{ id:'rights_inquiry', label:'입수·반출 경위를 묻기 전 권리 고지 — 진술거부권·변호인 조력권, 수사과정의 법령위반·인권침해에 대한 검사 구제신청권 (서명만 받지 말고 내용을 이해시킬 것 · 입건 전이라도 고지)', meta:[{type:'warn', text:'경위를 물을 때 필수'}, {type:'law', text:'형소법 제244조의3·제197조의3'}] }] : []),
         ])}
 
         <div class="info-box warn">
           <span class="info-box-title">현장 처리 원칙</span>
-          소유자는 <strong>원칙적으로 현행범으로 보지 않으며</strong>, 범죄구성요건에 대한 판단은 하지 않습니다. 감정위원은 위반 고지와 임의제출 절차만 진행하고, 현행범 체포 여부의 검토는 전면 거부·도주 우려가 있는 비협조 트랙에서만 이루어집니다.
+          소유자는 <strong>원칙적으로 현행범으로 보지 않습니다.</strong> 현행범 체포 여부의 검토는 전면 거부·도주 우려가 있는 비협조 트랙에서만 이루어집니다. 다만 일반동산 판별로 범죄혐의가 드러난 이 시점부터 사건은 <strong>수사 대상</strong>이 됩니다. 신청서 작성·감정까지 확보한 자료(행정 단계)와 이후 확보한 자료(수사 단계)는 구별해 기록합니다.
+          ${caseState.is_sjp
+            ? '특사경은 범죄혐의를 인식하면 수사를 개시해야 합니다(형소법 제245조의10③). 입수 경위·반출 의도처럼 고의와 관련된 사실을 묻는 것은 실질적 피의자 신문이므로, "확인"이나 "면담"이라는 이름으로 권리 고지를 건너뛰지 않습니다.'
+            : '특사경이 아닌 위원은 입수·반출 경위를 캐묻는 신문을 하지 않습니다. 화주가 스스로 밝힌 내용만 메모해 두고, 경위 조사는 출동한 특사경 또는 사법경찰관에게 넘깁니다.'}
         </div>
 
         <p class="card-desc" style="margin-top:1rem;">화주의 응답에 따라 절차가 세 갈래로 나뉩니다.</p>
@@ -912,14 +919,19 @@ const STATES = {
               <li><strong>즉시 출동 가능</strong> → 도착 대기, 이후 정식 인계</li>
               <li><strong>즉시 출동 불가</strong> → <strong>공항경찰대 등 관할 사법기관</strong>의 협조를 받아 진행 (기존 관례)</li>
             </ul>
-            임의제출서·여권 사본 등 필수 서류 확보는 비특사경 위원도 진행 가능하며, 압수물 정식 인계는 출동한 특사경 또는 협조 사법기관 측에서 처리합니다.
+            임의제출서·여권 사본 등 필수 서류 확보는 비특사경 위원도 진행 가능하며, 압수물 정식 인계는 출동한 특사경 또는 협조 사법기관 측에서 처리합니다. 위원이 물품을 넘겨받는 것은 형사절차상 압수가 아니라 <strong>반출 차단을 위한 점유 보전</strong>이므로, 압수조서와 압수목록은 압수 권한자가 작성·교부합니다. 행정서류를 맡아 두는 것과 압수는 구별됩니다.
           </div>`;
       const cooperateItems = [
         ...(caseState.is_sjp ? [{ id:'sjp_intro', label:'특사경 지명서 제시 및 신분 고지 (수사 개시)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'특사경 직무규정 제12조②'}] }] : []),
         { id:'rights', label:'범위 특정 제출권 안내 (전부/일부 선택 제출 가능)', meta:[{type:'warn', text:'필수'}] },
-        { id:'submission', label:'임의제출서 작성·서명 확보 (2부 작성)', meta:[{type:'warn', text:'필수'}, {type:'form', text:'붙임 1 (임의제출서)'}] },
-        { id:'receipt_copy', label:'임의제출 목록 사본 화주 교부 (제출자 보관용 1부)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제219조·제129조'}] },
-        { id:'receive', label:'문화유산 압수·인수 (임의제출물 압수 · 법 제90조 몰수 대상물 확보)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제218조 / 법 제90조'}] },
+        { id:'submission', label:'임의제출서 작성·서명 확보 (2부 작성 · 제출자의 지위(소유자·소지자·보관자)와 제출 경위를 적게 함)', meta:[{type:'warn', text:'필수'}, {type:'form', text:'붙임 1 (임의제출서)'}, {type:'law', text:'형소법 제218조'}] },
+        ...(caseState.is_sjp ? [
+          { id:'receipt_copy', label:'임의제출 목록 사본 화주 교부 (제출자 보관용 1부)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제219조·제129조'}] },
+          { id:'receive', label:'문화유산 압수·인수 (임의제출물 압수 · 법 제90조 몰수 대상물 확보)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제218조 / 법 제90조'}] },
+        ] : [
+          { id:'receipt_copy', label:'임의제출서(목록) 사본 화주 교부 (제출자 보관용 1부 · 형소법상 압수목록 교부는 압수 권한자가 하며, 화주가 먼저 출국하면 확보한 연락처로 송부)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제219조·제129조'}] },
+          { id:'receive', label:'문화유산 인수·점유 보전 (반출 차단 · 정식 압수는 출동한 특사경 또는 사법경찰관이 집행 · 법 제90조 몰수 대상물)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제90조'}] },
+        ]),
         { id:'passport', label:'여권 사본 촬영', meta:[{type:'warn', text:'필수'}] },
       ];
       const cooperateRequired = caseState.is_sjp
@@ -982,7 +994,7 @@ const STATES = {
         <p class="card-subtitle">Korean national · departure</p>
 
         ${renderChecklist('departure_korean', [
-          { id:'judicial', label:'귀국 후 사법기관 출석 조사 가능 안내', meta:[{type:'law', text:'법 제60조①·제90조②'}] },
+          { id:'judicial', label:'귀국 후 사법기관 출석 조사 가능 안내 — 수사 담당(사범단속팀 등)에서 연락할 것임을 알리고 화주 연락처·귀국 예정 확인 (임의 출석 안내이므로 동행 강제·출국 저지 근거가 아님 · 안내 경위는 기록)', meta:[{type:'law', text:'법 제60조①·제90조②'}, {type:'law', text:'형소법 제200조'}] },
           { id:'allow', label:'출국 허용' },
         ])}
 
@@ -1009,7 +1021,7 @@ const STATES = {
         <p class="card-subtitle">Foreign national · departure</p>
 
         ${renderChecklist('departure_foreign', [
-          { id:'judicial', label:'사법기관 출석 조사 가능 안내', meta:[{type:'law', text:'법 제60조①·제90조②'}] },
+          { id:'judicial', label:'사법기관 출석 조사 가능 안내 — 수사 담당(사범단속팀 등)에서 연락할 것임을 알리고 화주 연락처·전자우편 확인 (임의 출석 안내이므로 동행 강제·출국 저지 근거가 아님 · 안내 경위는 기록)', meta:[{type:'law', text:'법 제60조①·제90조②'}, {type:'law', text:'형소법 제200조'}] },
           { id:'allow', label:'출국 허용' },
         ])}
 
@@ -1033,7 +1045,7 @@ const STATES = {
       const sjpBlock = caseState.is_sjp
         ? `<div class="info-box warn">
             <span class="info-box-title">특사경 본인 — 직접 압수 가능</span>
-            본인이 특사경 자격으로 형소법 제216조 ③항에 따라 영장 없이 압수합니다. <strong>사후 영장 청구 의무</strong>가 발생하며, 신원·연락처 확보 후 신병은 출국 허용합니다.
+            본인이 특별사법경찰관 자격으로 형소법 제216조 ③항에 따라 영장 없이 압수합니다. <strong>사후에 지체 없이 검사에게 압수수색영장을 신청</strong>해야 하며(특사경은 영장을 직접 청구하지 않고 검사에게 신청 → 검사가 법원에 청구), 신원·연락처 확보 후 신병은 출국 허용합니다. 요건 판단이 어려우면 검사에게 지도·조언을 요청할 수 있습니다.
           </div>`
         : `<div class="info-box warn">
             <span class="info-box-title">특사경 부재 — 압수 권한자 호출 필수</span>
@@ -1043,22 +1055,23 @@ const STATES = {
       const items = caseState.is_sjp
         ? [
             { id:'sjp_intro', label:'특사경 지명서 제시 및 신분 고지 (수사 개시)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'특사경 직무규정 제12조②'}] },
-            { id:'seize_declare', label:'압수 처분 선언 (제216조 ③항 근거 + 사후 영장 청구 의무 고지)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제216조③'}] },
+            { id:'seize_declare', label:'압수 처분 선언 (제216조 ③항 근거 + 사후 영장 신청 예정 고지)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제216조③'}] },
             { id:'identify', label:'화주 신원·연락처 확인 (여권·신분증 제시)', meta:[{type:'warn', text:'필수'}] },
-            { id:'seize_record', label:'압수조서 작성 (제출자 진술란에 "임의제출 거부, 압수 처분에 따름" 명시)', meta:[{type:'warn', text:'필수'}, {type:'form', text:'압수조서'}] },
+            { id:'seize_record', label:'압수조서 작성 (제출자 진술란에 "임의제출 거부, 압수 처분에 따름" 명시 · 영장 없이 압수한 긴급성 사유(출국 임박 등)를 기재 · 작성자 직위 "특별사법경찰관" 기재)', meta:[{type:'warn', text:'필수'}, {type:'form', text:'압수조서'}] },
             { id:'receipt_copy', label:'압수목록 화주 교부', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제129조'}] },
             { id:'receive', label:'문화유산 압수·인수 (법 제90조 몰수 대상물 확보)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제90조'}] },
             { id:'passport', label:'여권 사본 촬영', meta:[{type:'warn', text:'필수'}] },
+            { id:'prosecutor_advice', label:'필요 시 검사 지도·조언 요청 (긴급하면 전화 → 받은 취지를 지체 없이 서면으로 남겨 편철)', meta:[{type:'form', text:'선택'}, {type:'form', text:'지도·조언 요청서 (협력규칙 제16조)'}] },
           ]
         : [
-            { id:'call_authority', label:'사범단속팀 또는 공항경찰대 호출 (압수 권한자 출동 요청)', meta:[{type:'warn', text:'필수'}] },
+            { id:'call_authority', label:'사범단속팀 또는 공항경찰대 호출 (압수 권한자 출동 요청 · 사건 개요, 필요한 조치, 출국 시각 등 긴급성을 구체적으로 전달)', meta:[{type:'warn', text:'필수'}] },
             { id:'hold_position', label:'보안검색요원 협조로 문화유산 점유 보전 (반출 차단)', meta:[{type:'warn', text:'필수'}] },
             { id:'identify', label:'화주 신원·연락처 확인 협조 요청', meta:[{type:'warn', text:'필수'}] },
             { id:'await_seizure', label:'압수 권한자 도착 후 압수 처분 진행 입회', meta:[{type:'warn', text:'필수'}] },
             { id:'receipt_copy', label:'압수목록 화주 교부 확인 (압수 권한자 작성·교부 입회)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'형소법 제129조'}] },
             { id:'passport', label:'여권 사본 촬영 (도착 권한자와 공유)', meta:[{type:'warn', text:'필수'}] },
           ];
-      const requiredIds = items.map(it => it.id);
+      const requiredIds = items.filter(it => (it.meta || []).some(m => m.type === 'warn' && m.text === '필수')).map(it => it.id);
       const stateKey = 'seize_216';
 
       return `
@@ -1114,13 +1127,17 @@ const STATES = {
           <div class="info-box warn">
             <span class="info-box-title">특사경 본인 — 현행범 체포 가능</span>
             위법성이 명백하고 체포 필요성이 인정될 때, 형소법 제212조에 따라 영장 없이 현행범 체포가 가능합니다 (준현행범: 형소법 제211조② 2호 — 장물·범죄에 사용된 물건 소지). 본인이 신원 확보를 시도하고, 필요 시 공항경찰대 등 관할 사법기관과 협조해 신병을 처리합니다.
+            <ul style="padding-left:1.1rem;margin:.4rem 0;">
+              <li>체포했다면 <strong>체포 시각을 기록</strong>합니다. 계속 구속할 필요가 있으면 체포한 때부터 <strong>48시간 이내</strong>에 검사에게 구속영장을 신청해야 하므로, 인계받는 쪽에 체포 시각을 함께 넘깁니다.</li>
+              <li>이 과정에서 폭행·공무집행방해 등 <strong>직무범위 밖의 범죄</strong>가 생기면 직접 수사하지 않고, 검사의 지도·조언을 받아 공항경찰대 등 관할 수사기관에 통보합니다 (특사경 협력규정 제16조).</li>
+            </ul>
           </div>
           ${renderChecklist('refuse_sjp', [
             { id:'sjp_intro', label:'특사경 지명서 제시 및 신분 고지 (수사 개시)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'특사경 직무규정 제12조②'}] },
             { id:'warn', label:'위반 사항 반복 고지 및 현행범 체포 가능 경고', meta:[{type:'warn', text:'필수'}] },
             { id:'identify', label:'신원 확보 시도 (여권·신분증 제시 요구)' },
             { id:'confiscate', label:'문화유산 압수 (보안검색요원 지원 · 법 제90조 몰수 대상)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제90조'}] },
-            { id:'support', label:'필요 시 공항경찰대 등 관할 사법기관 협조 요청' },
+            { id:'support', label:'필요 시 공항경찰대 등 관할 사법기관 협조 요청 (사건 개요, 본인 직무범위, 필요한 조치, 긴급성을 구체적으로 전달)' },
             { id:'handover', label:'신병·압수물 처리 — 사범단속팀 또는 경찰 인계', meta:[{type:'warn', text:'필수'}] },
           ])}
         `
@@ -1171,7 +1188,8 @@ const STATES = {
     render: () => {
       const items = [
         { id:'photo', label:'압수물 정밀 사진 촬영 (정면·측면·바닥·세부·크기 표시)', meta:[{type:'warn', text:'필수'}] },
-        { id:'report', label:'적발 경위서 작성', meta:[{type:'warn', text:'필수'}, {type:'form', text:'붙임 2 (경위서)'}] },
+        { id:'report', label:'적발 경위서 작성 — 발견 일시·장소·관련자·확보 자료를 적되, 신청서·감정 단계(행정) 자료와 위반 고지 이후(수사) 자료를 구분하고, 직접 본 사실·들은 내용·본인 판단을 나누어 기재', meta:[{type:'warn', text:'필수'}, {type:'form', text:'붙임 2 (경위서)'}] },
+        { id:'evidence_log', label:'압수물 관리 기록 — 식별번호, 확보 일시·장소, 확보자, 상태·수량, 보관 장소, 인계·인수 이력 (기록과 실물 일치 확인)', meta:[{type:'warn', text:'필수'}] },
         { id:'confirm', label:'일반동산문화유산 확인서 작성', meta:[{type:'warn', text:'필수'}, {type:'form', text:'붙임 3 / 별지 제1호'}] },
         { id:'record', label:'감정조서 작성 (특사경 요청 시 한글파일 + 서명 PDF 제출)', meta:[{type:'form', text:'붙임 5 (감정조서)'}] },
         { id:'notify_policy', label:'문화유산정책과 보고', meta:[{type:'warn', text:'필수'}] },
@@ -1191,8 +1209,8 @@ const STATES = {
 
         ${caseState.trail.includes('seize_216') ? `
         <div class="info-box warn">
-          <span class="info-box-title">제216조 ③ 압수 — 사후 영장 청구 의무</span>
-          영장 없이 압수한 사건이므로 <strong>지체 없이 사후 영장을 청구</strong>해야 합니다 (형소법 제216조 ③ 단서). 사범단속팀 특사경 인계 시 <strong>"제216조 ③ 압수 사건"임을 명시</strong>하고 사후 영장 청구 절차가 누락되지 않도록 협조합니다. 사후 영장 청구가 빠지면 압수의 적법성 자체가 다투어질 수 있습니다.
+          <span class="info-box-title">제216조 ③ 압수 — 사후 영장 신청 의무</span>
+          영장 없이 압수한 사건이므로 <strong>지체 없이 사후 영장을 받아야</strong> 합니다 (형소법 제216조 ③ 단서). 특사경은 검사에게 압수수색영장을 <strong>신청</strong>하고, 검사가 법원에 청구합니다. 사범단속팀 특사경 인계 시 <strong>"제216조 ③ 압수 사건"임을 명시</strong>하고 사후 영장 신청이 누락되지 않도록 협조합니다. 사후 영장이 빠지면 압수의 적법성 자체가 다투어질 수 있습니다.
         </div>
         ` : ''}
 
@@ -1211,11 +1229,14 @@ const STATES = {
           <span class="info-box-title">특사경 본인 — 추가 수사 절차</span>
           본인이 특사경 자격으로 수사를 직접 개시하는 경우 다음을 함께 진행합니다.
           <ul style="padding-left:1.1rem;margin:.4rem 0;">
-            <li><strong>범죄인지보고서</strong> 작성 — 특사경 직무규정 별지 제2호 서식 · 범죄사건부 등재</li>
+            <li><strong>범죄인지보고서</strong> 작성 · 범죄사건부 등재 (특사경 직무규정 제14조① · 별지 제2호 서식). 직무규정 서식은 개정 특사경 협력규칙의 법정 서식과 대조해 필수 항목이 빠지지 않게 합니다.</li>
+            <li>수사개시 즉시 검사 통보(특사경 협력규정 제15조)는 열거된 중대범죄에 한하며 문화유산법 위반은 열거되어 있지 않습니다. 다만 관세법 위반이 함께 문제되면 같은 조의 통보 대상이 될 수 있으므로 확인합니다.</li>
             <li>피의자 본인 확인 — 신분증 사본 복사 후 수사기록 편철</li>
-            <li>피의자 신문조서 작성 시 <strong>진술거부권 및 변호인 조력권</strong> 사전 고지 (자필 확인)</li>
+            <li>피의자 신문 전 <strong>진술거부권·변호인 조력권·검사 구제신청권</strong> 고지 (자필 확인). 서명만 받는 절차가 아니므로 내용을 이해시킵니다. 변호인을 선임하겠다고 하면 선임 기한과 다음 조사 일정을 정해 귀가시킨 뒤 조사합니다.</li>
+            <li>조사는 원칙적으로 <strong>오후 9시~다음 날 오전 6시</strong>에 하지 않고, 대기·휴식 포함 <strong>12시간</strong>을 넘기지 않습니다. 야간 출국편 사건이라도 예외 사유가 없으면 신문을 미루고, 예외로 조사했다면 그 사유를 수사보고로 남깁니다.</li>
+            <li>조서·수사보고 등 모든 서류에 작성 연월일, 소속, 직위(특별사법경찰관)를 적고 서명날인합니다.</li>
           </ul>
-          이러한 절차는 압수·인수 후 사범단속팀과 협의하여 진행하며, 인계 시 함께 송부합니다.
+          이러한 절차는 압수·인수 후 사범단속팀과 협의하여 진행하며, 인계 시 함께 송부합니다. 특사경 사건은 혐의가 없다고 보더라도 자체 종결하지 않고 <strong>모두 검사에게 송치</strong>합니다 (형소법 제245조의10⑤).
         </div>
         ` : ''}
 
