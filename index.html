@@ -462,7 +462,7 @@ details.field .field-body .examples strong { color: var(--text-ink); font-weight
 
 // ────────────────────────────────────────────────
 //  ▼ 배포할 때마다 이 한 줄만 바꾸세요. 화면 맨 아래에 그대로 표시됩니다.
-const APP_VERSION = 'v3.5 · 2026-11-07';
+const APP_VERSION = 'v3.6 · 2026-11-07';
 // ────────────────────────────────────────────────
 (function () {
   const v = document.getElementById('appVersion');
@@ -554,7 +554,7 @@ const STATES = {
         <h2 class="card-title">현장 특사경 자격 확인</h2>
         <p class="card-desc">현장의 특별사법경찰(특사경) 자격 여부를 선택하면 그에 맞는 절차로 진행됩니다.</p>
         <div class="choice-grid">
-          <button class="choice-btn violation" onclick="setSjpRole(true)">
+          <button class="choice-btn" onclick="setSjpRole(true)">
             <span class="choice-icon">特</span>
             <span class="choice-text">
               <span class="choice-label">특사경(특별사법경찰관) 위원 현장</span>
@@ -688,15 +688,15 @@ const STATES = {
     crumb: ['검색대', '신청서 작성·감정'],
     render: () => {
       const sjpLabel = caseState.is_sjp
-        ? '<span class="meta-tag warn" style="margin-left:.4rem;">특사경 본인</span>'
+        ? '<span class="meta-tag law" style="margin-left:.4rem;">특사경 본인</span>'
         : '<span class="meta-tag form" style="margin-left:.4rem;">특사경 부재</span>';
       return `
-      <div class="card violation">
+      <div class="card">
         <div class="card-meta">
-          <span class="card-step violation">① 현장 도착</span>
+          <span class="card-step">① 현장 도착</span>
           <span style="font-size:.78rem;color:var(--ink-soft);" id="startedAtDisplay"></span>
         </div>
-        <h2 class="card-title violation">비문화유산 확인 신청서 작성 및 감정${sjpLabel}</h2>
+        <h2 class="card-title">비문화유산 확인 신청서 작성 및 감정${sjpLabel}</h2>
 
         <div class="info-box">
           <span class="info-box-title">법 제60조⑤ 의무의 사후 보완</span>
