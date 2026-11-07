@@ -94,7 +94,7 @@ body.heritage {
   display: flex; align-items: baseline; gap: 12px; padding: 13px 20px;
 }
 .h-header .h-brand { font-family: var(--font-display); font-weight: 800; font-size: 21px; letter-spacing: 4px; }
-.h-header .h-sub { font-size: 11px; font-weight: 800; letter-spacing: 2px; color: var(--on-dark-soft); }
+.h-header .h-sub { font-size: 12px; font-weight: 800; letter-spacing: 2px; color: var(--on-dark-soft); }
 
 /* ── 카드/박스: 한지 채움 + 1px 경계 + 좌측 4px 의미색 띠. 그림자 없음 ── */
 .h-box { background: var(--surface-soft); border: 1px solid var(--hairline); border-left: 4px solid var(--accent-structure); padding: 16px 18px; }
@@ -115,7 +115,7 @@ body.heritage {
 .h-btn--text { background: none; padding: 2px 0; color: var(--accent-structure); font-size: 12.5px; letter-spacing: 0.5px; }
 
 /* ── 태그·칩 (1px 테두리, 직각) ── */
-.h-tag { font-size: 10px; border: 1px solid var(--hairline); color: var(--text-muted); padding: 1.5px 6px; background: var(--surface-canvas); letter-spacing: 1px; }
+.h-tag { font-size: 12px; border: 1px solid var(--hairline); color: var(--text-muted); padding: 2px 7px; background: var(--surface-canvas); letter-spacing: 1px; }
 .h-tag--primary { border-color: var(--accent-structure); color: var(--accent-structure); }
 
 /* ── 번호 배지 (원형 예외) ── */
@@ -180,7 +180,7 @@ body.heritage {
   font-size: 12px; color: var(--text-muted);
   display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-height: 32px;
 }
-.breadcrumb-track { font-weight: 800; letter-spacing: 2px; font-size: 11px; text-transform: uppercase; color: var(--accent-structure); }
+.breadcrumb-track { font-weight: 800; letter-spacing: 1.5px; font-size: 12.5px; text-transform: uppercase; color: var(--accent-structure); }
 .breadcrumb-track.violation { color: var(--accent-warning); }
 .breadcrumb-sep { color: var(--text-muted-soft); }
 .breadcrumb-step { color: var(--text-muted); }
@@ -205,7 +205,7 @@ body.heritage {
   gap: 8px; flex-wrap: wrap; margin-bottom: 12px; padding-bottom: 9px;
   border-bottom: 1px solid var(--hairline);
 }
-.card-step { font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-structure); }
+.card-step { font-size: 12.5px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent-structure); }
 .card-step.violation { color: var(--accent-warning); }
 .card-title { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; color: var(--text-ink); line-height: 1.4; margin-bottom: 12px; word-break: keep-all; }
 .card-title.violation { color: var(--accent-warning); }
@@ -266,8 +266,8 @@ body.heritage {
 
 /* 메타 태그 — h-tag 문법 */
 .meta-tag {
-  display: inline-flex; align-items: center; gap: 4px; padding: 1.5px 6px;
-  border-radius: 0; font-size: 10px; font-weight: 700; letter-spacing: .5px; line-height: 1.5;
+  display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px;
+  border-radius: 0; font-size: 12px; font-weight: 700; letter-spacing: .5px; line-height: 1.5;
   background: var(--surface-canvas); border: 1px solid var(--hairline); color: var(--text-muted);
 }
 .meta-tag.law { border-color: var(--accent-structure); color: var(--accent-structure); }
@@ -381,7 +381,7 @@ details.field .field-body .examples strong { color: var(--text-ink); font-weight
 .footer { text-align: center; color: var(--text-muted); font-size: .75rem; padding: 8px 16px 36px; max-width: 720px; margin: 0 auto; line-height: 1.7; }
 .footer .h-saekdong { justify-content: center; margin: 0 auto 14px; width: max-content; }
 .footer-author { font-weight: 700; margin-top: 6px; color: var(--text-muted); }
-.app-version { margin-top: 8px; font-size: .68rem; letter-spacing: 1px; color: var(--text-muted-soft); }
+.app-version { margin-top: 8px; font-size: .75rem; letter-spacing: 1px; color: var(--text-muted-soft); }
 
 /* 표지(시작 화면) 색동 */
 .h-saekdong.cover { justify-content: center; margin: 4px auto 16px; width: max-content; }
@@ -395,7 +395,7 @@ details.field .field-body .examples strong { color: var(--text-ink); font-weight
   .card-title { font-size: 1.05rem; }
   .choice-btn { padding: 11px 12px; min-height: 56px; }
   .choice-label { font-size: .93rem; }
-  .choice-desc { font-size: .76rem; }
+  .choice-desc { font-size: .8rem; }
 }
 
 /* 터치 기기 — hover 잔상 제거 */
@@ -1399,7 +1399,7 @@ function goBack() {
 function renderBreadcrumb(state) {
   const crumb = document.getElementById('breadcrumb');
   const items = state.crumb || ['시작'];
-  const trackClass = state.track === 'checkpoint' ? 'violation' : '';
+  const trackClass = ''; // 트랙 이름은 구조색(쪽빛) — 적은 경고·위반에만 (규칙 4)
   crumb.innerHTML = items.map((c, i) => {
     if (i === 0) return `<span class="breadcrumb-track ${trackClass}">${c}</span>`;
     const isLast = i === items.length - 1;
