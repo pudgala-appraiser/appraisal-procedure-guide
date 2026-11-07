@@ -150,13 +150,18 @@ body.heritage {
    · 색동 구분선은 표지(시작 화면)와 푸터에만
    ===================================================================== */
 
+/* 제목 서체 — 마루부리 Bold(© NAVER, OFL)에서 "검색대 적발 시 절차" 글자만 잘라 내장.
+   웹폰트를 내려받지 않으므로 오프라인·휴대폰에서도 같은 모양. 제목 문구를 바꾸면 다시 잘라야 함. */
+@font-face { font-family: "TitleMaru"; font-weight: 700; font-display: swap;
+  src: url(data:font/woff2;base64,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) format("woff2"); }
+
 /* HEADER */
 .h-header {
   position: sticky; top: 0; z-index: 100;
   flex-wrap: wrap; align-items: center; gap: 10px;
   padding: 12px max(16px, calc((100% - 720px) / 2));
 }
-.h-header .h-brand { font-size: 17px; letter-spacing: 2px; }
+.h-header .h-brand { font-family: "TitleMaru", var(--font-display); font-weight: 700; font-size: 22px; letter-spacing: 2px; }
 .h-header .h-sub { letter-spacing: 1.5px; }
 .header-actions { margin-left: auto; display: flex; gap: 6px; flex-shrink: 0; }
 .header-btn {
@@ -383,7 +388,7 @@ details.field .field-body .examples strong { color: var(--text-ink); font-weight
 
 /* RESPONSIVE */
 @media (max-width: 480px) {
-  .h-header .h-brand { font-size: 15px; letter-spacing: 1px; }
+  .h-header .h-brand { font-size: 18px; letter-spacing: 1px; }
   .h-header .h-sub { display: none; }
   .container { padding: 14px 12px 72px; }
   .card { padding: 14px; }
@@ -462,7 +467,7 @@ details.field .field-body .examples strong { color: var(--text-ink); font-weight
 
 // ────────────────────────────────────────────────
 //  ▼ 배포할 때마다 이 한 줄만 바꾸세요. 화면 맨 아래에 그대로 표시됩니다.
-const APP_VERSION = 'v3.6 · 2026-11-07';
+const APP_VERSION = 'v3.7 · 2026-11-07';
 // ────────────────────────────────────────────────
 (function () {
   const v = document.getElementById('appVersion');
