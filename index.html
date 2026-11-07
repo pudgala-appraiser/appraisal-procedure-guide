@@ -202,7 +202,7 @@ body.heritage {
 }
 .card-step { font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-structure); }
 .card-step.violation { color: var(--accent-warning); }
-.card-title { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; color: var(--text-ink); line-height: 1.4; margin-bottom: 4px; word-break: keep-all; }
+.card-title { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; color: var(--text-ink); line-height: 1.4; margin-bottom: 12px; word-break: keep-all; }
 .card-title.violation { color: var(--accent-warning); }
 .card-subtitle { font-size: 10.5px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted-soft); margin-bottom: 12px; }
 .card-desc { color: var(--text-body); font-size: .92rem; line-height: 1.65; margin-bottom: 14px; word-break: keep-all; }
@@ -462,7 +462,7 @@ details.field .field-body .examples strong { color: var(--text-ink); font-weight
 
 // ────────────────────────────────────────────────
 //  ▼ 배포할 때마다 이 한 줄만 바꾸세요. 화면 맨 아래에 그대로 표시됩니다.
-const APP_VERSION = 'v3.4 · 2026-11-03';
+const APP_VERSION = 'v3.5 · 2026-11-07';
 // ────────────────────────────────────────────────
 (function () {
   const v = document.getElementById('appVersion');
@@ -549,10 +549,35 @@ const STATES = {
     crumb: ['시작'],
     render: () => `
       <div class="h-saekdong cover" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-      <div class="card violation">
-        <div class="card-meta"><span class="card-step violation">검색대 적발 절차</span></div>
-        <h2 class="card-title violation">일반동산문화유산 해당 기준</h2>
-        <p class="card-subtitle">Criteria · General Movable Cultural Heritage</p>
+      <div class="card">
+        <div class="card-meta"><span class="card-step">검색대 적발 절차</span></div>
+        <h2 class="card-title">현장 특사경 자격 확인</h2>
+        <p class="card-desc">현장의 특별사법경찰(특사경) 자격 여부를 선택하면 그에 맞는 절차로 진행됩니다.</p>
+        <div class="choice-grid">
+          <button class="choice-btn violation" onclick="setSjpRole(true)">
+            <span class="choice-icon">特</span>
+            <span class="choice-text">
+              <span class="choice-label">특사경(특별사법경찰관) 위원 현장</span>
+              <span class="choice-desc">본인이 직접 임의제출·인계 진행 가능</span>
+            </span>
+            <span class="choice-arrow">›</span>
+          </button>
+          <button class="choice-btn" onclick="setSjpRole(false)">
+            <span class="choice-icon">非</span>
+            <span class="choice-text">
+              <span class="choice-label">특사경 자격 위원 부재</span>
+              <span class="choice-desc">사범단속팀 호출 또는 경찰 신고 필요</span>
+            </span>
+            <span class="choice-arrow">›</span>
+          </button>
+        </div>
+        <div class="info-box" style="font-size:.82rem;">
+          여기서 '특사경 자격'은 <strong>특별사법경찰관</strong> 지명을 말합니다. 영장 없는 압수(형소법 제216조③·제218조)와 피의자 신문의 주체는 특별사법경찰관이며, 특별사법경찰리는 수사를 보조합니다. 특별사법경찰리만 현장에 있으면 '부재'로 진행하십시오. 지명 여부·직위·담당 범죄는 미리 확인해 두고, 서류에는 직위를 명확히 적습니다.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">일반동산문화유산 해당 기준</h2>
         <p class="card-desc">시행령 별표 3(2024. 7. 23. 개정) 기준입니다. 분야별로 공통기준을 모두 충족하고 추가기준 중 하나 이상을 충족하면 일반동산문화유산으로 봅니다.</p>
 
         <details class="field">
@@ -650,28 +675,6 @@ const STATES = {
           수출일·반출일 현재 <strong>생존해 있는 제작자의 작품</strong>은 일반동산문화유산 범위에서 제외됩니다 (시행령 제36조 단서).
         </div>
 
-        <p class="card-desc" style="margin-top:1.25rem;">현장의 특별사법경찰(특사경) 자격 여부를 선택하면 그에 맞는 절차로 진행됩니다.</p>
-        <div class="info-box" style="font-size:.82rem;">
-          여기서 '특사경 자격'은 <strong>특별사법경찰관</strong> 지명을 말합니다. 영장 없는 압수(형소법 제216조③·제218조)와 피의자 신문의 주체는 특별사법경찰관이며, 특별사법경찰리는 수사를 보조합니다. 특별사법경찰리만 현장에 있으면 '부재'로 진행하십시오. 지명 여부·직위·담당 범죄는 미리 확인해 두고, 서류에는 직위를 명확히 적습니다.
-        </div>
-        <div class="choice-grid">
-          <button class="choice-btn violation" onclick="setSjpRole(true)">
-            <span class="choice-icon">特</span>
-            <span class="choice-text">
-              <span class="choice-label">특사경(특별사법경찰관) 위원 현장</span>
-              <span class="choice-desc">본인이 직접 임의제출·인계 진행 가능</span>
-            </span>
-            <span class="choice-arrow">›</span>
-          </button>
-          <button class="choice-btn" onclick="setSjpRole(false)">
-            <span class="choice-icon">非</span>
-            <span class="choice-text">
-              <span class="choice-label">특사경 자격 위원 부재</span>
-              <span class="choice-desc">사범단속팀 호출 또는 경찰 신고 필요</span>
-            </span>
-            <span class="choice-arrow">›</span>
-          </button>
-        </div>
       </div>
       <div class="info-box">
         체크항목·진행 위치는 이 기기에만 저장됩니다(localStorage). "⌂ 처음" 버튼으로 언제든 삭제됩니다.
@@ -690,11 +693,10 @@ const STATES = {
       return `
       <div class="card violation">
         <div class="card-meta">
-          <span class="card-step violation">① 현장 도착 · 신청서 작성 · 감정</span>
+          <span class="card-step violation">① 현장 도착</span>
           <span style="font-size:.78rem;color:var(--ink-soft);" id="startedAtDisplay"></span>
         </div>
         <h2 class="card-title violation">비문화유산 확인 신청서 작성 및 감정${sjpLabel}</h2>
-        <p class="card-subtitle">Confirmation request &amp; appraisal</p>
 
         <div class="info-box">
           <span class="info-box-title">법 제60조⑤ 의무의 사후 보완</span>
@@ -778,7 +780,6 @@ const STATES = {
       <div class="card success">
         <div class="card-meta"><span class="card-step">② 비문화유산 판별 · 출국</span></div>
         <h2 class="card-title">국외 반출 가능</h2>
-        <p class="card-subtitle">Non-heritage · departure allowed</p>
 
         <div class="info-box">
           감정 결과 비문화유산으로 판별되었습니다. 반출 제한 사유가 없으므로 <strong>화주의 출국을 허용</strong>합니다.
@@ -805,7 +806,6 @@ const STATES = {
       <div class="card violation">
         <div class="card-meta"><span class="card-step violation">② 신청서 작성 거부 · 위원 직권 감정</span></div>
         <h2 class="card-title violation">신청서 거부 후 직권 감정</h2>
-        <p class="card-subtitle">Refused submission · ex officio appraisal</p>
 
         <div class="info-box warn">
           <span class="info-box-title">상황 정의</span>
@@ -850,7 +850,6 @@ const STATES = {
       <div class="card violation">
         <div class="card-meta"><span class="card-step violation">② 일반동산 확정 · 위반 고지</span></div>
         <h2 class="card-title violation">위반 사실 고지 및 권리 고지</h2>
-        <p class="card-subtitle">Violation notice &amp; rights</p>
 
         <div class="info-box warn">
           <span class="info-box-title">위법 확정</span>
@@ -941,7 +940,6 @@ const STATES = {
       <div class="card violation">
         <div class="card-meta"><span class="card-step violation">② 검색대 필수 서류</span></div>
         <h2 class="card-title">화주 출국 전 필수 절차</h2>
-        <p class="card-subtitle">Mandatory at checkpoint · before departure</p>
 
         <div class="info-box warn">
           <span class="info-box-title">검색대에서 반드시 마쳐야 할 것</span>
@@ -991,7 +989,6 @@ const STATES = {
       <div class="card success">
         <div class="card-meta"><span class="card-step">③ 출국 안내 · 내국인</span></div>
         <h2 class="card-title">내국인 출국 처리</h2>
-        <p class="card-subtitle">Korean national · departure</p>
 
         ${renderChecklist('departure_korean', [
           { id:'judicial', label:'귀국 후 사법기관 출석 조사 가능 안내 — 수사 담당(사범단속팀 등)에서 연락할 것임을 알리고 화주 연락처·귀국 예정 확인 (임의 출석 안내이므로 동행 강제·출국 저지 근거가 아님 · 안내 경위는 기록)', meta:[{type:'law', text:'법 제60조①·제90조②'}, {type:'law', text:'형소법 제200조'}] },
@@ -1018,7 +1015,6 @@ const STATES = {
       <div class="card success">
         <div class="card-meta"><span class="card-step">③ 출국 안내 · 외국인</span></div>
         <h2 class="card-title">외국인 출국 처리</h2>
-        <p class="card-subtitle">Foreign national · departure</p>
 
         ${renderChecklist('departure_foreign', [
           { id:'judicial', label:'사법기관 출석 조사 가능 안내 — 수사 담당(사범단속팀 등)에서 연락할 것임을 알리고 화주 연락처·전자우편 확인 (임의 출석 안내이므로 동행 강제·출국 저지 근거가 아님 · 안내 경위는 기록)', meta:[{type:'law', text:'법 제60조①·제90조②'}, {type:'law', text:'형소법 제200조'}] },
@@ -1078,7 +1074,6 @@ const STATES = {
       <div class="card violation">
         <div class="card-meta"><span class="card-step violation">② 임의제출 거부 · 제216조 ③ 압수</span></div>
         <h2 class="card-title violation">압수 처분</h2>
-        <p class="card-subtitle">Seizure under Criminal Procedure Act §216(3)</p>
 
         <div class="info-box warn">
           <span class="info-box-title">법적 근거</span>
@@ -1164,7 +1159,6 @@ const STATES = {
       <div class="card violation">
         <div class="card-meta"><span class="card-step violation">비협조 트랙</span></div>
         <h2 class="card-title violation">경찰 신고 및 신병 인계</h2>
-        <p class="card-subtitle">Police report &amp; handover</p>
 
         ${sjpBlock}
 
@@ -1203,7 +1197,6 @@ const STATES = {
       <div class="card accent">
         <div class="card-meta"><span class="card-step">③ 감정관실 사후 처리</span></div>
         <h2 class="card-title">압수물 처리 및 후속 절차</h2>
-        <p class="card-subtitle">Post-detection processing at the office</p>
 
         ${renderChecklist('office_followup', items)}
 
@@ -1310,7 +1303,6 @@ function renderSummary() {
     <div class="card accent">
       <div class="card-meta"><span class="card-step">진행 완료</span></div>
       <h2 class="card-title">사건 진행 요약</h2>
-      <p class="card-subtitle">Case summary</p>
       <div class="summary-section">
         <h3>기본 정보</h3>
         <div class="summary-list">
