@@ -209,7 +209,6 @@ body.heritage {
 .card-step.violation { color: var(--accent-warning); }
 .card-title { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; color: var(--text-ink); line-height: 1.4; margin-bottom: 12px; word-break: keep-all; }
 .card-title.violation { color: var(--accent-warning); }
-.card-subtitle { font-size: 10.5px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted-soft); margin-bottom: 12px; }
 .card-desc { color: var(--text-body); font-size: .92rem; line-height: 1.65; margin-bottom: 14px; word-break: keep-all; }
 .card-desc strong { color: var(--text-ink); font-weight: 700; }
 
@@ -313,15 +312,6 @@ details.field .field-body .examples {
 }
 details.field .field-body .examples strong { color: var(--text-ink); font-weight: 700; }
 
-/* INPUT FIELDS */
-.input-group { margin: .5rem 0; }
-.input-group label { display: block; font-size: .8rem; color: var(--text-muted); margin-bottom: .25rem; font-weight: 700; }
-.input-group input, .input-group textarea, .input-group select {
-  width: 100%; padding: 9px 12px; border: 1px solid var(--hairline); border-radius: 0;
-  font-family: var(--font-body); font-size: .95rem; background: var(--surface-canvas); color: var(--text-ink);
-}
-.input-group textarea { resize: vertical; min-height: 60px; }
-
 /* NAV BUTTONS */
 .nav-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
 .nav-btn {
@@ -348,6 +338,9 @@ details.field .field-body .examples strong { color: var(--text-ink); font-weight
 .summary-list-item:last-child { border-bottom: none; }
 .summary-key { color: var(--text-muted); flex-shrink: 0; }
 .summary-val { color: var(--text-ink); font-weight: 700; text-align: right; word-break: break-all; }
+.summary-check { display: flex; gap: 10px; padding: 4px 0; line-height: 1.5; word-break: keep-all; }
+.summary-time { flex-shrink: 0; min-width: 3.1em; font-weight: 700; color: var(--text-ink); font-variant-numeric: tabular-nums; }
+.summary-offpath { color: var(--text-muted-soft); }
 
 /* MODAL — 직각·무그림자 */
 .modal-backdrop {
@@ -380,7 +373,6 @@ details.field .field-body .examples strong { color: var(--text-ink); font-weight
 /* FOOTER — 색동 구분선 (마무리 허용 지점) */
 .footer { text-align: center; color: var(--text-muted); font-size: .75rem; padding: 8px 16px 36px; max-width: 720px; margin: 0 auto; line-height: 1.7; }
 .footer .h-saekdong { justify-content: center; margin: 0 auto 14px; width: max-content; }
-.footer-author { font-weight: 700; margin-top: 6px; color: var(--text-muted); }
 .app-version { margin-top: 8px; font-size: .75rem; letter-spacing: 1px; color: var(--text-muted-soft); }
 
 /* 표지(시작 화면) 색동 */
@@ -467,7 +459,7 @@ details.field .field-body .examples strong { color: var(--text-ink); font-weight
 
 // ────────────────────────────────────────────────
 //  ▼ 배포할 때마다 이 한 줄만 바꾸세요. 화면 맨 아래에 그대로 표시됩니다.
-const APP_VERSION = 'v3.7 · 2026-11-07';
+const APP_VERSION = 'v3.8 · 2026-11-12';
 // ────────────────────────────────────────────────
 (function () {
   const v = document.getElementById('appVersion');
@@ -482,22 +474,25 @@ let caseState = {
   trail: [],          // 경로 기록
   checks: {},         // { 'state.checkid': true/false }
   checkLabels: {},    // { 'state.checkid': '사람이 읽는 라벨' }
+  checkTimes: {},     // { 'state.checkid': 체크한 시각(ISO) } — 경위서 작성용
   inputs: {},         // 자유 입력값
 };
 
 function saveState() {
-  if (caseState.track) {
-    localStorage.setItem('appraisal_case', JSON.stringify(caseState));
-    document.getElementById('resumeBtn').style.display = '';
-  }
+  if (!caseState.track) return;
+  try { localStorage.setItem('appraisal_case', JSON.stringify(caseState)); }
+  catch (e) { /* 사생활 보호 모드 등 저장 불가 — 진행 자체는 계속 */ }
 }
 
 function loadState() {
-  const saved = localStorage.getItem('appraisal_case');
+  let saved = null;
+  try { saved = localStorage.getItem('appraisal_case'); } catch (e) { return null; }
   if (saved) {
     try {
       const obj = JSON.parse(saved);
       if (obj && !obj.checkLabels) obj.checkLabels = {};  // 구버전 저장 호환
+      if (obj && !obj.checkTimes) obj.checkTimes = {};
+      if (obj && !obj.checks) obj.checks = {};
       return obj;
     }
     catch(e) { return null; }
@@ -505,10 +500,17 @@ function loadState() {
   return null;
 }
 
+// 이 기기에 남아 있는 '다른' 진행 중 사건 (지금 화면의 사건과 시작 시각이 다른 것)
+function resumableCase() {
+  const saved = loadState();
+  if (!saved || !saved.trail || saved.trail.length <= 1) return null;
+  if (saved.startedAt && saved.startedAt === caseState.startedAt) return null;
+  return saved;
+}
+
 function clearState() {
-  localStorage.removeItem('appraisal_case');
-  caseState = { startedAt: null, track: null, is_sjp: null, trail: [], checks: {}, checkLabels: {}, inputs: {} };
-  document.getElementById('resumeBtn').style.display = 'none';
+  try { localStorage.removeItem('appraisal_case'); } catch (e) {}
+  caseState = { startedAt: null, track: null, is_sjp: null, trail: [], checks: {}, checkLabels: {}, checkTimes: {}, inputs: {} };
 }
 
 // ===== 유틸 =====
@@ -519,11 +521,20 @@ function fmtTime(iso) {
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
+function fmtClock(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  const pad = n => String(n).padStart(2,'0');
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+let toastTimer = null;
 function showToast(msg, type) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.className = 'toast show' + (type ? ' '+type : '');
-  setTimeout(() => t.classList.remove('show'), 2400);
+  clearTimeout(toastTimer);   // 연달아 띄울 때 앞선 타이머가 새 안내를 일찍 지우지 않게
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
 }
 
 function showModal(title, bodyHtml, buttons) {
@@ -554,6 +565,7 @@ const STATES = {
     crumb: ['시작'],
     render: () => `
       <div class="h-saekdong cover" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+      ${renderResumeCard()}
       <div class="card">
         <div class="card-meta"><span class="card-step">검색대 적발 절차</span></div>
         <h2 class="card-title">현장 특사경 자격 확인</h2>
@@ -682,7 +694,7 @@ const STATES = {
 
       </div>
       <div class="info-box">
-        체크항목·진행 위치는 이 기기에만 저장됩니다(localStorage). "⌂ 처음" 버튼으로 언제든 삭제됩니다.
+체크항목·체크 시각·진행 위치는 이 기기에만 저장됩니다(localStorage). 화면이 새로 열려도 첫 화면에서 이어서 할 수 있고, "⌂ 처음" 버튼으로 언제든 삭제됩니다.
       </div>
     `
   },
@@ -761,7 +773,7 @@ const STATES = {
             <span class="choice-icon">拒</span>
             <span class="choice-text">
               <span class="choice-label">신청서 작성 거부</span>
-              <span class="choice-desc">드문 케이스 · 재시도 후 화주 책임 반출</span>
+              <span class="choice-desc">드문 케이스 · 재시도 후 위원 직권 감정</span>
             </span>
             <span class="choice-arrow">›</span>
           </button>
@@ -809,7 +821,7 @@ const STATES = {
     crumb: ['검색대', '신청서 거부', '위원 직권 감정'],
     render: () => `
       <div class="card violation">
-        <div class="card-meta"><span class="card-step violation">② 신청서 작성 거부 · 위원 직권 감정</span></div>
+        <div class="card-meta"><span class="card-step violation">①-2 신청서 작성 거부 · 위원 직권 감정</span></div>
         <h2 class="card-title violation">신청서 거부 후 직권 감정</h2>
 
         <div class="info-box warn">
@@ -943,7 +955,7 @@ const STATES = {
         : ['rights', 'submission', 'receipt_copy', 'receive', 'passport'];
       return `
       <div class="card violation">
-        <div class="card-meta"><span class="card-step violation">② 검색대 필수 서류</span></div>
+        <div class="card-meta"><span class="card-step violation">③ 검색대 필수 서류</span></div>
         <h2 class="card-title">화주 출국 전 필수 절차</h2>
 
         <div class="info-box warn">
@@ -992,11 +1004,11 @@ const STATES = {
     crumb: ['검색대', '협조', '내국인 출국'],
     render: () => `
       <div class="card success">
-        <div class="card-meta"><span class="card-step">③ 출국 안내 · 내국인</span></div>
+        <div class="card-meta"><span class="card-step">④ 출국 안내 · 내국인</span></div>
         <h2 class="card-title">내국인 출국 처리</h2>
 
         ${renderChecklist('departure_korean', [
-          { id:'judicial', label:'귀국 후 사법기관 출석 조사 가능 안내 — 수사 담당(사범단속팀 등)에서 연락할 것임을 알리고 화주 연락처·귀국 예정 확인 (임의 출석 안내이므로 동행 강제·출국 저지 근거가 아님 · 안내 경위는 기록)', meta:[{type:'law', text:'법 제60조①·제90조②'}, {type:'law', text:'형소법 제200조'}] },
+          { id:'judicial', label:'귀국 후 사법기관 출석 조사 가능 안내 — 수사 담당(사범단속팀 등)에서 연락할 것임을 알리고 화주 연락처·귀국 예정 확인 (임의 출석 안내이므로 동행 강제·출국 저지 근거가 아님 · 안내 경위는 기록)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제60조①·제90조②'}, {type:'law', text:'형소법 제200조'}] },
           { id:'allow', label:'출국 허용' },
         ])}
 
@@ -1006,7 +1018,7 @@ const STATES = {
 
         <div class="nav-row">
           <button class="nav-btn secondary" onclick="goBack()">‹ 뒤로</button>
-          <button class="nav-btn violation" onclick="navigate('office_followup')">감정관실 사후 처리 ›</button>
+          <button class="nav-btn violation" onclick="tryNavigate('office_followup', 'departure_korean', ['judicial'])">감정관실 사후 처리 ›</button>
         </div>
       </div>
     `
@@ -1018,11 +1030,11 @@ const STATES = {
     crumb: ['검색대', '협조', '외국인 출국'],
     render: () => `
       <div class="card success">
-        <div class="card-meta"><span class="card-step">③ 출국 안내 · 외국인</span></div>
+        <div class="card-meta"><span class="card-step">④ 출국 안내 · 외국인</span></div>
         <h2 class="card-title">외국인 출국 처리</h2>
 
         ${renderChecklist('departure_foreign', [
-          { id:'judicial', label:'사법기관 출석 조사 가능 안내 — 수사 담당(사범단속팀 등)에서 연락할 것임을 알리고 화주 연락처·전자우편 확인 (임의 출석 안내이므로 동행 강제·출국 저지 근거가 아님 · 안내 경위는 기록)', meta:[{type:'law', text:'법 제60조①·제90조②'}, {type:'law', text:'형소법 제200조'}] },
+          { id:'judicial', label:'사법기관 출석 조사 가능 안내 — 수사 담당(사범단속팀 등)에서 연락할 것임을 알리고 화주 연락처·전자우편 확인 (임의 출석 안내이므로 동행 강제·출국 저지 근거가 아님 · 안내 경위는 기록)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제60조①·제90조②'}, {type:'law', text:'형소법 제200조'}] },
           { id:'allow', label:'출국 허용' },
         ])}
 
@@ -1032,7 +1044,7 @@ const STATES = {
 
         <div class="nav-row">
           <button class="nav-btn secondary" onclick="goBack()">‹ 뒤로</button>
-          <button class="nav-btn violation" onclick="navigate('office_followup')">감정관실 사후 처리 ›</button>
+          <button class="nav-btn violation" onclick="tryNavigate('office_followup', 'departure_foreign', ['judicial'])">감정관실 사후 처리 ›</button>
         </div>
       </div>
     `
@@ -1077,7 +1089,7 @@ const STATES = {
 
       return `
       <div class="card violation">
-        <div class="card-meta"><span class="card-step violation">② 임의제출 거부 · 제216조 ③ 압수</span></div>
+        <div class="card-meta"><span class="card-step violation">③ 임의제출 거부 · 긴급 압수 (제216조 ③항)</span></div>
         <h2 class="card-title violation">압수 처분</h2>
 
         <div class="info-box warn">
@@ -1128,7 +1140,8 @@ const STATES = {
             <span class="info-box-title">특사경 본인 — 현행범 체포 가능</span>
             위법성이 명백하고 체포 필요성이 인정될 때, 형소법 제212조에 따라 영장 없이 현행범 체포가 가능합니다 (준현행범: 형소법 제211조② 2호 — 장물·범죄에 사용된 물건 소지). 본인이 신원 확보를 시도하고, 필요 시 공항경찰대 등 관할 사법기관과 협조해 신병을 처리합니다.
             <ul style="padding-left:1.1rem;margin:.4rem 0;">
-              <li>체포했다면 <strong>체포 시각을 기록</strong>합니다. 계속 구속할 필요가 있으면 체포한 때부터 <strong>48시간 이내</strong>에 검사에게 구속영장을 신청해야 하므로, 인계받는 쪽에 체포 시각을 함께 넘깁니다.</li>
+              <li>체포할 때에는 <strong>피의사실의 요지, 체포의 이유, 변호인을 선임할 수 있음</strong>을 말하고 <strong>변명할 기회</strong>를 주며, 진술거부권도 알립니다 (형소법 제200조의5·제213조의2). 이 고지가 빠지면 체포의 적법성이 다투어집니다.</li>
+              <li>체포했다면 <strong>체포 시각을 기록</strong>합니다 — 아래 '현행범 체포 시' 항목을 체포 직후 체크하면 그 시각이 요약에 남습니다. 계속 구속할 필요가 있으면 체포한 때부터 <strong>48시간 이내</strong>에 검사에게 구속영장을 신청해야 하므로, 인계받는 쪽에 체포 시각을 함께 넘깁니다.</li>
               <li>이 과정에서 폭행·공무집행방해 등 <strong>직무범위 밖의 범죄</strong>가 생기면 직접 수사하지 않고, 검사의 지도·조언을 받아 공항경찰대 등 관할 수사기관에 통보합니다 (특사경 협력규정 제16조).</li>
             </ul>
           </div>
@@ -1136,6 +1149,7 @@ const STATES = {
             { id:'sjp_intro', label:'특사경 지명서 제시 및 신분 고지 (수사 개시)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'특사경 직무규정 제12조②'}] },
             { id:'warn', label:'위반 사항 반복 고지 및 현행범 체포 가능 경고', meta:[{type:'warn', text:'필수'}] },
             { id:'identify', label:'신원 확보 시도 (여권·신분증 제시 요구)' },
+            { id:'arrest', label:'현행범 체포 시 — 피의사실 요지·체포 이유·변호인 선임권 고지, 변명 기회 부여, 진술거부권 고지 (체포 직후 체크 → 체크 시각이 체포 시각으로 요약에 남음)', meta:[{type:'form', text:'체포한 경우'}, {type:'law', text:'형소법 제200조의5·제213조의2'}] },
             { id:'confiscate', label:'문화유산 압수 (보안검색요원 지원 · 법 제90조 몰수 대상)', meta:[{type:'warn', text:'필수'}, {type:'law', text:'법 제90조'}] },
             { id:'support', label:'필요 시 공항경찰대 등 관할 사법기관 협조 요청 (사건 개요, 본인 직무범위, 필요한 조치, 긴급성을 구체적으로 전달)' },
             { id:'handover', label:'신병·압수물 처리 — 사범단속팀 또는 경찰 인계', meta:[{type:'warn', text:'필수'}] },
@@ -1162,8 +1176,8 @@ const STATES = {
       const stateKey = caseState.is_sjp ? 'refuse_sjp' : 'refuse_nonsjp';
       return `
       <div class="card violation">
-        <div class="card-meta"><span class="card-step violation">비협조 트랙</span></div>
-        <h2 class="card-title violation">경찰 신고 및 신병 인계</h2>
+        <div class="card-meta"><span class="card-step violation">③ 전면 거부 · 비협조</span></div>
+        <h2 class="card-title violation">${caseState.is_sjp ? '현행범 체포 검토 및 신병 인계' : '경찰 신고 및 신병 인계'}</h2>
 
         ${sjpBlock}
 
@@ -1200,7 +1214,7 @@ const STATES = {
 
       return `
       <div class="card accent">
-        <div class="card-meta"><span class="card-step">③ 감정관실 사후 처리</span></div>
+        <div class="card-meta"><span class="card-step">⑤ 감정관실 사후 처리</span></div>
         <h2 class="card-title">압수물 처리 및 후속 절차</h2>
 
         ${renderChecklist('office_followup', items)}
@@ -1209,6 +1223,13 @@ const STATES = {
         <div class="info-box warn">
           <span class="info-box-title">제216조 ③ 압수 — 사후 영장 신청 의무</span>
           영장 없이 압수한 사건이므로 <strong>지체 없이 사후 영장을 받아야</strong> 합니다 (형소법 제216조 ③ 단서). 특사경은 검사에게 압수수색영장을 <strong>신청</strong>하고, 검사가 법원에 청구합니다. 사범단속팀 특사경 인계 시 <strong>"제216조 ③ 압수 사건"임을 명시</strong>하고 사후 영장 신청이 누락되지 않도록 협조합니다. 사후 영장이 빠지면 압수의 적법성 자체가 다투어질 수 있습니다.
+        </div>
+        ` : ''}
+
+        ${caseState.is_sjp && caseState.trail.includes('refuse') ? `
+        <div class="info-box warn">
+          <span class="info-box-title">전면 거부 트랙 — 영장 없이 압수한 경우의 사후 영장</span>
+          임의제출 없이 특사경이 직접 압수했다면 이것도 <strong>영장 없는 압수</strong>입니다. 범죄장소 긴급 압수(형소법 제216조 ③)라면 지체 없이 사후 영장을 받아야 하고, 현행범 체포 현장에서 압수했다면(제216조 ① 2호) 계속 압수할 필요가 있을 때 <strong>체포한 때부터 48시간 이내에 영장이 청구</strong>되어야 하므로(제217조 ②) 그 전에 검사에게 신청합니다. 영장을 받지 못하면 압수물을 즉시 반환해야 합니다(제217조 ③). 사범단속팀·경찰에 인계할 때 <strong>압수 근거와 체포·압수 시각</strong>을 함께 넘깁니다.
         </div>
         ` : ''}
 
@@ -1298,11 +1319,53 @@ function computeCaseLabels() {
   return { trackLabel, sjpLabel, branchLabel };
 }
 
+// 체크리스트 키 → 그 체크리스트가 놓인 화면
+const CHECKLIST_SCREEN = { cooperate_optional: 'cooperate', refuse_sjp: 'refuse', refuse_nonsjp: 'refuse' };
+
+// 완료 항목을 체크한 시각순으로. 되돌아가 버린 분기에서 체크한 것은 지우지 않고 표시만 구분
+function collectChecks() {
+  const times = caseState.checkTimes || {};
+  return Object.keys(caseState.checks).filter(k => caseState.checks[k]).map((k, i) => {
+    const group = k.split('.')[0];
+    const screen = CHECKLIST_SCREEN[group] || group;
+    return { key: k, order: i, time: times[k] || '', label: caseState.checkLabels[k] || k, onPath: caseState.trail.includes(screen) };
+  }).sort((a, b) => (a.time && b.time) ? (a.time < b.time ? -1 : a.time > b.time ? 1 : a.order - b.order) : a.order - b.order);
+}
+
+// 거쳐 온 화면 이름 (시작·요약 제외)
+function pathLabel() {
+  const names = caseState.trail.filter(id => id !== 'start' && id !== 'summary' && STATES[id])
+    .map(id => { const c = STATES[id].crumb; return c[c.length - 1]; });
+  return names.length ? names.join(' → ') : '—';
+}
+
+function renderResumeCard() {
+  const saved = resumableCase();
+  if (!saved) return '';
+  const last = STATES[saved.trail[saved.trail.length - 1]];
+  const where = last ? last.crumb.join(' › ') : '—';
+  const done = Object.values(saved.checks || {}).filter(Boolean).length;
+  return `
+      <div class="card accent">
+        <div class="card-meta">
+          <span class="card-step">진행 중인 사건</span>
+          <span style="font-size:.78rem;color:var(--text-muted);">${saved.startedAt ? '시작 ' + fmtTime(saved.startedAt) : ''}</span>
+        </div>
+        <h2 class="card-title">이어서 진행하시겠습니까?</h2>
+        <p class="card-desc">이 기기에 저장된 사건이 있습니다. 마지막 화면은 <strong>${where}</strong>, 체크한 항목은 ${done}건입니다.</p>
+        <div class="nav-row" style="margin-top:0;">
+          <button class="nav-btn primary" onclick="resumeCase()">이어서 하기 ›</button>
+          <button class="nav-btn secondary" onclick="discardSaved()">지우고 새로 시작</button>
+        </div>
+      </div>`;
+}
+
 function renderSummary() {
   const { trackLabel, sjpLabel, branchLabel } = computeCaseLabels();
   const startedFmt = caseState.startedAt ? fmtTime(caseState.startedAt) : '—';
 
-  const checkEntries = Object.entries(caseState.checks).filter(([k,v]) => v);
+  const checkEntries = collectChecks();
+  const hasOffPath = checkEntries.some(e => !e.onPath);
 
   return `
     <div class="card accent">
@@ -1315,15 +1378,17 @@ function renderSummary() {
           <div class="summary-list-item"><span class="summary-key">시작 시각</span><span class="summary-val">${startedFmt}</span></div>
           <div class="summary-list-item"><span class="summary-key">특사경 자격</span><span class="summary-val">${sjpLabel}</span></div>
           <div class="summary-list-item"><span class="summary-key">분기</span><span class="summary-val">${branchLabel}</span></div>
+          <div class="summary-list-item"><span class="summary-key">진행 경로</span><span class="summary-val" style="word-break:keep-all;">${pathLabel()}</span></div>
         </div>
       </div>
       <div class="summary-section">
         <h3>완료 항목 (${checkEntries.length}건)</h3>
         <div class="summary-list" style="font-size:.82rem;color:var(--ink-soft);">
-          ${checkEntries.length ? checkEntries.map(([k]) => {
-            return `<div style="padding:.2rem 0;">✓ ${caseState.checkLabels[k] || k}</div>`;
-          }).join('') : '<div style="color:var(--line);font-style:italic;">완료 항목 없음</div>'}
+          ${checkEntries.length ? checkEntries.map(e => {
+            return `<div class="summary-check${e.onPath ? '' : ' summary-offpath'}"><span class="summary-time">${e.time ? fmtClock(e.time) : '✓'}</span><span>${e.label}${e.onPath ? '' : ' — 되돌아간 분기'}</span></div>`;
+          }).join('') : '<div style="color:var(--text-muted-soft);">완료 항목 없음</div>'}
         </div>
+        <p class="card-desc" style="font-size:.8rem;color:var(--text-muted);margin:.6rem 0 0;">시각은 항목을 체크한 때입니다. 실제 조치 시각과 다르면 경위서에는 실제 시각을 적으십시오.${hasOffPath ? ' "되돌아간 분기"는 뒤로 돌아가 다른 경로를 택하기 전에 체크한 항목입니다.' : ''}</p>
       </div>
       <div class="nav-row">
         <button class="nav-btn secondary" onclick="copyReport()">📋 요약 복사</button>
@@ -1341,9 +1406,11 @@ function renderState(stateId) {
   const state = STATES[stateId];
   if (!state) return;
   document.getElementById('app').innerHTML = state.render();
+  document.getElementById('toast').classList.remove('show');   // 앞 화면의 안내가 새 화면을 가리지 않게
   renderBreadcrumb(state);
   window.scrollTo(0, 0);
   if (state.onMount) state.onMount();
+  document.getElementById('resumeBtn').style.display = (stateId === 'start' && resumableCase()) ? '' : 'none';
 }
 
 function navigate(stateId) {
@@ -1364,14 +1431,17 @@ function tryNavigate(targetState, stateId, requiredIds) {
   const missing = requiredIds.filter(id => !caseState.checks[`${stateId}.${id}`]);
   if (missing.length > 0) {
     showToast(`필수 항목 ${missing.length}개를 먼저 체크해 주십시오`, 'warn');
+    let first = null;
     missing.forEach(id => {
       const el = document.querySelector(`[data-check-id="${stateId}.${id}"]`);
       if (el) {
-        // 디자인 시스템 규칙 6(허용 모션 외 금지) — 흔들림 대신 정적 색 강조
+        // 디자인 시스템 규칙 6(허용 모션 외 금지) — 흔들림 대신 정적 색 강조. 체크할 때까지 유지
         el.classList.add('miss');
-        setTimeout(() => el.classList.remove('miss'), 1400);
+        if (!first) first = el;
       }
     });
+    // 버튼은 목록 아래에 있어 빠진 항목이 화면 밖일 수 있음 — 첫 항목으로 즉시 이동(모션 없음)
+    if (first) first.scrollIntoView({ block: 'center' });
     return;
   }
   navigate(targetState);
@@ -1379,6 +1449,10 @@ function tryNavigate(targetState, stateId, requiredIds) {
 
 // 특사경 역할 설정 후 진행
 function setSjpRole(isSjp) {
+  if (resumableCase()) {
+    if (!confirm('이 기기에 저장된 진행 중 사건이 있습니다. 새 사건을 시작하면 그 기록은 지워집니다. 계속하시겠습니까?')) return;
+    try { localStorage.removeItem('appraisal_case'); } catch (e) {}
+  }
   caseState.is_sjp = isSjp;
   // 사건 시작 시각 — 앱을 열어둔 시각이 아니라 실제 절차 진입 시점에 기록
   if (!caseState.startedAt) caseState.startedAt = new Date().toISOString();
@@ -1409,8 +1483,11 @@ function renderBreadcrumb(state) {
 
 function toggleCheck(id, el) {
   if (!caseState.checkLabels) caseState.checkLabels = {};
+  if (!caseState.checkTimes) caseState.checkTimes = {};
   const now = !caseState.checks[id];
   caseState.checks[id] = now;
+  if (now) { caseState.checkTimes[id] = new Date().toISOString(); el.classList.remove('miss'); }
+  else delete caseState.checkTimes[id];
   el.classList.toggle('checked', now);
   el.setAttribute('aria-checked', now ? 'true' : 'false');
   // 요약·기록에서 내부 ID 대신 사람이 읽는 라벨이 나오도록 보존
@@ -1426,20 +1503,31 @@ function copyReport() {
   txt += `진입 트랙: ${trackLabel}\n`;
   txt += `시작 시각: ${fmtTime(caseState.startedAt)}\n`;
   txt += `특사경 자격: ${sjpLabel}\n`;
-  txt += `분기: ${branchLabel}\n\n`;
+  txt += `분기: ${branchLabel}\n`;
+  txt += `진행 경로: ${pathLabel()}\n\n`;
 
-  const checks = Object.entries(caseState.checks).filter(([k,v]) => v);
+  const checks = collectChecks();
   if (checks.length) {
-    txt += `[완료 항목 ${checks.length}건]\n`;
-    checks.forEach(([k]) => { txt += `✓ ${caseState.checkLabels[k] || k}\n`; });
+    txt += `[완료 항목 ${checks.length}건 — 시각은 체크한 때]\n`;
+    checks.forEach(e => { txt += `${e.time ? fmtClock(e.time) : '✓'} ${e.label}${e.onPath ? '' : ' (되돌아간 분기)'}\n`; });
   }
   txt += `\n기록 출력: ${fmtTime(new Date().toISOString())}\n`;
 
-  navigator.clipboard.writeText(txt).then(() => {
-    showToast('요약이 클립보드에 복사되었습니다', 'success');
-  }).catch(() => {
-    showModal('요약', `<pre style="white-space:pre-wrap;font-family:var(--font-body);font-size:.85rem;">${txt}</pre>`);
-  });
+  const fallback = () => {
+    const pre = document.createElement('pre');
+    pre.style.cssText = 'white-space:pre-wrap;font-family:var(--font-body);font-size:.85rem;user-select:text;';
+    pre.textContent = txt;
+    showModal('요약 — 길게 눌러 복사', '');
+    document.getElementById('modalBody').appendChild(pre);
+  };
+  // 보안 연결이 아니거나 권한이 없으면 clipboard 자체가 없을 수 있음
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(() => {
+      showToast('요약이 클립보드에 복사되었습니다', 'success');
+    }).catch(fallback);
+  } else {
+    fallback();
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -1447,22 +1535,29 @@ function copyReport() {
 // ═══════════════════════════════════════════
 
 document.getElementById('resetBtn').onclick = () => {
-  if (caseState.track && !confirm('진행 중인 사건이 있습니다. 처음으로 돌아가면 삭제됩니다. 계속하시겠습니까?')) return;
+  // 절차에 들어가지 않은 첫 화면에서는 지울 것이 없음 — 저장된 다른 사건은 첫 화면 카드에서만 지움
+  if (!caseState.startedAt) { caseState.trail = []; navigate('start'); return; }
+  if (!confirm('진행 중인 사건이 있습니다. 처음으로 돌아가면 삭제됩니다. 계속하시겠습니까?')) return;
   clearState();
   navigate('start');
 };
 
-document.getElementById('resumeBtn').onclick = () => {
-  const saved = loadState();
-  if (saved && saved.trail && saved.trail.length > 1) {
-    caseState = saved;
-    const lastState = saved.trail[saved.trail.length - 1];
-    renderState(lastState);
-    showToast('이전 진행 상태를 복구했습니다', 'success');
-  } else {
-    showToast('복구할 진행 상태가 없습니다', 'warn');
-  }
-};
+function resumeCase() {
+  const saved = resumableCase();
+  if (!saved) { showToast('복구할 진행 상태가 없습니다', 'warn'); return; }
+  caseState = saved;
+  const lastState = saved.trail[saved.trail.length - 1];
+  renderState(STATES[lastState] ? lastState : 'arrival');
+  showToast('이전 진행 상태를 복구했습니다', 'success');
+}
+
+function discardSaved() {
+  if (!confirm('저장된 사건 기록을 지우고 새로 시작합니다. 계속하시겠습니까?')) return;
+  clearState();
+  navigate('start');
+}
+
+document.getElementById('resumeBtn').onclick = resumeCase;
 
 // 모달 배경 클릭 시 닫기
 document.getElementById('modal').addEventListener('click', e => {
@@ -1476,11 +1571,7 @@ document.addEventListener('keydown', e => {
 
 // 시작
 (function init() {
-  const saved = loadState();
-  // 진행 중인 사건이 있을 때만(start 외에 다른 화면을 거친 경우) 복구 버튼 표시
-  if (saved && saved.trail && saved.trail.length > 1) {
-    document.getElementById('resumeBtn').style.display = '';
-  }
+  // 저장된 진행 중 사건이 있으면 첫 화면 맨 위 카드와 헤더 '복구' 버튼으로 이어서 할 수 있음
   navigate('start');
 })();
 </script>
