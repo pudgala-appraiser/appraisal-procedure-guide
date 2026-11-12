@@ -159,7 +159,7 @@ body.heritage {
 .h-header {
   position: sticky; top: 0; z-index: 100;
   flex-wrap: wrap; align-items: center; gap: 10px;
-  padding: 12px max(16px, calc((100% - 720px) / 2));
+  padding: 12px max(16px, calc((100% - 688px) / 2));
 }
 .h-header .h-brand { font-family: "TitleMaru", var(--font-display); font-weight: 700; font-size: 22px; letter-spacing: 2px; }
 .h-header .h-sub { letter-spacing: 1.5px; }
@@ -176,7 +176,7 @@ body.heritage {
 /* BREADCRUMB */
 .breadcrumb {
   background: var(--surface-canvas); border-bottom: 1px solid var(--hairline);
-  padding: 7px max(16px, calc((100% - 720px) / 2));
+  padding: 7px max(16px, calc((100% - 688px) / 2));
   font-size: 12px; color: var(--text-muted);
   display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-height: 32px;
 }
@@ -233,9 +233,9 @@ body.heritage {
 .choice-btn.violation .choice-icon { background: var(--accent-warning); }
 .choice-btn.success .choice-icon { background: var(--accent-positive); }
 .choice-text { flex: 1; min-width: 0; }
-.choice-label { font-family: var(--font-display); font-size: .98rem; font-weight: 800; color: var(--text-ink); margin-bottom: 2px; line-height: 1.35; word-break: keep-all; }
+.choice-label { display: block; font-family: var(--font-display); font-size: .98rem; font-weight: 800; color: var(--text-ink); margin-bottom: 2px; line-height: 1.35; word-break: keep-all; }
 .choice-btn.violation .choice-label { color: var(--accent-warning); }
-.choice-desc { font-size: .8rem; color: var(--text-muted); line-height: 1.45; word-break: keep-all; }
+.choice-desc { display: block; font-size: .8rem; color: var(--text-muted); line-height: 1.45; word-break: keep-all; }
 .choice-arrow { color: var(--text-muted-soft); font-size: 1.2rem; flex-shrink: 0; }
 
 /* CHECKLIST */
@@ -243,7 +243,7 @@ body.heritage {
 .check-item {
   display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px;
   background: var(--surface-canvas); border: 1px solid var(--hairline); border-radius: 0;
-  cursor: pointer; user-select: none;
+  cursor: pointer; user-select: none; min-height: 44px;
 }
 .check-item:hover { border-color: var(--accent-structure); }
 .check-item.checked { background: var(--surface-card); border-color: var(--accent-positive); }
@@ -296,6 +296,7 @@ details.field summary {
   font-size: .92rem; word-break: keep-all;
 }
 details.field summary::-webkit-details-marker { display: none; }
+details.field summary span { margin-right: auto; }
 details.field summary::after { content: '＋'; color: var(--accent-structure); font-weight: 400; font-size: 1.05rem; }
 details.field[open] summary { border-bottom: 1px solid var(--hairline); }
 details.field[open] summary::after { content: '−'; }
@@ -360,11 +361,12 @@ details.field .field-body .examples strong { color: var(--text-ink); font-weight
 
 /* TOAST — 모션 없이 즉시 표시 */
 .toast {
-  position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+  position: fixed; bottom: 22px; left: 0; right: 0; margin: 0 auto;
+  width: max-content; max-width: calc(100vw - 32px); word-break: keep-all;
   display: none; background: var(--surface-soft); border: 1px solid var(--hairline);
   border-left: 4px solid var(--accent-structure); border-radius: 0;
   color: var(--text-body); padding: 10px 16px; font-size: .88rem;
-  z-index: 150; max-width: 90vw; text-align: center;
+  z-index: 150; text-align: center;
 }
 .toast.show { display: block; }
 .toast.warn { border-left-color: var(--accent-warning); }
@@ -382,6 +384,7 @@ details.field .field-body .examples strong { color: var(--text-ink); font-weight
 @media (max-width: 480px) {
   .h-header .h-brand { font-size: 18px; letter-spacing: 1px; }
   .h-header .h-sub { display: none; }
+  .h-header, .breadcrumb { padding-left: 12px; padding-right: 12px; }
   .container { padding: 14px 12px 72px; }
   .card { padding: 14px; }
   .card-title { font-size: 1.05rem; }
