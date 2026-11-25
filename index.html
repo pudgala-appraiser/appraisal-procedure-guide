@@ -19,13 +19,15 @@
    다국어 안내 앱(heritage-guide v5.0)과 같은 문법이다.
 
    규칙
-   1. 벌 하나에 색 하나. 평소는 청 벌(하늘빛). 강제 처분 화면 셋
-      (신청서 거부 후 직권 감정 · 제216조 ③항 긴급 압수 · 전면 거부)만 적 벌(인주)로 바뀐다.
-      어느 화면이 적 벌인지는 STATES의 theme 값이 정한다.
+   1. 벌 하나에 색 하나. 화면의 색이 사건의 단계를 알린다.
+      · 청 벌(하늘빛) — 일반동산 확정 전(행정 단계)과 요약
+      · 황 벌(치자) — 일반동산 확정 뒤(수사 단계): 위반 고지 · 필수 서류 · 출국 안내 · 사후 처리
+      · 적 벌(인주) — 강제 처분: 신청서 거부 후 직권 감정 · 제216조 ③항 긴급 압수 · 전면 거부
+      어느 화면이 어느 벌인지는 STATES의 theme 값이 정한다.
    2. 바탕은 흰색. 모든 면은 직각. 그림자·그라데이션·둥근 모서리 없음.
    3. 색 띠 상자·색동·원형 배지는 쓰지 않는다. 가는 선(seam)과 굵은 먹 선으로만 나눈다.
    4. --mark는 판단이 걸린 자리(필수 표시, 점검 칸, 경고 제목)에만 쓴다.
-      청 벌에서는 먹색, 적 벌에서는 인주색이다. 체크를 마친 칸은 먹색으로 채워져 붉은색이 빠진다.
+      청·황 벌에서는 먹색, 적 벌에서는 인주색이다. 체크를 마친 칸은 먹색으로 채워져 붉은색이 빠진다.
    5. 제목은 명조(앱에 넣은 본명조 300·500), 본문은 기기 고딕.
       글꼴 파일이 없으면(HTML 파일 하나만 열 때) 기기 명조로 바뀌어 보인다.
    6. 전환·변형 모션 없음. 누르는 동안의 색 바뀜만 있다.
@@ -45,6 +47,18 @@
   --on-plane: #0e2233;  /* 색면 위 글자 */
   --on-plane-2: #24394a;
   --mark: #0e2233;      /* 판단이 걸린 자리 */
+  --mark-ink: #ffffff;
+}
+[data-theme="hwang"] {
+  --bg: #ffffff;
+  --plane: #f0c544;     /* 색면 — 치자 */
+  --ink: #17140a;
+  --ink-2: #3d3a30;
+  --mute: #6f6b5e;
+  --seam: #d6d2c4;
+  --on-plane: #17140a;  /* 치자 위에는 짙은 글자 */
+  --on-plane-2: #3f3610;
+  --mark: #17140a;
   --mark-ink: #ffffff;
 }
 [data-theme="jeok"] {
@@ -751,6 +765,7 @@ const STATES = {
   // ─── 일반동산 판별 — 위반 고지 + 권리 고지 + 3분기 ───
   heritage_confirmed: {
     track: 'checkpoint',
+    theme: 'hwang',  // 일반동산 확정 뒤(수사 단계) — 황 벌
     crumb: ['검색대', '일반동산 확정', '위반 고지'],
     render: () => `
       <div class="card violation">
@@ -810,6 +825,7 @@ const STATES = {
   // ─── 협조 — 검색대 필수 서류 (화주 출국 전) ───
   cooperate: {
     track: 'checkpoint',
+    theme: 'hwang',  // 일반동산 확정 뒤(수사 단계) — 황 벌
     crumb: ['검색대', '협조', '필수 서류'],
     render: () => {
       const sjpNotice = caseState.is_sjp
@@ -890,6 +906,7 @@ const STATES = {
   // ─── 협조 · 내국인 출국 ───
   departure_korean: {
     track: 'checkpoint',
+    theme: 'hwang',  // 일반동산 확정 뒤(수사 단계) — 황 벌
     crumb: ['검색대', '협조', '내국인 출국'],
     render: () => `
       <div class="card success">
@@ -916,6 +933,7 @@ const STATES = {
   // ─── 협조 · 외국인 출국 ───
   departure_foreign: {
     track: 'checkpoint',
+    theme: 'hwang',  // 일반동산 확정 뒤(수사 단계) — 황 벌
     crumb: ['검색대', '협조', '외국인 출국'],
     render: () => `
       <div class="card success">
@@ -1088,6 +1106,7 @@ const STATES = {
   // ─── 감정관실 사후 처리 ───
   office_followup: {
     track: 'checkpoint',
+    theme: 'hwang',  // 일반동산 확정 뒤(수사 단계) — 황 벌
     crumb: ['감정관실', '사후 처리'],
     render: () => {
       const items = [
@@ -1294,7 +1313,7 @@ function renderSummary() {
 // ═══════════════════════════════════════════
 
 // 벌(색) — 화면마다 STATES의 theme 값을 따른다. 값이 없으면 청 벌
-const THEMES = { cheong: '#8fcbf7', jeok: '#d4311e' };
+const THEMES = { cheong: '#8fcbf7', hwang: '#f0c544', jeok: '#d4311e' };
 function applyTheme(id) {
   if (!THEMES[id]) id = 'cheong';
   document.documentElement.setAttribute('data-theme', id);
