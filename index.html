@@ -1,449 +1,335 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="cheong">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1F4E79">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#8fcbf7">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="검색대 적발">
 <title>검색대 적발 시 절차</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%231F4E79'/><text x='32' y='46' font-size='38' fill='%23D9A43B' text-anchor='middle' font-family='serif' font-weight='600'>規</text></svg>">
-<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' fill='%231F4E79'/><text x='90' y='128' font-size='108' fill='%23D9A43B' text-anchor='middle' font-family='serif' font-weight='600'>規</text></svg>">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%238fcbf7'/><text x='32' y='46' font-size='38' fill='%230e2233' text-anchor='middle' font-family='serif' font-weight='500'>規</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' fill='%238fcbf7'/><text x='90' y='128' font-size='108' fill='%230e2233' text-anchor='middle' font-family='serif' font-weight='500'>規</text></svg>">
 <style>
 /* =====================================================================
-   heritage-design.css — 한재원 문화유산 교육·학술 디자인 시스템 (오방색)
-   단일 HTML 배포 원칙에 따라 원본 CSS 전문을 이 블록에 내장함.
-   시스템이 갱신되면 '── 앱 화면 스타일 ──' 이전 부분을 통째로 교체할 것.
-   (서체 예외: 미설치 기기·오프라인 대응을 위해 웹폰트 대신
-    기기 기본 글꼴 스택을 사용함 — heritage-guide와 동일한 결정)
+   검색대 적발 시 절차 — 화면 스타일 (v4.0, 「다섯 벌」)
+   색·글자·면 처리는 다섯 벌 디자인 시스템(tokens.json)을 따른다.
+   슬라이드용 수치(1920×1080)는 앱 크기로 줄이고 역할만 지킨다.
+   다국어 안내 앱(heritage-guide v5.0)과 같은 문법이다.
+
+   규칙
+   1. 벌 하나에 색 하나. 평소는 청 벌(하늘빛). 강제 처분 화면 셋
+      (신청서 거부 후 직권 감정 · 제216조 ③항 긴급 압수 · 전면 거부)만 적 벌(인주)로 바뀐다.
+      어느 화면이 적 벌인지는 STATES의 theme 값이 정한다.
+   2. 바탕은 흰색. 모든 면은 직각. 그림자·그라데이션·둥근 모서리 없음.
+   3. 색 띠 상자·색동·원형 배지는 쓰지 않는다. 가는 선(seam)과 굵은 먹 선으로만 나눈다.
+   4. --mark는 판단이 걸린 자리(필수 표시, 점검 칸, 경고 제목)에만 쓴다.
+      청 벌에서는 먹색, 적 벌에서는 인주색이다. 체크를 마친 칸은 먹색으로 채워져 붉은색이 빠진다.
+   5. 제목은 명조(앱에 넣은 본명조 300·500), 본문은 기기 고딕.
+      글꼴 파일이 없으면(HTML 파일 하나만 열 때) 기기 명조로 바뀌어 보인다.
+   6. 전환·변형 모션 없음. 누르는 동안의 색 바뀜만 있다.
    ===================================================================== */
 
-/* ── 토큰 ── */
-:root {
-  /* 오방 기본색 */
-  --obang-cheong: #1F4E79; /* 청(쪽빛) — 구조·질서 */
-  --obang-jeok: #A63C32;   /* 적(석간주) — 경계·금지 */
-  --obang-hwang: #D9A43B;  /* 황(치자) — 중심·핵심 */
-  --obang-baek: #FAF7F0;   /* 백(소색 한지) — 바탕 */
-  --obang-heuk: #221E1A;   /* 흑(먹) — 텍스트 */
-  --obang-nok: #3F6B51;    /* 뇌록 — 긍정·확인 */
+@font-face { font-family: 'Dasot Serif'; font-weight: 300; font-style: normal; font-display: swap; src: url('fonts/dasot-serif-300.woff2') format('woff2'); }
+@font-face { font-family: 'Dasot Serif'; font-weight: 500; font-style: normal; font-display: swap; src: url('fonts/dasot-serif-500.woff2') format('woff2'); }
 
-  /* 표면 */
-  --surface-canvas: #FAF7F0; /* 페이지 바탕 — 순백 #FFF 금지 */
-  --surface-soft: #F3EEE3;   /* 카드·박스 채움 */
-  --surface-card: #ECE5D6;   /* 가라앉은 카드 */
-  --hairline: #E3DBC9;       /* 1px 경계선 */
-
-  /* 텍스트 */
-  --text-ink: #221E1A;
-  --text-body: #3D3831;
-  --text-muted: #6F675B;
-  --text-muted-soft: #948B7D;
-  --on-dark: #FAF7F0;       /* 어두운 면 위 주 텍스트 */
-  --on-dark-soft: #B9C9D8;  /* 어두운 면 위 보조(회청) */
-  --on-hwang: #221E1A;      /* 황 면 위 텍스트 */
-
-  /* 의미 별칭 */
-  --accent-structure: var(--obang-cheong); /* 구조: 헤더·주 버튼·기본 띠 */
-  --accent-center: var(--obang-hwang);     /* 핵심: 화면당 채움 1회 */
-  --accent-warning: var(--obang-jeok);     /* 주의·오류 전용 */
-  --accent-positive: var(--obang-nok);     /* 확인·긍정 전용 */
-
-  /* 서체 — 기기 기본 글꼴 스택 (웹폰트 미사용: 미설치 기기·오프라인 대응) */
-  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, 'Apple SD Gothic Neo', 'Malgun Gothic', '맑은 고딕', 'Noto Sans KR', sans-serif;
-  --font-display: var(--font-body); /* 제목·인용 — 굵기로만 위계 구분 */
-
-  /* 여백·형태 */
-  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px;
-  --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px;
-  --radius: 0; /* 모든 모서리 직각 — 원형은 번호 배지만 예외 */
-
-  /* 구 토큰 호환 별칭 — 본문 인라인 스타일이 참조 (전부 시스템 토큰으로 연결) */
-  --ink-soft: var(--text-muted);
-  --accent: var(--accent-warning);
-  --line: var(--hairline);
-  --line-soft: var(--hairline);
-  --gold: var(--obang-hwang);
-  --gold-soft: var(--obang-hwang);
-  --primary: var(--accent-structure);
-  --bg-alt: var(--surface-card);
-  --font-en: var(--font-body);
+/* ── 벌(색) — 값은 다섯 벌 tokens.json 그대로 ── */
+:root, [data-theme="cheong"] {
+  --bg: #ffffff;        /* 바탕 */
+  --plane: #8fcbf7;     /* 색면 — 하늘빛 */
+  --ink: #0e2233;       /* 제목 */
+  --ink-2: #2f4252;     /* 본문 */
+  --mute: #5b6b78;      /* 덧붙이는 말. 색면 위에는 쓰지 않는다 */
+  --seam: #c9d5dd;      /* 가는 선 */
+  --on-plane: #0e2233;  /* 색면 위 글자 */
+  --on-plane-2: #24394a;
+  --mark: #0e2233;      /* 판단이 걸린 자리 */
+  --mark-ink: #ffffff;
+}
+[data-theme="jeok"] {
+  --bg: #ffffff;
+  --plane: #d4311e;     /* 색면 — 인주 */
+  --ink: #141414;
+  --ink-2: #3b3b3b;
+  --mute: #6e6e6e;
+  --seam: #d2d2d2;
+  --on-plane: #ffffff;
+  --on-plane-2: #ffffff; /* 토큰 값 #ffe3dd는 인주 위에서 대비가 4.06:1이라 작은 글자에는 흰색을 쓴다 */
+  --mark: #d4311e;
+  --mark-ink: #ffffff;
 }
 
-/* ── 베이스 ── */
+:root {
+  /* 제목 — 본명조. 앱에 넣은 파일이 먼저, 없으면 기기 명조 */
+  --serif: 'Dasot Serif', 'Noto Serif KR', 'Noto Serif CJK KR', 'AppleMyungjo', 'Batang', serif;
+  /* 본문·조작부 — 기기 고딕 (웹폰트 없음: 오프라인·미설치 기기 대응) */
+  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Apple SD Gothic Neo', 'Malgun Gothic', '맑은 고딕', 'Noto Sans KR', sans-serif;
+
+  /* 기기 안전 영역 — 홈 화면 실행·가로 화면(노치) 대응. 해당 없는 기기에서는 0 */
+  --safe-t: env(safe-area-inset-top, 0px);  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px); --safe-r: env(safe-area-inset-right, 0px);
+  /* 본문 단 너비 688px. 좁은 화면에서는 좌우 16px */
+  --gx-l: max(16px, var(--safe-l), calc((100% - 688px) / 2));
+  --gx-r: max(16px, var(--safe-r), calc((100% - 688px) / 2));
+  --crumb-h: 38px;   /* 경로 줄 높이 — 절반이 색면에 걸친다 */
+}
+
+/* ── 바탕 ── */
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html { font-size: 16px; }
+html { font-size: 16px; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body.heritage {
-  margin: 0; background: var(--surface-canvas); color: var(--text-body);
-  font-family: var(--font-body); font-size: 14px; line-height: 1.65;
+  background: var(--bg); color: var(--ink-2);
+  font-family: var(--sans); font-size: 15px; line-height: 1.65;
   min-height: 100vh; overscroll-behavior-y: contain;
 }
-.heritage h1, .heritage h2, .heritage h3 {
-  font-family: var(--font-display); font-weight: 800; color: var(--text-ink);
-  letter-spacing: -0.02em; line-height: 1.3; margin: 0;
-}
-.heritage a { color: var(--accent-structure); }
-.heritage a:hover { color: var(--obang-cheong); text-decoration: underline; text-underline-offset: 3px; }
-.heritage :focus-visible { outline: 2px solid var(--accent-structure); outline-offset: 2px; }
+.heritage button { font-family: inherit; border-radius: 0; }
+.heritage strong { color: var(--ink); font-weight: 700; }
+.heritage a { color: var(--ink); text-underline-offset: 3px; }
+.heritage :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 
-/* ── 헤더 바 (쪽빛 단일 평면 — 그라데이션 금지) ── */
+/* ── 머리 — 색면 + 경로 줄. 경로 줄은 색면 아랫변에 걸친다 (화면 위에 고정) ── */
+.topbar { position: sticky; top: 0; z-index: 100; background: var(--bg); padding-bottom: 10px; border-bottom: 1px solid var(--seam); }
+.topbar::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0;
+  bottom: calc(var(--crumb-h) / 2 + 11px);   /* 아래 여백 10px + 선 1px + 경로 줄 절반 */
+  background: var(--plane);
+}
 .h-header {
-  background: var(--accent-structure); color: var(--on-dark);
-  display: flex; align-items: baseline; gap: 12px; padding: 13px 20px;
+  position: relative; color: var(--on-plane);
+  display: flex; align-items: center; gap: 4px 14px; flex-wrap: wrap;
+  padding: calc(10px + var(--safe-t)) var(--gx-r) 10px var(--gx-l);
 }
-.h-header .h-brand { font-family: var(--font-display); font-weight: 800; font-size: 21px; letter-spacing: 4px; }
-.h-header .h-sub { font-size: 12px; font-weight: 800; letter-spacing: 2px; color: var(--on-dark-soft); }
-
-/* ── 카드/박스: 한지 채움 + 1px 경계 + 좌측 4px 의미색 띠. 그림자 없음 ── */
-.h-box { background: var(--surface-soft); border: 1px solid var(--hairline); border-left: 4px solid var(--accent-structure); padding: 16px 18px; }
-.h-box--warning { border-left-color: var(--accent-warning); }
-.h-box--positive { border-left-color: var(--accent-positive); }
-.h-box--center { border-left-color: var(--accent-center); }
-
-/* ── 버튼 ── */
-.h-btn {
-  font-family: inherit; cursor: pointer; border: none; border-radius: 0;
-  background: var(--accent-structure); color: var(--on-dark);
-  padding: 10px 30px; font-size: 14px; font-weight: 700; letter-spacing: 3px;
-}
-.h-btn:hover { background: #1A4066; }
-.h-btn:disabled { opacity: 0.45; cursor: default; }
-.h-btn--ghost { background: var(--surface-canvas); border: 1px solid var(--accent-structure); color: var(--accent-structure); }
-.h-btn--ghost:hover { background: var(--surface-soft); }
-.h-btn--text { background: none; padding: 2px 0; color: var(--accent-structure); font-size: 12.5px; letter-spacing: 0.5px; }
-
-/* ── 태그·칩 (1px 테두리, 직각) ── */
-.h-tag { font-size: 12px; border: 1px solid var(--hairline); color: var(--text-muted); padding: 2px 7px; background: var(--surface-canvas); letter-spacing: 1px; }
-.h-tag--primary { border-color: var(--accent-structure); color: var(--accent-structure); }
-
-/* ── 번호 배지 (원형 예외) ── */
-.h-badge {
-  width: 44px; height: 44px; border-radius: 999px; background: var(--accent-structure);
-  color: var(--on-dark); display: inline-flex; align-items: center; justify-content: center;
-  font-size: 18px; font-weight: 800;
-}
-
-/* ── 색동 구분선 — 표지·마무리 화면에만 ── */
-.h-saekdong { display: flex; gap: 8px; }
-.h-saekdong span { width: 34px; height: 5px; }
-.h-saekdong span:nth-child(1) { background: var(--obang-cheong); }
-.h-saekdong span:nth-child(2) { background: var(--obang-jeok); }
-.h-saekdong span:nth-child(3) { background: var(--obang-hwang); }
-.h-saekdong span:nth-child(4) { background: var(--obang-heuk); }
-
-/* ── 로딩: 황 점 3개 깜빡임 (허용된 유일한 모션) ── */
-.h-dots { display: inline-flex; gap: 7px; }
-.h-dots span { width: 7px; height: 7px; background: var(--accent-center); animation: h-blink 1.05s infinite; }
-.h-dots span:nth-child(2) { animation-delay: 0.18s; }
-.h-dots span:nth-child(3) { animation-delay: 0.36s; }
-@keyframes h-blink { 0%, 70%, 100% { opacity: 0.25; } 35% { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .h-dots span { animation: none; opacity: 0.8; } }
-
-/* =====================================================================
-   ── 앱 화면 스타일 — 위 시스템의 토큰·클래스만 사용 ──
-   규칙 준수 메모:
-   · 평면·직각·무그림자. 전환·변형 모션 없음 (필수 미체크 강조도 정적 색 강조)
-   · 적은 경계·금지 전용(위반 트랙·경고 박스·필수 태그), 뇌록은 완료 체크 전용
-   · 황 채움 없음(띠·색동만 사용) — 화면당 1회 한도 내
-   · 색동 구분선은 표지(시작 화면)와 푸터에만
-   ===================================================================== */
-
-/* 제목 서체 — 마루부리 Bold(© NAVER, OFL)에서 "검색대 적발 시 절차" 글자만 잘라 내장.
-   웹폰트를 내려받지 않으므로 오프라인·휴대폰에서도 같은 모양. 제목 문구를 바꾸면 다시 잘라야 함. */
-@font-face { font-family: "TitleMaru"; font-weight: 700; font-display: swap;
-  src: url(data:font/woff2;base64,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) format("woff2"); }
-
-/* HEADER */
-.h-header {
-  position: sticky; top: 0; z-index: 100;
-  flex-wrap: wrap; align-items: center; gap: 10px;
-  padding: 12px max(16px, calc((100% - 688px) / 2));
-}
-.h-header .h-brand { font-family: "TitleMaru", var(--font-display); font-weight: 700; font-size: 22px; letter-spacing: 2px; }
-.h-header .h-sub { letter-spacing: 1.5px; }
-.header-actions { margin-left: auto; display: flex; gap: 6px; flex-shrink: 0; }
+.h-brand { font-family: var(--serif); font-weight: 500; font-size: 22px; line-height: 1.3; letter-spacing: -.01em; word-break: keep-all; }
+.h-sub { font-size: 13px; color: var(--on-plane-2); }
+.header-actions { margin-left: auto; display: flex; gap: 8px; flex-shrink: 0; }
 .header-btn {
-  background: transparent; border: 1px solid var(--on-dark-soft); color: var(--on-dark);
-  padding: 6px 10px; border-radius: 0; font-family: var(--font-body);
-  font-size: 12.5px; font-weight: 700; cursor: pointer; min-height: 36px;
-  display: inline-flex; align-items: center; gap: 4px;
+  position: relative; cursor: pointer;
+  background: transparent; border: 1.5px solid var(--on-plane); color: var(--on-plane);
+  min-height: 38px; padding: 4px 13px; font-size: 14px; font-weight: 500; line-height: 1.3;
 }
-.header-btn:hover { background: #1A4066; }
-.header-btn.danger:hover { background: var(--accent-warning); border-color: var(--accent-warning); }
+.header-btn::after { content: ""; position: absolute; inset: -4px; }   /* 누르는 자리 46px */
+.header-btn:active { background: var(--on-plane); color: var(--plane); }
+.h-header :focus-visible { outline-color: var(--on-plane); }
 
-/* BREADCRUMB */
+.crumb-bar { position: relative; padding: 0 var(--gx-r) 0 var(--gx-l); }
 .breadcrumb {
-  background: var(--surface-canvas); border-bottom: 1px solid var(--hairline);
-  padding: 7px max(16px, calc((100% - 688px) / 2));
-  font-size: 12px; color: var(--text-muted);
-  display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-height: 32px;
+  background: var(--bg); border: 1.5px solid var(--ink);
+  min-height: var(--crumb-h); padding: 6px 12px;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 0 7px;
+  font-size: 13.5px; line-height: 1.5; color: var(--ink-2); word-break: keep-all;
 }
-.breadcrumb-track { font-weight: 800; letter-spacing: 1.5px; font-size: 12.5px; text-transform: uppercase; color: var(--accent-structure); }
-.breadcrumb-track.violation { color: var(--accent-warning); }
-.breadcrumb-sep { color: var(--text-muted-soft); }
-.breadcrumb-step { color: var(--text-muted); }
-.breadcrumb-step.current { color: var(--text-ink); font-weight: 700; }
+.breadcrumb-track { font-weight: 700; color: var(--ink); }
+.breadcrumb-sep { color: var(--mute); }
+.breadcrumb-step.current { color: var(--ink); font-weight: 700; }
 
-/* MAIN */
-.container { max-width: 720px; margin: 0 auto; padding: 18px 16px 72px; }
+/* ── 본문 단 ── */
+.container { padding: 24px var(--gx-r) 72px var(--gx-l); }
 
-/* CARDS — h-box 문법 */
-.card {
-  background: var(--surface-soft); border: 1px solid var(--hairline);
-  border-left: 4px solid var(--accent-structure);
-  padding: 18px; margin-bottom: 16px;
+/* ── 구획 — 상자 없이 흰 바탕 위에. 굵은 먹 선 하나로 나눈다 ── */
+.card { border-top: 2px solid var(--ink); padding-top: 14px; margin-bottom: 34px; }
+.container > .card:first-child { border-top: none; padding-top: 0; }
+
+.card-meta { display: flex; align-items: baseline; justify-content: space-between; gap: 2px 12px; flex-wrap: wrap; margin-bottom: 6px; }
+.card-step { font-size: 13.5px; font-weight: 700; color: var(--ink-2); word-break: keep-all; }
+.card-time { font-size: 13px; color: var(--mute); font-variant-numeric: tabular-nums; }
+.card-title {
+  font-family: var(--serif); font-weight: 500; font-size: 26px; line-height: 1.34; letter-spacing: -.01em;
+  color: var(--ink); margin-bottom: 14px; word-break: keep-all;
 }
-.card.accent { border-left-color: var(--accent-center); }
-.card.violation { border-left-color: var(--accent-warning); }
-.card.success { border-left-color: var(--accent-positive); }
-.card.info { border-left-color: var(--accent-structure); }
+.card-title .meta-tag { font-family: var(--sans); letter-spacing: 0; vertical-align: middle; position: relative; top: -2px; }
+.card-desc { color: var(--ink-2); font-size: 15px; line-height: 1.65; margin-bottom: 12px; word-break: keep-all; }
+.card-note { color: var(--mute); font-size: 13px; line-height: 1.6; margin-top: 10px; word-break: keep-all; }
 
-.card-meta {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 8px; flex-wrap: wrap; margin-bottom: 12px; padding-bottom: 9px;
-  border-bottom: 1px solid var(--hairline);
-}
-.card-step { font-size: 12.5px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent-structure); }
-.card-step.violation { color: var(--accent-warning); }
-.card-title { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; color: var(--text-ink); line-height: 1.4; margin-bottom: 12px; word-break: keep-all; }
-.card-title.violation { color: var(--accent-warning); }
-.card-desc { color: var(--text-body); font-size: .92rem; line-height: 1.65; margin-bottom: 14px; word-break: keep-all; }
-.card-desc strong { color: var(--text-ink); font-weight: 700; }
-
-/* CHOICE BUTTONS */
-.choice-grid { display: flex; flex-direction: column; gap: 8px; }
+/* ── 선택 — 가는 명조 한자 한 글자를 크게 세우고, 가는 선으로만 나눈다 ── */
+.choice-grid { display: flex; flex-direction: column; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--seam); }
+.choice-btn:last-child { border-bottom: none; }
 .choice-btn {
-  text-align: left; background: var(--surface-canvas);
-  border: 1px solid var(--hairline); border-radius: 0;
-  padding: 13px 14px; cursor: pointer; font-family: var(--font-body); color: var(--text-ink);
-  display: flex; align-items: center; gap: 12px; min-height: 60px; width: 100%;
+  width: 100%; text-align: left; cursor: pointer;
+  background: var(--bg); color: var(--ink); border: none; border-bottom: 1px solid var(--seam);
+  padding: 13px 4px 12px; min-height: 76px;
+  display: flex; align-items: center; gap: 14px;
 }
-.choice-btn:hover { border-color: var(--accent-structure); }
-.choice-btn.violation:hover { border-color: var(--accent-warning); }
-.choice-btn.success:hover { border-color: var(--accent-positive); }
 .choice-icon {
-  font-family: var(--font-display); font-weight: 800; font-size: 1.05rem;
-  color: var(--on-dark); width: 38px; height: 38px;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--accent-structure); border-radius: 999px; /* 원형 배지 예외 */
-  flex-shrink: 0;
+  font-family: var(--serif); font-weight: 300; font-size: 44px; line-height: 1;
+  width: 50px; flex-shrink: 0; text-align: center; color: inherit;
 }
-.choice-btn.violation .choice-icon { background: var(--accent-warning); }
-.choice-btn.success .choice-icon { background: var(--accent-positive); }
 .choice-text { flex: 1; min-width: 0; }
-.choice-label { display: block; font-family: var(--font-display); font-size: .98rem; font-weight: 800; color: var(--text-ink); margin-bottom: 2px; line-height: 1.35; word-break: keep-all; }
-.choice-btn.violation .choice-label { color: var(--accent-warning); }
-.choice-desc { display: block; font-size: .8rem; color: var(--text-muted); line-height: 1.45; word-break: keep-all; }
-.choice-arrow { color: var(--text-muted-soft); font-size: 1.2rem; flex-shrink: 0; }
+.choice-label { display: block; font-family: var(--serif); font-weight: 500; font-size: 18px; line-height: 1.4; letter-spacing: -.01em; word-break: keep-all; }
+.choice-desc { display: block; margin-top: 1px; font-size: 13.5px; line-height: 1.5; color: var(--mute); word-break: keep-all; }
+.choice-arrow { flex-shrink: 0; font-size: 22px; line-height: 1; color: inherit; padding-right: 2px; }
+@media (hover: hover) {
+  .choice-btn:hover .choice-label { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
+}
+/* 누르는 동안 그 벌의 색으로 밑칠 */
+.choice-btn:active { background: var(--plane); color: var(--on-plane); }
+.choice-btn:active .choice-desc { color: var(--on-plane-2); }
 
-/* CHECKLIST */
-.checklist { display: flex; flex-direction: column; gap: 6px; margin: 12px 0 14px; }
+/* ── 점검 목록 — 위아래 먹 선, 항목 사이는 가는 선 ── */
+.checklist { display: flex; flex-direction: column; margin: 18px 0; border-top: 1.5px solid var(--ink); border-bottom: 1.5px solid var(--ink); }
 .check-item {
-  display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px;
-  background: var(--surface-canvas); border: 1px solid var(--hairline); border-radius: 0;
-  cursor: pointer; user-select: none; min-height: 44px;
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 6px 12px 4px; min-height: 48px;
+  border-bottom: 1px solid var(--seam); cursor: pointer; user-select: none; -webkit-user-select: none;
 }
-.check-item:hover { border-color: var(--accent-structure); }
-.check-item.checked { background: var(--surface-card); border-color: var(--accent-positive); }
-.check-item.checked .check-label { color: var(--text-muted); }
-.check-item.checked .check-label-text { text-decoration: line-through; text-decoration-color: var(--accent-positive); }
+.check-item:last-child { border-bottom: none; }
+/* 점검 칸 — 남은 항목은 --mark 테두리, 마친 항목은 먹색 채움 */
 .check-box {
-  width: 19px; height: 19px; border: 2px solid var(--hairline); border-radius: 0;
-  flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center;
-  background: var(--surface-canvas);
+  width: 22px; height: 22px; flex-shrink: 0; margin-top: 1px;
+  border: 2px solid var(--mark); background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
 }
-.check-item.checked .check-box { background: var(--accent-positive); border-color: var(--accent-positive); }
-.check-item.checked .check-box::after { content: '✓'; color: var(--on-dark); font-size: 13px; font-weight: 700; }
-/* 필수 미체크 강조 — 규칙 6에 따라 모션 없이 정적 색 강조 */
-.check-item.miss { border-color: var(--accent-warning); background: var(--surface-card); }
-.check-item.miss .check-box { border-color: var(--accent-warning); }
-.check-label { flex: 1; font-size: .88rem; color: var(--text-ink); line-height: 1.5; word-break: keep-all; }
+.check-item.checked .check-box { background: var(--ink); border-color: var(--ink); }
+.check-item.checked .check-box::after {
+  content: ""; width: 6px; height: 11px; margin-top: -2px;
+  border: solid var(--bg); border-width: 0 2.5px 2.5px 0; transform: rotate(45deg);
+}
+.check-label { flex: 1; min-width: 0; font-size: 15px; line-height: 1.55; color: var(--ink); word-break: keep-all; }
 .check-label-text { display: block; }
-.check-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.check-item.checked .check-label-text { color: var(--mute); text-decoration: line-through; text-decoration-thickness: 1px; text-decoration-color: var(--mute); }
+.check-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+/* 필수인데 빠진 항목 — 굵은 틀. 체크할 때까지 그대로 둔다 */
+.check-item.miss { outline: 2px solid var(--mark); outline-offset: -2px; padding-left: 10px; padding-right: 10px; }
+.check-item.miss .meta-tag.warn { background: var(--mark); color: var(--mark-ink); }
+.check-item.checked .meta-tag.warn { border-color: var(--mute); color: var(--mute); }   /* 마친 항목은 표시도 가라앉힌다 */
 
-/* 메타 태그 — h-tag 문법 */
+/* ── 태그 — 테두리 네모. '필수'는 놓치면 안 되므로 굵은 테두리(판정 인 방식) ── */
 .meta-tag {
-  display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px;
-  border-radius: 0; font-size: 12px; font-weight: 700; letter-spacing: .5px; line-height: 1.5;
-  background: var(--surface-canvas); border: 1px solid var(--hairline); color: var(--text-muted);
+  display: inline-flex; align-items: center; padding: 0 6px;
+  font-size: 12px; font-weight: 400; line-height: 1.7; white-space: normal; word-break: keep-all;
+  background: var(--bg); border: 1px solid var(--mute); color: var(--mute);
 }
-.meta-tag.law { border-color: var(--accent-structure); color: var(--accent-structure); }
-.meta-tag.warn { border-color: var(--accent-warning); color: var(--accent-warning); }
-.meta-tag.time { border-color: var(--accent-center); color: var(--text-muted); }
+.meta-tag.law { color: var(--ink-2); }
+.meta-tag.warn { border: 2px solid var(--mark); color: var(--mark); font-weight: 700; line-height: 1.55; }
 
-/* INFO BOX */
+/* ── 안내 — 위쪽 가는 선 하나. 경고는 먹 틀에 제목만 --mark ── */
 .info-box {
-  background: var(--surface-card); border: 1px solid var(--hairline);
-  border-left: 4px solid var(--accent-structure); border-radius: 0;
-  padding: 12px 14px; margin: 14px 0; font-size: .85rem; color: var(--text-body);
-  line-height: 1.6; word-break: keep-all;
+  border-top: 1px solid var(--seam); padding: 12px 0 0; margin: 16px 0;
+  font-size: 14px; line-height: 1.7; color: var(--ink-2); word-break: keep-all;
 }
-.info-box.warn { border-left-color: var(--accent-warning); }
-.info-box.warn strong { color: var(--accent-warning); }
-.info-box-title { font-family: var(--font-display); font-weight: 800; font-size: .8rem; color: var(--accent-structure); margin-bottom: 5px; display: block; }
-.info-box.warn .info-box-title { color: var(--accent-warning); }
-.info-box ul, .info-box ol { padding-left: 1.1rem; margin: .25rem 0; }
-.info-box li { margin: .15rem 0; }
+.info-box-title { display: block; font-size: 14px; font-weight: 700; line-height: 1.5; color: var(--ink); margin-bottom: 4px; }
+.info-box.warn { border: 1.5px solid var(--ink); padding: 12px 14px 13px; }
+/* 바로 위가 선으로 끝나는 묶음이면 선을 겹치지 않는다 */
+.choice-grid + .info-box:not(.warn), details.field + .info-box:not(.warn) { border-top: none; padding-top: 0; }
+.info-box.warn .info-box-title { color: var(--mark); }
+.info-box ul, .info-box ol { padding-left: 1.2rem; margin: 6px 0; }
+.info-box li { margin: 3px 0; }
+.info-box p { margin-bottom: 6px; }
+.container > .info-box:last-child { color: var(--mute); font-size: 13px; }
 
-/* CRITERIA ACCORDION */
-details.field { border: 1px solid var(--hairline); border-radius: 0; margin-bottom: 8px; background: var(--surface-canvas); }
+/* ── 접이 — 가는 선 사이에 제목 한 줄 ── */
+details.field { border-top: 1px solid var(--seam); border-bottom: 1px solid var(--seam); }
+details.field + details.field { border-top: none; }
 details.field summary {
-  padding: 10px 13px; cursor: pointer; font-family: var(--font-display); font-weight: 800;
-  color: var(--text-ink); background: var(--surface-card); list-style: none;
-  display: flex; justify-content: space-between; align-items: center; user-select: none;
-  font-size: .92rem; word-break: keep-all;
+  list-style: none; cursor: pointer; user-select: none; -webkit-user-select: none;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  min-height: 50px; padding: 10px 4px;
+  font-size: 15px; font-weight: 700; line-height: 1.45; color: var(--ink); word-break: keep-all;
 }
 details.field summary::-webkit-details-marker { display: none; }
-details.field summary span { margin-right: auto; }
-details.field summary::after { content: '＋'; color: var(--accent-structure); font-weight: 400; font-size: 1.05rem; }
-details.field[open] summary { border-bottom: 1px solid var(--hairline); }
+details.field summary > span { margin-right: auto; font-size: 12.5px; font-weight: 400; color: var(--mute); }
+details.field summary::after { content: '+'; flex-shrink: 0; font-family: var(--serif); font-weight: 300; font-size: 26px; line-height: 1; color: var(--ink); }
 details.field[open] summary::after { content: '−'; }
-details.field .field-body { padding: 12px 14px; font-size: .86rem; color: var(--text-body); }
-details.field .field-body h4 { font-family: var(--font-display); font-size: .84rem; color: var(--accent-structure); margin: .6rem 0 .3rem; font-weight: 800; }
+details.field .field-body { padding: 0 4px 16px; font-size: 14px; line-height: 1.65; color: var(--ink-2); }
+details.field .field-body h4 { font-size: 13.5px; font-weight: 700; color: var(--ink); margin: 12px 0 4px; }
 details.field .field-body h4:first-child { margin-top: 0; }
-details.field .field-body ol, details.field .field-body ul { padding-left: 1.3rem; margin: .2rem 0; }
-details.field .field-body li { margin: .2rem 0; line-height: 1.55; }
-details.field .field-body li strong { color: var(--text-ink); }
-details.field .field-body .field-note { font-size: .77rem; color: var(--text-muted); margin-top: .35rem; }
-details.field .field-body .examples {
-  font-size: .78rem; color: var(--text-muted); background: var(--surface-card);
-  border: 1px solid var(--hairline); padding: 8px 11px; margin-top: .55rem; line-height: 1.55;
-}
-details.field .field-body .examples strong { color: var(--text-ink); font-weight: 700; }
+details.field .field-body ol, details.field .field-body ul { padding-left: 1.35rem; margin: 3px 0; }
+details.field .field-body li { margin: 3px 0; word-break: keep-all; }
+details.field .field-body .field-note { font-size: 13px; color: var(--mute); margin-top: 5px; word-break: keep-all; }
+details.field .field-body .field-note.strong { color: var(--ink); font-weight: 500; margin-top: 10px; }
+details.field .field-body .examples { border-top: 1px solid var(--seam); padding-top: 9px; margin-top: 11px; font-size: 13px; line-height: 1.6; color: var(--mute); word-break: keep-all; }
+details.field .field-body .examples strong { margin-right: 4px; }
 
-/* NAV BUTTONS */
-.nav-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+/* ── 이동 단추 — 먹색 채움 / 먹 테두리 ── */
+.nav-row { display: flex; gap: 8px; margin-top: 22px; flex-wrap: wrap; }
 .nav-btn {
-  flex: 1; min-width: 130px; padding: 12px 16px; border-radius: 0;
-  font-family: var(--font-body); font-size: .92rem; font-weight: 700; letter-spacing: 1px;
-  cursor: pointer; border: none; display: inline-flex; align-items: center; justify-content: center;
-  gap: 6px; min-height: 48px;
+  flex: 1; min-width: 130px; min-height: 50px; padding: 12px 16px; cursor: pointer;
+  border: 1.5px solid var(--ink); background: var(--ink); color: var(--bg);
+  font-size: 15px; font-weight: 700; line-height: 1.3;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
 }
-.nav-btn.primary { background: var(--accent-structure); color: var(--on-dark); }
-.nav-btn.primary:hover { background: #1A4066; }
-.nav-btn.violation { background: var(--accent-warning); color: var(--on-dark); }
-.nav-btn.success { background: var(--accent-positive); color: var(--on-dark); }
-.nav-btn.secondary { background: var(--surface-canvas); color: var(--accent-structure); border: 1px solid var(--accent-structure); }
-.nav-btn.secondary:hover { background: var(--surface-soft); }
+.nav-btn.secondary { background: var(--bg); color: var(--ink); }
+@media (hover: hover) {
+  .nav-btn:hover { background: var(--ink-2); border-color: var(--ink-2); }
+  .nav-btn.secondary:hover { background: var(--bg); border-color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+}
+.nav-btn:active { background: var(--plane); border-color: var(--plane); color: var(--on-plane); }
 
-/* SUMMARY VIEW */
-.summary-section { margin-bottom: 18px; }
-.summary-section h3 {
-  font-family: var(--font-display); font-size: .92rem; font-weight: 800; color: var(--text-ink);
-  margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--hairline);
-}
-.summary-list { font-size: .88rem; color: var(--text-ink); }
-.summary-list-item { display: flex; justify-content: space-between; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--hairline); }
-.summary-list-item:last-child { border-bottom: none; }
-.summary-key { color: var(--text-muted); flex-shrink: 0; }
-.summary-val { color: var(--text-ink); font-weight: 700; text-align: right; word-break: break-all; }
-.summary-check { display: flex; gap: 10px; padding: 4px 0; line-height: 1.5; word-break: keep-all; }
-.summary-time { flex-shrink: 0; min-width: 3.1em; font-weight: 700; color: var(--text-ink); font-variant-numeric: tabular-nums; }
-.summary-offpath { color: var(--text-muted-soft); }
+/* ── 요약 ── */
+.summary-section { margin-bottom: 24px; }
+.summary-section h3 { font-family: var(--sans); font-size: 14px; font-weight: 700; line-height: 1.5; color: var(--ink); padding-bottom: 6px; border-bottom: 1.5px solid var(--ink); }
+.summary-list { font-size: 14.5px; color: var(--ink-2); }
+.summary-list-item { display: flex; justify-content: space-between; gap: 14px; padding: 8px 0; border-bottom: 1px solid var(--seam); }
+.summary-key { color: var(--mute); flex-shrink: 0; }
+.summary-val { color: var(--ink); font-weight: 500; text-align: right; word-break: break-all; }
+.summary-checks { padding-top: 6px; }
+.summary-check { display: flex; gap: 10px; padding: 5px 0; line-height: 1.55; word-break: keep-all; }
+.summary-time { flex-shrink: 0; min-width: 3.1em; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+.summary-offpath, .summary-offpath .summary-time { color: var(--mute); }
 
-/* MODAL — 직각·무그림자 */
-.modal-backdrop {
-  position: fixed; inset: 0; background: rgba(34, 30, 26, .55); z-index: 200;
-  display: none; align-items: center; justify-content: center; padding: 16px;
-}
+/* ── 창 ── */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, .5); z-index: 200; display: none; align-items: center; justify-content: center; padding: 16px; }
 .modal-backdrop.active { display: flex; }
-.modal {
-  background: var(--surface-canvas); border: 1px solid var(--hairline);
-  border-top: 4px solid var(--accent-structure); border-radius: 0;
-  max-width: 480px; width: 100%; max-height: 85vh; overflow-y: auto;
-}
-.modal-header { padding: 16px 18px 10px; border-bottom: 1px solid var(--hairline); }
-.modal-title { font-family: var(--font-display); font-weight: 800; color: var(--text-ink); font-size: 1.05rem; }
-.modal-body { padding: 14px 18px; font-size: .9rem; line-height: 1.6; }
-.modal-footer { padding: 10px 18px 18px; display: flex; gap: 8px; justify-content: flex-end; }
+.modal { background: var(--bg); border: 1.5px solid var(--ink); max-width: 480px; width: 100%; max-height: 85vh; overflow-y: auto; }
+.modal-header { padding: 18px 18px 0; }
+.modal-title { font-family: var(--serif); font-weight: 500; font-size: 20px; line-height: 1.4; letter-spacing: -.01em; color: var(--ink); }
+.modal-body { padding: 12px 18px; font-size: 14.5px; line-height: 1.65; }
+.modal-footer { padding: 6px 18px 18px; display: flex; gap: 8px; justify-content: flex-end; }
 
-/* TOAST — 모션 없이 즉시 표시 */
+/* ── 알림 — 먹색 면. 경고는 --mark 면. 모션 없이 바로 나타난다 ── */
 .toast {
-  position: fixed; bottom: 22px; left: 0; right: 0; margin: 0 auto;
+  position: fixed; bottom: calc(22px + var(--safe-b)); left: 0; right: 0; margin: 0 auto;
   width: max-content; max-width: calc(100vw - 32px); word-break: keep-all;
-  display: none; background: var(--surface-soft); border: 1px solid var(--hairline);
-  border-left: 4px solid var(--accent-structure); border-radius: 0;
-  color: var(--text-body); padding: 10px 16px; font-size: .88rem;
+  display: none; background: var(--ink); color: var(--bg);
+  padding: 11px 18px; font-size: 14.5px; font-weight: 500; line-height: 1.5;
   z-index: 150; text-align: center;
 }
 .toast.show { display: block; }
-.toast.warn { border-left-color: var(--accent-warning); }
-.toast.success { border-left-color: var(--accent-positive); }
+.toast.warn { background: var(--mark); color: var(--mark-ink); }
 
-/* FOOTER — 색동 구분선 (마무리 허용 지점) */
-.footer { text-align: center; color: var(--text-muted); font-size: .75rem; padding: 8px 16px 36px; max-width: 720px; margin: 0 auto; line-height: 1.7; }
-.footer .h-saekdong { justify-content: center; margin: 0 auto 14px; width: max-content; }
-.app-version { margin-top: 8px; font-size: .75rem; letter-spacing: 1px; color: var(--text-muted-soft); }
+/* ── 바닥 ── */
+.footer { padding: 0 var(--gx-r) calc(40px + var(--safe-b)) var(--gx-l); color: var(--mute); font-size: 12.5px; line-height: 1.7; word-break: keep-all; }
+.footer > div { border-top: 1px solid var(--seam); padding-top: 16px; }
+.app-version { margin-top: 10px; font-variant-numeric: tabular-nums; }
 
-/* 표지(시작 화면) 색동 */
-.h-saekdong.cover { justify-content: center; margin: 4px auto 16px; width: max-content; }
-
-/* RESPONSIVE */
+/* ── 휴대폰 ── */
 @media (max-width: 480px) {
-  .h-header .h-brand { font-size: 18px; letter-spacing: 1px; }
-  .h-header .h-sub { display: none; }
-  .h-header, .breadcrumb { padding-left: 12px; padding-right: 12px; }
-  .container { padding: 14px 12px 72px; }
-  .card { padding: 14px; }
-  .card-title { font-size: 1.05rem; }
-  .choice-btn { padding: 11px 12px; min-height: 56px; }
-  .choice-label { font-size: .93rem; }
-  .choice-desc { font-size: .8rem; }
+  .h-brand { font-size: 19px; }
+  .h-sub { display: none; }
+  .container { padding-top: 20px; }
+  .card-title { font-size: 23px; }
+  .choice-icon { font-size: 40px; width: 44px; }
+  .choice-btn { gap: 12px; }
+  .choice-label { font-size: 17px; }
 }
-
-/* 터치 기기 — hover 잔상 제거 */
-@media (hover: none) {
-  .choice-btn:hover, .choice-btn.violation:hover, .choice-btn.success:hover,
-  .check-item:hover { border-color: var(--hairline); }
-  .nav-btn.primary:hover { background: var(--accent-structure); }
-  .nav-btn.secondary:hover { background: var(--surface-canvas); }
-  .h-btn:hover { background: var(--accent-structure); }
-  .header-btn:hover, .header-btn.danger:hover { background: transparent; border-color: var(--on-dark-soft); }
-}
-
-/* 스크롤바 — 직각, 시스템 색 */
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: var(--surface-soft); }
-::-webkit-scrollbar-thumb { background: var(--hairline); }
-::-webkit-scrollbar-thumb:hover { background: var(--text-muted-soft); }
-
-/* =====================================================================
-   규칙 요약 (코드 리뷰용 — heritage-design.css 원문)
-   1. 페이지 배경은 항상 --surface-canvas. 순백 #FFF 금지.
-   2. 모든 모서리 직각. 그라데이션·그림자·블러 금지 — 평면과 1px 선만.
-   3. 황(치자) 채움은 화면당 1회.
-   4. 적(석간주)은 경계·금지·오류에만, 뇌록은 긍정·확인에만.
-   5. 색동 구분선은 표지(빈 상태)·마무리(푸터)에만.
-   6. hover=색 심화·밑줄 / focus=청 2px outline / 로딩=황 점 3개. 그 외 모션 없음.
-   7. 제목=나눔명조 800, 본문·UI=나눔고딕. 본문 행간 1.6~1.75.
-      (7조 서체는 미설치 기기·오프라인 대응을 위해 기기 기본 글꼴로 대체 적용)
-   ===================================================================== */
 </style>
 </head>
 <body class="heritage">
 
-<header class="h-header">
-  <div class="h-brand">검색대 적발 시 절차</div>
-  <div class="h-sub">KOREA HERITAGE SERVICE · ON-SITE MANUAL</div>
-  <div class="header-actions">
-    <button class="header-btn" id="resumeBtn" style="display:none;" title="저장된 진행 복구">⟲ 복구</button>
-    <button class="header-btn danger" id="resetBtn" title="처음으로">⌂ 처음</button>
+<div class="topbar">
+  <header class="h-header">
+    <div class="h-brand">검색대 적발 시 절차</div>
+    <div class="h-sub" lang="en">On-site procedure manual, Korea Heritage Service</div>
+    <div class="header-actions">
+      <button class="header-btn" id="resumeBtn" style="display:none;" title="저장된 진행 복구">복구</button>
+      <button class="header-btn" id="resetBtn" title="처음으로">처음</button>
+    </div>
+  </header>
+  <div class="crumb-bar">
+    <nav class="breadcrumb" id="breadcrumb" aria-label="진행 위치">
+      <span class="breadcrumb-track">시작</span>
+    </nav>
   </div>
-</header>
-
-<div class="breadcrumb" id="breadcrumb">
-  <span class="breadcrumb-track">시작</span>
 </div>
 
 <main class="container" id="app"></main>
 
-<div class="footer">
-  <div class="h-saekdong" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-  Reference · 문화유산법 제39·60·90조 · 형소법 제211·212·216·218조 · 특사경 협력규정 · 감정관실 설치·운영 규정
-  <div class="app-version" id="appVersion"></div>
-</div>
+<footer class="footer">
+  <div>
+    Reference · 문화유산법 제39·60·90조 · 형소법 제211·212·216·218조 · 특사경 협력규정 · 감정관실 설치·운영 규정
+    <div class="app-version" id="appVersion"></div>
+  </div>
+</footer>
 
 <div class="modal-backdrop" id="modal">
   <div class="modal">
@@ -462,7 +348,7 @@ details.field .field-body .examples strong { color: var(--text-ink); font-weight
 
 // ────────────────────────────────────────────────
 //  ▼ 배포할 때마다 이 한 줄만 바꾸세요. 화면 맨 아래에 그대로 표시됩니다.
-const APP_VERSION = 'v3.8 · 2026-11-12';
+const APP_VERSION = 'v4.0 · 2026-11-25';
 // ────────────────────────────────────────────────
 (function () {
   const v = document.getElementById('appVersion');
@@ -567,7 +453,6 @@ const STATES = {
     track: 'checkpoint',
     crumb: ['시작'],
     render: () => `
-      <div class="h-saekdong cover" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
       ${renderResumeCard()}
       <div class="card">
         <div class="card-meta"><span class="card-step">검색대 적발 절차</span></div>
@@ -591,7 +476,7 @@ const STATES = {
             <span class="choice-arrow">›</span>
           </button>
         </div>
-        <div class="info-box" style="font-size:.82rem;">
+        <div class="info-box">
           여기서 '특사경 자격'은 <strong>특별사법경찰관</strong> 지명을 말합니다. 영장 없는 압수(형소법 제216조③·제218조)와 피의자 신문의 주체는 특별사법경찰관이며, 특별사법경찰리는 수사를 보조합니다. 특별사법경찰리만 현장에 있으면 '부재'로 진행하십시오. 지명 여부·직위·담당 범죄는 미리 확인해 두고, 서류에는 직위를 명확히 적습니다.
         </div>
       </div>
@@ -661,7 +546,7 @@ const STATES = {
         </details>
 
         <details class="field">
-          <summary>4. 자연사 분야 <span style="font-size:.75rem;color:var(--accent);font-weight:500;margin-left:.4rem;">기준 구성 다름</span></summary>
+          <summary>4. 자연사 분야 <span>기준 구성 다름</span></summary>
           <div class="field-body">
             <h4>공통기준 (1~2 모두 충족)</h4>
             <ol>
@@ -677,13 +562,13 @@ const STATES = {
               <li><strong>시대성·지역성</strong> — 특정 시대 또는 지역을 대표</li>
             </ol>
             <div class="examples"><strong>예시</strong> 동물류(박제·골격·건조표본·액침표본), 식물류(꽃·열매·종자·잎·표본), 지질류(화석·동굴생성물·퇴적구조·광물·암석·운석)</div>
-            <div class="field-note" style="margin-top:.5rem;color:var(--accent);">※ 자연사 분야는 별도기준 조항이 없음 (가목만 적용)</div>
+            <div class="field-note strong">※ 자연사 분야는 별도기준 조항이 없음 (가목만 적용)</div>
           </div>
         </details>
 
-        <div class="info-box" style="border-left-color:var(--obang-hwang);">
+        <div class="info-box">
           <span class="info-box-title">별도기준 (미술·전적·생활기술 분야에 한함 · 자연사 분야 제외)</span>
-          <p style="font-size:.82rem;margin-bottom:.35rem;">위 가목 기준을 충족하지 않더라도, 다음 1·2 중 하나에 해당하면 일반동산문화유산으로 봅니다.</p>
+          <p>위 가목 기준을 충족하지 않더라도, 다음 1·2 중 하나에 해당하면 일반동산문화유산으로 봅니다.</p>
           <ol style="padding-left:1.3rem;margin:.3rem 0;">
             <li><strong>외국유물</strong> — 국내에서 출토되었거나 상당기간 전해져 온 외국 제작 유물 중 우리나라 역사·예술·문화에 상당한 영향을 끼쳤음이 분명할 것</li>
             <li><strong>기타</strong> — 유물 형태가 일부분에 불과하더라도 해당 부분의 명문·문양·제작양식 등에 의해 문화유산적 가치가 분명할 것</li>
@@ -697,7 +582,7 @@ const STATES = {
 
       </div>
       <div class="info-box">
-체크항목·체크 시각·진행 위치는 이 기기에만 저장됩니다(localStorage). 화면이 새로 열려도 첫 화면에서 이어서 할 수 있고, "⌂ 처음" 버튼으로 언제든 삭제됩니다.
+체크항목·체크 시각·진행 위치는 이 기기에만 저장됩니다(localStorage). 화면이 새로 열려도 첫 화면에서 이어서 할 수 있고, "처음" 버튼으로 언제든 삭제됩니다.
       </div>
     `
   },
@@ -714,7 +599,7 @@ const STATES = {
       <div class="card">
         <div class="card-meta">
           <span class="card-step">① 현장 도착</span>
-          <span style="font-size:.78rem;color:var(--ink-soft);" id="startedAtDisplay"></span>
+          <span class="card-time" id="startedAtDisplay"></span>
         </div>
         <h2 class="card-title">비문화유산 확인 신청서 작성 및 감정${sjpLabel}</h2>
 
@@ -731,7 +616,7 @@ const STATES = {
         ])}
 
         <details class="field" style="margin-top:1rem;">
-          <summary>신청서 작성 거부 시 처리 <span style="font-size:.75rem;color:var(--ink-soft);font-weight:400;margin-left:.4rem;">드문 케이스</span></summary>
+          <summary>신청서 작성 거부 시 처리 <span>드문 케이스</span></summary>
           <div class="field-body">
             <h4>① 다국어 안내 도구로 재시도</h4>
             <ul>
@@ -821,6 +706,7 @@ const STATES = {
   // ─── 신청서 작성 거부 — 위원 직권 감정 ───
   release_refused: {
     track: 'checkpoint',
+    theme: 'jeok',   // 강제 처분 화면 — 적 벌
     crumb: ['검색대', '신청서 거부', '위원 직권 감정'],
     render: () => `
       <div class="card violation">
@@ -970,7 +856,7 @@ const STATES = {
 
         ${renderChecklist('cooperate', cooperateItems)}
 
-        <p class="card-desc" style="margin-top:.85rem;font-size:.88rem;">아래는 가능하면 함께 확보(상황에 따라 선택).</p>
+        <p class="card-desc" style="margin-top:.85rem;">아래는 가능하면 함께 확보(상황에 따라 선택).</p>
 
         ${renderChecklist('cooperate_optional', [
           { id:'addl', label:'추가 자료 — 연락처, 전자우편, 주소, 영수증' },
@@ -1056,6 +942,7 @@ const STATES = {
   // ─── 임의제출 거부 + 신원 협조 — 형소법 제216조③ 압수 ───
   seize_216: {
     track: 'checkpoint',
+    theme: 'jeok',   // 강제 처분 화면 — 적 벌
     crumb: ['검색대', '임의제출 거부', '제216조③ 압수'],
     render: () => {
       const sjpBlock = caseState.is_sjp
@@ -1135,6 +1022,7 @@ const STATES = {
   // ─── 비협조 ───
   refuse: {
     track: 'checkpoint',
+    theme: 'jeok',   // 강제 처분 화면 — 적 벌
     crumb: ['검색대', '비협조'],
     render: () => {
       const sjpBlock = caseState.is_sjp
@@ -1352,7 +1240,7 @@ function renderResumeCard() {
       <div class="card accent">
         <div class="card-meta">
           <span class="card-step">진행 중인 사건</span>
-          <span style="font-size:.78rem;color:var(--text-muted);">${saved.startedAt ? '시작 ' + fmtTime(saved.startedAt) : ''}</span>
+          <span class="card-time">${saved.startedAt ? '시작 ' + fmtTime(saved.startedAt) : ''}</span>
         </div>
         <h2 class="card-title">이어서 진행하시겠습니까?</h2>
         <p class="card-desc">이 기기에 저장된 사건이 있습니다. 마지막 화면은 <strong>${where}</strong>, 체크한 항목은 ${done}건입니다.</p>
@@ -1386,15 +1274,15 @@ function renderSummary() {
       </div>
       <div class="summary-section">
         <h3>완료 항목 (${checkEntries.length}건)</h3>
-        <div class="summary-list" style="font-size:.82rem;color:var(--ink-soft);">
+        <div class="summary-list summary-checks">
           ${checkEntries.length ? checkEntries.map(e => {
             return `<div class="summary-check${e.onPath ? '' : ' summary-offpath'}"><span class="summary-time">${e.time ? fmtClock(e.time) : '✓'}</span><span>${e.label}${e.onPath ? '' : ' — 되돌아간 분기'}</span></div>`;
-          }).join('') : '<div style="color:var(--text-muted-soft);">완료 항목 없음</div>'}
+          }).join('') : '<div style="color:var(--mute);">완료 항목 없음</div>'}
         </div>
-        <p class="card-desc" style="font-size:.8rem;color:var(--text-muted);margin:.6rem 0 0;">시각은 항목을 체크한 때입니다. 실제 조치 시각과 다르면 경위서에는 실제 시각을 적으십시오.${hasOffPath ? ' "되돌아간 분기"는 뒤로 돌아가 다른 경로를 택하기 전에 체크한 항목입니다.' : ''}</p>
+        <p class="card-note">시각은 항목을 체크한 때입니다. 실제 조치 시각과 다르면 경위서에는 실제 시각을 적으십시오.${hasOffPath ? ' "되돌아간 분기"는 뒤로 돌아가 다른 경로를 택하기 전에 체크한 항목입니다.' : ''}</p>
       </div>
       <div class="nav-row">
-        <button class="nav-btn secondary" onclick="copyReport()">📋 요약 복사</button>
+        <button class="nav-btn secondary" onclick="copyReport()">요약 복사</button>
         <button class="nav-btn primary" onclick="if(confirm('새 사건으로 진행하시겠습니까? 현재 기록은 삭제됩니다.')){clearState();navigate('start');}">새 사건 ›</button>
       </div>
     </div>
@@ -1405,9 +1293,19 @@ function renderSummary() {
 //   상태 머신 액션
 // ═══════════════════════════════════════════
 
+// 벌(색) — 화면마다 STATES의 theme 값을 따른다. 값이 없으면 청 벌
+const THEMES = { cheong: '#8fcbf7', jeok: '#d4311e' };
+function applyTheme(id) {
+  if (!THEMES[id]) id = 'cheong';
+  document.documentElement.setAttribute('data-theme', id);
+  const m = document.querySelector('meta[name="theme-color"]');
+  if (m) m.setAttribute('content', THEMES[id]);
+}
+
 function renderState(stateId) {
   const state = STATES[stateId];
   if (!state) return;
+  applyTheme(state.theme);
   document.getElementById('app').innerHTML = state.render();
   document.getElementById('toast').classList.remove('show');   // 앞 화면의 안내가 새 화면을 가리지 않게
   renderBreadcrumb(state);
@@ -1438,7 +1336,7 @@ function tryNavigate(targetState, stateId, requiredIds) {
     missing.forEach(id => {
       const el = document.querySelector(`[data-check-id="${stateId}.${id}"]`);
       if (el) {
-        // 디자인 시스템 규칙 6(허용 모션 외 금지) — 흔들림 대신 정적 색 강조. 체크할 때까지 유지
+        // 모션 없이 굵은 틀로 강조. 체크할 때까지 유지
         el.classList.add('miss');
         if (!first) first = el;
       }
@@ -1476,9 +1374,8 @@ function goBack() {
 function renderBreadcrumb(state) {
   const crumb = document.getElementById('breadcrumb');
   const items = state.crumb || ['시작'];
-  const trackClass = ''; // 트랙 이름은 구조색(쪽빛) — 적은 경고·위반에만 (규칙 4)
   crumb.innerHTML = items.map((c, i) => {
-    if (i === 0) return `<span class="breadcrumb-track ${trackClass}">${c}</span>`;
+    if (i === 0) return `<span class="breadcrumb-track">${c}</span>`;
     const isLast = i === items.length - 1;
     return `<span class="breadcrumb-sep">›</span><span class="breadcrumb-step ${isLast?'current':''}">${c}</span>`;
   }).join('');
@@ -1518,7 +1415,7 @@ function copyReport() {
 
   const fallback = () => {
     const pre = document.createElement('pre');
-    pre.style.cssText = 'white-space:pre-wrap;font-family:var(--font-body);font-size:.85rem;user-select:text;';
+    pre.style.cssText = 'white-space:pre-wrap;font-family:var(--sans);font-size:.875rem;user-select:text;';
     pre.textContent = txt;
     showModal('요약 — 길게 눌러 복사', '');
     document.getElementById('modalBody').appendChild(pre);
